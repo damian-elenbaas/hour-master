@@ -1,1 +1,1 @@
-export * from './lib/machine.module';
+export * from './lib/backend-features.module';
