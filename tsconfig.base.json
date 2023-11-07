@@ -14,7 +14,14 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@hour-master/backend/dto": ["libs/backend/dto/src/index.ts"],
+      "@hour-master/backend/features": ["libs/backend/features/src/index.ts"],
+      "@hour-master/frontend/common": ["libs/frontend/common/src/index.ts"],
+      "@hour-master/frontend/features": ["libs/frontend/features/src/index.ts"],
+      "@hour-master/shared/api": ["libs/shared/api/src/index.ts"],
+      "@hour-master/ui": ["libs/frontend/ui/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }
