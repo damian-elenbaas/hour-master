@@ -10,8 +10,17 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
-  IsStrongPassword
+  IsStrongPassword,
+  IsStrongPasswordOptions
 } from "class-validator";
+
+export const StrongPasswordOptions: IsStrongPasswordOptions = {
+  minLength: 8,
+  minNumbers: 1,
+  minSymbols: 1,
+  minLowercase: 1,
+  minUppercase: 1
+}
 
 export class CreateUserDto implements ICreateUser {
   @IsNotEmpty()
@@ -24,7 +33,7 @@ export class CreateUserDto implements ICreateUser {
 
   @IsNotEmpty()
   @IsString()
-  @IsStrongPassword()
+  @IsStrongPassword(StrongPasswordOptions)
   password!: string;
 
   @IsNotEmpty()
@@ -54,7 +63,7 @@ export class UpsertUserDto implements IUpsertUser {
 
   @IsNotEmpty()
   @IsString()
-  @IsStrongPassword()
+  @IsStrongPassword(StrongPasswordOptions)
   password!: string;
 
   @IsNotEmpty()
@@ -80,7 +89,7 @@ export class UpdateUserDto implements IUpdateUser {
 
   @IsOptional()
   @IsString()
-  @IsStrongPassword()
+  @IsStrongPassword(StrongPasswordOptions)
   password!: string;
 
   @IsOptional()
