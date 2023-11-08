@@ -16,3 +16,4 @@ export type ICreateHourScheme = Pick<
 
 export type IUpdateHourScheme = Partial<Omit<IHourScheme, 'id'>>;
 export type IUpsertHourScheme = IHourScheme;
+export type IAddHourSchemeRow = IHourSchemeRow;

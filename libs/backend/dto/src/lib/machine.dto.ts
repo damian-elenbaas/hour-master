@@ -7,7 +7,8 @@ import {
 import {
   ICreateMachine,
   IUpsertMachine,
-  IUpdateMachine
+  IUpdateMachine,
+  Id
 } from '@hour-master/shared/api';
 
 export class CreateMachineDto implements ICreateMachine {
@@ -23,7 +24,7 @@ export class CreateMachineDto implements ICreateMachine {
 export class UpsertMachineDto implements IUpsertMachine {
   @IsString()
   @IsNotEmpty()
-  id!: string;
+  id!: Id;
 
   @IsString()
   @IsNotEmpty()

@@ -19,7 +19,6 @@ export class CreateHourSchemeDto implements ICreateHourScheme {
 
   @IsOptional()
   rows?: IHourSchemeRow[];
-
 }
 
 export class UpsertHourSchemeDto implements IUpsertHourScheme {
