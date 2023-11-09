@@ -1,9 +1,10 @@
 <a
   [routerLink]="link"
-  class="block py-2 pl-3 pr-4 text-white rounded hover:bg-secondary md:hover:bg-transparent md:border-0 md:hover:text-secondary md:p-0"
-  [ngClass]="{
-    'text-secondary bg-accent rounded md:bg-transparent md:text-accent': accent
-  }"
+  routerLinkActive="text-secondary bg-accent rounded md:bg-transparent md:text-accent"
+  #active="routerLinkActive"
+  class="block py-2 pl-3 pr-4 rounded hover:bg-secondary hover:text-white md:hover:bg-transparent md:border-0 md:hover:text-secondary md:p-0"
+  [class.text-white]="!active.isActive"
+  [routerLinkActiveOptions]="activeOptions"
 >
   <ng-content></ng-content>
 </a>

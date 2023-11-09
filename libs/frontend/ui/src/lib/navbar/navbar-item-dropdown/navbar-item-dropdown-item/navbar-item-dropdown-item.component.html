@@ -1,5 +1,8 @@
 <a
   [routerLink]='link'
+  routerLinkActive="text-secondary bg-accent rounded md:bg-transparent md:text-accent"
+  #active="routerLinkActive"
+  [class.text-white]="!active.isActive"
   class="block px-4 py-2 text-sm text-white hover:bg-primary">
   <ng-content></ng-content>
 </a>

@@ -4,8 +4,16 @@ export const appRoutes: Route[] = [
   {
     path: '',
     loadChildren: () =>
-      import('@hour-master/frontend/features').then(
-        (m) => m.FeaturesModule
+      import('@hour-master/frontend/static').then(
+        (m) => m.StaticModule
+      )
+  },
+  {
+    path: 'hour-scheme',
+    pathMatch: 'full',
+    loadChildren: () =>
+      import('@hour-master/frontend/features/hour-scheme').then(
+        (m) => m.HourSchemeModule
       )
   }
 ];
