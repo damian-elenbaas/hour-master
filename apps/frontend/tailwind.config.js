@@ -4,6 +4,7 @@ const sharedTailwindCondig = require('../../libs/tailwind-preset/tailwind.config
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: 'media',
   presets: [sharedTailwindCondig],
   content: [
     join(__dirname, 'src/**/!(*.stories|*.spec).{ts,html}'),
