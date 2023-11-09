@@ -27,7 +27,7 @@ export class CreateHourSchemeRowDto implements ICreateHourSchemeRow {
   description!: string;
 
   @IsOptional()
-  machine?: IMachine | undefined;
+  machine?: IMachine;
 }
 
 export class UpsertHourSchemeRowDto implements IUpsertHourSchemeRow {
@@ -46,7 +46,7 @@ export class UpsertHourSchemeRowDto implements IUpsertHourSchemeRow {
   description!: string;
 
   @IsOptional()
-  machine?: IMachine | undefined;
+  machine?: IMachine;
 }
 
 export class UpdateHourSchemeRowDto implements IUpdateHourSchemeRow {
@@ -59,6 +59,6 @@ export class UpdateHourSchemeRowDto implements IUpdateHourSchemeRow {
   description!: string;
 
   @IsOptional()
-  machine?: IMachine | undefined;
+  machine?: IMachine;
 }
 

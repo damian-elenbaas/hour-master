@@ -6,5 +6,5 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./navbar-item-dropdown-item.component.scss'],
 })
 export class NavbarItemDropdownItemComponent {
-  @Input() link: string | undefined;
+  @Input() link: string | null = null;
 }

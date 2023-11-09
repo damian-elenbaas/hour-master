@@ -20,7 +20,8 @@
       "@hour-master/frontend/common": ["libs/frontend/common/src/index.ts"],
       "@hour-master/frontend/features": ["libs/frontend/features/src/index.ts"],
       "@hour-master/shared/api": ["libs/shared/api/src/index.ts"],
-      "@hour-master/ui": ["libs/frontend/ui/src/index.ts"]
+      "@hour-master/ui": ["libs/frontend/ui/src/index.ts"],
+      "@hour-master/user": ["libs/frontend/user/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

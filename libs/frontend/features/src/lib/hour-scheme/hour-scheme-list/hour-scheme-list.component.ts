@@ -10,7 +10,7 @@ import { HourSchemeService } from '../hour-scheme.service';
 })
 export class HourSchemeListComponent implements OnInit, OnDestroy {
   hourSchemes: IHourScheme[] | null = null;
-  subscription: Subscription | undefined = undefined;
+  subscription: Subscription | null = null;
 
   constructor(private hourSchemeService: HourSchemeService) { }
 
