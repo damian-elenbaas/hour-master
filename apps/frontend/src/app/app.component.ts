@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { FeaturesModule } from '@hour-master/frontend/features';
 import { UiModule } from '@hour-master/ui';
 import { initFlowbite } from 'flowbite';
 
@@ -8,7 +7,6 @@ import { initFlowbite } from 'flowbite';
   standalone: true,
   imports: [
     RouterModule,
-    FeaturesModule,
     UiModule
   ],
   selector: 'hour-master-root',
