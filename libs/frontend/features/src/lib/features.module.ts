@@ -5,9 +5,28 @@ import { HourSchemeDetailsComponent } from './hour-scheme/hour-scheme-details/ho
 import { HttpClientModule } from '@angular/common/http';
 import { HourSchemeService } from './hour-scheme/hour-scheme.service';
 import { AboutComponent } from './about/about.component';
+import { RouterModule, Routes } from '@angular/router';
+
+const routes: Routes = [
+  {
+    path: 'about',
+    pathMatch: 'full',
+    component: AboutComponent
+  },
+  {
+    path: 'hour-scheme',
+    pathMatch: 'full',
+    component: HourSchemeListComponent
+  },
+  {
+    path: 'hour-scheme/:id',
+    pathMatch: 'full',
+    component: HourSchemeDetailsComponent
+  }
+]
 
 @NgModule({
-  imports: [CommonModule, HttpClientModule],
+  imports: [CommonModule, HttpClientModule, RouterModule.forChild(routes)],
   declarations: [
     HourSchemeListComponent,
     HourSchemeDetailsComponent,
