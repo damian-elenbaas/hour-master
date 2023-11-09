@@ -5,6 +5,6 @@ import { Component, Input } from '@angular/core';
   templateUrl: './navbar-item.component.html'
 })
 export class NavbarItemComponent {
-  @Input() link: string | undefined;
-  @Input() accent: boolean | undefined;
+  @Input() link: string | null = null;
+  @Input() accent: boolean | null = null;
 }
