@@ -6,19 +6,19 @@ import { RouterModule, Routes } from '@angular/router';
 import { HourSchemeService } from './hour-scheme.service';
 import { HttpClientModule } from '@angular/common/http';
 import { UiModule } from '@hour-master/ui';
-
+import { HourSchemeEditComponent } from './hour-scheme-edit/hour-scheme-edit.component';
 
 const routes: Routes = [
   {
     path: ':id',
     pathMatch: 'full',
-    component: HourSchemeDetailsComponent
+    component: HourSchemeDetailsComponent,
   },
   {
     path: '',
     pathMatch: 'full',
-    component: HourSchemeListComponent
-  }
+    component: HourSchemeListComponent,
+  },
 ];
 
 @NgModule({
@@ -26,18 +26,18 @@ const routes: Routes = [
     CommonModule,
     RouterModule.forChild(routes),
     HttpClientModule,
-    UiModule
+    UiModule,
   ],
   declarations: [
     HourSchemeListComponent,
-    HourSchemeDetailsComponent
+    HourSchemeDetailsComponent,
+    HourSchemeEditComponent,
   ],
-  providers: [
-    HourSchemeService
-  ],
+  providers: [HourSchemeService],
   exports: [
     HourSchemeListComponent,
-    HourSchemeDetailsComponent
-  ]
+    HourSchemeDetailsComponent,
+    HourSchemeEditComponent,
+  ],
 })
 export class HourSchemeModule {}

@@ -14,5 +14,12 @@ export const appRoutes: Route[] = [
       import('@hour-master/frontend/features/hour-scheme').then(
         (m) => m.HourSchemeModule
       )
+  },
+  {
+    path: 'user',
+    loadChildren: () =>
+      import('@hour-master/frontend/features/user').then(
+        (m) => m.UserModule
+      )
   }
 ];

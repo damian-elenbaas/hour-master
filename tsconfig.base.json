@@ -21,6 +21,12 @@
       "@hour-master/frontend/features/hour-scheme": [
         "libs/frontend/features/hour-scheme/src/index.ts"
       ],
+      "@hour-master/frontend/features/machine": [
+        "libs/frontend/features/machine/src/index.ts"
+      ],
+      "@hour-master/frontend/features/project": [
+        "libs/frontend/features/project/src/index.ts"
+      ],
       "@hour-master/frontend/features/user": [
         "libs/frontend/features/user/src/index.ts"
       ],
