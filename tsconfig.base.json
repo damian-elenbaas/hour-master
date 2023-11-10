@@ -10,14 +10,23 @@
     "importHelpers": true,
     "target": "es2015",
     "module": "esnext",
-    "lib": ["es2020", "dom"],
+    "lib": [
+      "es2020",
+      "dom"
+    ],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@hour-master/backend/dto": ["libs/backend/dto/src/index.ts"],
-      "@hour-master/backend/features": ["libs/backend/features/src/index.ts"],
-      "@hour-master/frontend/common": ["libs/frontend/common/src/index.ts"],
+      "@hour-master/backend/dto": [
+        "libs/backend/dto/src/index.ts"
+      ],
+      "@hour-master/backend/features": [
+        "libs/backend/features/src/index.ts"
+      ],
+      "@hour-master/frontend/common": [
+        "libs/frontend/common/src/index.ts"
+      ],
       "@hour-master/frontend/features/hour-scheme": [
         "libs/frontend/features/hour-scheme/src/index.ts"
       ],
@@ -30,10 +39,19 @@
       "@hour-master/frontend/features/user": [
         "libs/frontend/features/user/src/index.ts"
       ],
-      "@hour-master/frontend/static": ["libs/frontend/static/src/index.ts"],
-      "@hour-master/shared/api": ["libs/shared/api/src/index.ts"],
-      "@hour-master/ui": ["libs/frontend/ui/src/index.ts"]
+      "@hour-master/frontend/static": [
+        "libs/frontend/static/src/index.ts"
+      ],
+      "@hour-master/shared/api": [
+        "libs/shared/api/src/index.ts"
+      ],
+      "@hour-master/ui": [
+        "libs/frontend/ui/src/index.ts"
+      ]
     }
   },
-  "exclude": ["node_modules", "tmp"]
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
 }
