@@ -7,6 +7,7 @@ import {
 
 import {
   IsEmail,
+  IsEnum,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -45,6 +46,7 @@ export class CreateUserDto implements ICreateUser {
   lastname!: string;
 
   @IsNotEmpty()
+  @IsEnum(UserRole)
   role!: UserRole;
 }
 
@@ -75,6 +77,7 @@ export class UpsertUserDto implements IUpsertUser {
   lastname!: string;
 
   @IsNotEmpty()
+  @IsEnum(UserRole)
   role!: UserRole;
 }
 
@@ -101,6 +104,7 @@ export class UpdateUserDto implements IUpdateUser {
   lastname!: string;
 
   @IsOptional()
+  @IsEnum(UserRole)
   role!: UserRole;
 }
 
