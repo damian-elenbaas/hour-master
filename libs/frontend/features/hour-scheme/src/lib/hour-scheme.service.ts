@@ -2,7 +2,7 @@ import { Observable, throwError } from 'rxjs';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { map, catchError, tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { ApiResponse, IHourScheme } from '@hour-master/shared/api';
+import { ApiResponse, IHourScheme, Id } from '@hour-master/shared/api';
 
 /**
  * See https://angular.io/guide/http#requesting-data-from-a-server
@@ -34,6 +34,21 @@ export class HourSchemeService {
       })
       .pipe(
         map((response: any) => response.results as IHourScheme[]),
+        tap(console.log),
+        catchError(this.handleError)
+      );
+  }
+
+  public details(id: Id, options?: any): Observable<IHourScheme | null> {
+    console.log(`details ${this.endpoint}/${id}`);
+
+    return this.http
+      .get<ApiResponse<IHourScheme>>(`${this.endpoint}/${id}`, {
+        ...options,
+        ...httpOptions
+      })
+      .pipe(
+        map((response: any) => response.results as IHourScheme),
         tap(console.log),
         catchError(this.handleError)
       );

@@ -5,17 +5,19 @@ import { HourSchemeDetailsComponent } from './hour-scheme-details/hour-scheme-de
 import { RouterModule, Routes } from '@angular/router';
 import { HourSchemeService } from './hour-scheme.service';
 import { HttpClientModule } from '@angular/common/http';
+import { UiModule } from '@hour-master/ui';
+
 
 const routes: Routes = [
-  {
-    path: '',
-    pathMatch: 'full',
-    component: HourSchemeListComponent
-  },
   {
     path: ':id',
     pathMatch: 'full',
     component: HourSchemeDetailsComponent
+  },
+  {
+    path: '',
+    pathMatch: 'full',
+    component: HourSchemeListComponent
   }
 ];
 
@@ -23,7 +25,8 @@ const routes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-    HttpClientModule
+    HttpClientModule,
+    UiModule
   ],
   declarations: [
     HourSchemeListComponent,

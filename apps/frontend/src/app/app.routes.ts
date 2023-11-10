@@ -10,7 +10,6 @@ export const appRoutes: Route[] = [
   },
   {
     path: 'hour-scheme',
-    pathMatch: 'full',
     loadChildren: () =>
       import('@hour-master/frontend/features/hour-scheme').then(
         (m) => m.HourSchemeModule

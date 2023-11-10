@@ -1,4 +1,8 @@
-<div class="border-2 p-2 mb-2 border-green-500" *ngFor="let hourScheme of hourSchemes">
-  <h2>Van: {{hourScheme.worker.firstname}} {{hourScheme.worker.lastname}}</h2>
-  <h3>Datum: {{hourScheme.date}}</h3>
-</div>
+<a
+  routerLink='{{hourScheme.id}}'
+  class="border-2 p-2 mb-2 border-green-500"
+  *ngFor="let hourScheme of hourSchemes"
+>
+    <h2>Van: {{hourScheme.worker.firstname}} {{hourScheme.worker.lastname}}</h2>
+    <h3>Datum: {{hourScheme.date}}</h3>
+</a>

@@ -12,8 +12,10 @@ import { NavbarItemDropdownItemComponent } from './navbar/navbar-item-dropdown/n
     NavbarComponent,
     NavbarItemComponent,
     NavbarItemDropdownComponent,
-    NavbarItemDropdownItemComponent,
+    NavbarItemDropdownItemComponent
   ],
-  exports: [NavbarComponent],
+  exports: [
+    NavbarComponent
+  ],
 })
 export class UiModule {}

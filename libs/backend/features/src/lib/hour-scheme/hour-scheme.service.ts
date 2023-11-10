@@ -20,6 +20,32 @@ export class HourSchemeService {
         password: 'password',
         role: UserRole.ROADWORKER,
       },
+      rows: [
+        {
+          id: 'row-1',
+          project: {
+            id: 'project-1',
+            name: 'Project 1',
+            location: {
+              id: 'location-1',
+              adres: 'Location 1',
+              city: 'City 1',
+              postalCode: '1234 AB',
+            },
+            admin: {
+              id: 'admin-1',
+              username: 'admin',
+              firstname: 'Admin',
+              lastname: 'Admin',
+              email: 'admin@example.com',
+              password: 'password',
+              role: UserRole.OFFICE,
+            }
+          },
+          hours: 4,
+          description: 'Ik heb gewerkt aan de weg',
+        }
+      ]
     },
     {
       id: 'hour-scheme-2',
@@ -42,6 +68,7 @@ export class HourSchemeService {
   }
 
   getOne(id: Id): IHourScheme {
+    Logger.log(`${this.TAG} getOne(${id})`);
     const hourScheme =
       this.hourSchemes$.value
         .find((hourScheme) => hourScheme.id === id);
