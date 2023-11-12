@@ -14,6 +14,11 @@ const routes: Routes = [
     component: UserListComponent
   },
   {
+    path: 'new',
+    pathMatch: 'full',
+    component: UserEditComponent
+  },
+  {
     path: ':id',
     pathMatch: 'full',
     component: UserDetailsComponent

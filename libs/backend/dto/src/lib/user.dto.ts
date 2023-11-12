@@ -16,11 +16,12 @@ import {
 } from "class-validator";
 
 export const StrongPasswordOptions: IsStrongPasswordOptions = {
-  minLength: 8,
-  minNumbers: 1,
-  minSymbols: 1,
-  minLowercase: 1,
-  minUppercase: 1
+  // TODO: change to better values
+  minLength: 4,
+  minNumbers: 0,
+  minSymbols: 0,
+  minLowercase: 0,
+  minUppercase: 0
 }
 
 export class CreateUserDto implements ICreateUser {
