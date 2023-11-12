@@ -6,4 +6,5 @@ export * from './lib/models/hour-scheme.interface';
 export * from './lib/models/hour-scheme-row.interface';
 export * from './lib/models/location.interface';
 export * from './lib/models/api-response.interface';
+export * from './lib/models/service-result.interface';
 

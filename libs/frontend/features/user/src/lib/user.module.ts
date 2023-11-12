@@ -29,12 +29,12 @@ const routes: Routes = [
   imports: [
     CommonModule,
     HttpClientModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    UserEditComponent
   ],
   declarations: [
     UserListComponent,
-    UserDetailsComponent,
-    UserEditComponent
+    UserDetailsComponent
   ],
   providers: [UserService],
   exports: [

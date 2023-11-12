@@ -1,1 +1,60 @@
-<p>user-edit works!</p>
+<div class="p-4 relative ">
+  <div class="mx-auto w-fit">
+    <form [formGroup]="userForm" (submit)="onSubmit()">
+      <table class="text-left rtl:text-right ">
+        <tbody>
+          <tr class="border-b">
+            <th scope="row" class="bg-primary text-white px-6 py-3">
+              <label for="username">Gebruikersnaam</label>
+            </th>
+            <td class="px-6">
+              <input id="username" type="text" formControlName="username" />
+            </td>
+          </tr>
+          <tr class="border-b">
+            <th scope="row" class="bg-primary text-white px-6 py-3">
+              <label for="first-name">Voornaam</label>
+            </th>
+            <td class="px-6">
+              <input id="first-name" type="text" formControlName="firstname" />
+            </td>
+          </tr>
+          <tr class="border-b">
+            <th scope="row" class="bg-primary text-white px-6 py-3">
+              <label for="last-name">Achternaam</label>
+            </th>
+            <td class="px-6">
+              <input id="last-name" type="text" formControlName="lastname" />
+            </td>
+          </tr>
+          <tr class="border-b">
+            <th scope="row" class="bg-primary text-white px-6 py-3">
+              <label for="email">Email</label>
+            </th>
+            <td class="px-6">
+              <input id="email" type="email" formControlName="email" />
+            </td>
+          </tr>
+          <tr class="border-b">
+            <th scope="row" class="bg-primary text-white px-6 py-3">
+              <label for="role">Rol</label>
+            </th>
+            <td class="px-6">
+              <select id="role" formControlName="role" class="w-full">
+                <option *ngFor="let role of roles | keyvalue" [value]="role.key">{{ role.value | titlecase }}</option>
+              </select>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="w-full flex justify-center mt-3">
+        <button type="button" class="bg-secondary px-4 py-2 rounded-md text-white mr-2" (click)="onCancel()">
+          Annuleren
+        </button>
+        <button type="submit" class="bg-accent px-4 py-2 rounded-md">
+          Opslaan
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

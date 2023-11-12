@@ -1,1 +1,51 @@
-<p>user-details works!</p>
+<div class="p-4 relative">
+  <div class="w-fit mx-auto">
+    <table class="text-left rtl:text-right">
+      <tbody>
+        <tr class="border-b">
+          <th scope="row" class="bg-primary text-white px-6 py-3">
+            Gebruikersnaam
+          </th>
+          <td class="px-6">
+            {{ user?.username }}
+          </td>
+        </tr>
+        <tr class="border-b">
+          <th scope="row" class="bg-primary text-white px-6 py-3">
+            Voornaam
+          </th>
+          <td class="px-6">
+            {{ user?.firstname }}
+          </td>
+        </tr>
+        <tr class="border-b">
+          <th scope="row" class="bg-primary text-white px-6 py-3">
+            Achternaam
+          </th>
+          <td class="px-6">
+            {{ user?.lastname }}
+          </td>
+        </tr>
+        <tr class="border-b">
+          <th scope="row" class="bg-primary text-white px-6 py-3">
+            Email
+          </th>
+          <td class="px-6">
+            {{ user?.email }}
+          </td>
+        </tr>
+        <tr class="border-b">
+          <th scope="row" class="bg-primary text-white px-6 py-3">
+            Rol
+          </th>
+          <td class="px-6">
+            {{ user?.role | titlecase }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="w-full flex justify-center mt-3">
+      <button routerLink="edit" class="bg-secondary px-4 py-2 rounded-md text-white">Bijwerken</button>
+    </div>
+  </div>
+</div>

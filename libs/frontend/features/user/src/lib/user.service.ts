@@ -2,7 +2,7 @@ import { Observable, throwError } from 'rxjs';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { map, catchError, tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { ApiResponse, IUser, Id } from '@hour-master/shared/api';
+import { ApiResponse, IServiceResult, IUpdateUser, IUser, Id } from '@hour-master/shared/api';
 
 /**
  * See https://angular.io/guide/http#requesting-data-from-a-server
@@ -49,6 +49,19 @@ export class UserService {
       })
       .pipe(
         map((response: any) => response.results as IUser),
+        tap(console.log),
+        catchError(this.handleError)
+      );
+  }
+
+  public update(id: Id, user: IUpdateUser, options?: any): Observable<boolean | null> {
+    return this.http
+      .patch<ApiResponse<IServiceResult<IUser>>>(`${this.endpoint}/${id}`, user, {
+        ...options,
+        ...httpOptions
+      })
+      .pipe(
+        map((response: any) => response.results as boolean),
         tap(console.log),
         catchError(this.handleError)
       );

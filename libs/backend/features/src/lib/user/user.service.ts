@@ -1,4 +1,4 @@
-import { ICreateUser, IUser, Id, UserRole } from '@hour-master/shared/api';
+import { ICreateUser, IUpdateUser, IUser, Id, UserRole } from '@hour-master/shared/api';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 
 import { BehaviorSubject } from 'rxjs';
@@ -59,7 +59,7 @@ export class UserService {
   }
 
   create(user: ICreateUser): IUser {
-    Logger.log('create', this.TAG);
+    Logger.log(`${this.TAG} create(${user})`);
     const current = this.users$.value;
     let newUser: IUser = {
       ...user,
@@ -72,5 +72,21 @@ export class UserService {
     newUser = rest;
 
     return newUser;
+  }
+
+  update(id: Id, user: IUpdateUser): boolean {
+    Logger.log(`${this.TAG} update(${id}, ${user})`);
+
+    const current = this.users$.value;
+    const index = current.findIndex((user) => user.id === id);
+    if(index === -1) return false;
+    current[index] = {
+      ...current[index],
+      ...user
+    };
+
+    this.users$.next(current);
+
+    return true;
   }
 }
