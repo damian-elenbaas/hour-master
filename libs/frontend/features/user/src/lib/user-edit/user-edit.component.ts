@@ -3,7 +3,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
-  ReactiveFormsModule
+  ReactiveFormsModule,
+  Validators
 } from '@angular/forms';
 import { ICreateUser, IUpdateUser, Id, UserRole } from '@hour-master/shared/api';
 import { Subscription } from 'rxjs';
@@ -22,13 +23,13 @@ export class UserEditComponent implements OnInit, OnDestroy {
   subscription: Subscription | null = null;
 
   userForm = new FormGroup({
-    username: new FormControl(''),
-    email: new FormControl(''),
-    firstname: new FormControl(''),
-    lastname: new FormControl(''),
-    role: new FormControl(''),
-    password: new FormControl(''),
-    passwordConfirm: new FormControl('')
+    username: new FormControl('', Validators.required),
+    email: new FormControl('', [Validators.required, Validators.email]),
+    firstname: new FormControl('', Validators.required),
+    lastname: new FormControl('', Validators.required),
+    role: new FormControl('', Validators.required),
+    password: new FormControl('', Validators.required),
+    passwordConfirm: new FormControl('', Validators.required)
   });
   roles = UserRole;
 
@@ -59,8 +60,8 @@ export class UserEditComponent implements OnInit, OnDestroy {
                 firstname: user.firstname,
                 lastname: user.lastname,
                 role: user.role.toString(),
-                password: '',
-                passwordConfirm: ''
+                password: 'not_used',
+                passwordConfirm: 'not_used'
               });
             },
             (error) => {

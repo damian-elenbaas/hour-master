@@ -7,7 +7,10 @@
             <th scope="row" class="bg-primary text-white px-6 py-3">
               <label for="username">Gebruikersnaam</label>
             </th>
-            <td class="px-6">
+            <td class="px-6 flex flex-col">
+              <span *ngIf="userForm.get('username')?.invalid" class="text-sm text-red-500">
+                Gebruikersnaam is verplicht
+              </span>
               <input id="username" type="text" formControlName="username" />
             </td>
           </tr>
@@ -15,7 +18,10 @@
             <th scope="row" class="bg-primary text-white px-6 py-3">
               <label for="first-name">Voornaam</label>
             </th>
-            <td class="px-6">
+            <td class="px-6 flex flex-col">
+              <span *ngIf="userForm.get('firstname')?.invalid" class="text-sm text-red-500">
+                Voornaam is verplicht
+              </span>
               <input id="first-name" type="text" formControlName="firstname" />
             </td>
           </tr>
@@ -23,7 +29,10 @@
             <th scope="row" class="bg-primary text-white px-6 py-3">
               <label for="last-name">Achternaam</label>
             </th>
-            <td class="px-6">
+            <td class="px-6 flex flex-col">
+              <span *ngIf="userForm.get('lastname')?.invalid" class="text-sm text-red-500">
+                Achternaam is verplicht
+              </span>
               <input id="last-name" type="text" formControlName="lastname" />
             </td>
           </tr>
@@ -31,7 +40,10 @@
             <th scope="row" class="bg-primary text-white px-6 py-3">
               <label for="email">Email</label>
             </th>
-            <td class="px-6">
+            <td class="px-6 flex flex-col">
+              <span *ngIf="userForm.get('email')?.invalid" class="text-sm text-red-500">
+                Email is verplicht
+              </span>
               <input id="email" type="email" formControlName="email" />
             </td>
           </tr>
@@ -39,28 +51,34 @@
             <th scope="row" class="bg-primary text-white px-6 py-3">
               <label for="role">Rol</label>
             </th>
-            <td class="px-6">
+            <td class="px-6 flex flex-col">
+              <span *ngIf="userForm.get('role')?.invalid" class="text-sm text-red-500">
+                Rol is verplicht
+              </span>
               <select id="role" formControlName="role" class="w-full">
                 <option *ngFor="let role of roles | keyvalue" [value]="role.key">{{ role.value | titlecase }}</option>
               </select>
             </td>
           </tr>
-          <tr class="border-b">
+          <tr class="border-b" *ngIf="!userId">
             <th scope="row" class="bg-primary text-white px-6 py-3">
               <label for="password">Wachtwoord</label>
             </th>
-            <td class="px-6">
+            <td class="px-6 flex flex-col">
+              <span *ngIf="userForm.get('password')?.invalid" class="text-sm text-red-500">
+                Wachtwoord is verplicht
+              </span>
               <input id="password" type="password" formControlName="password" />
             </td>
           </tr>
-          <tr
-            class="border-b"
-            *ngIf="!userId"
-          >
+          <tr class="border-b" *ngIf="!userId">
             <th scope="row" class="bg-primary text-white px-6 py-3">
               <label for="c-password">Bevestig wachtwoord</label>
             </th>
-            <td class="px-6">
+            <td class="px-6 flex flex-col">
+              <span *ngIf="userForm.get('passwordConfirm')?.invalid" class="text-sm text-red-500">
+                Bevestig wachtwoord is verplicht
+              </span>
               <input id="c-password" type="password" formControlName="passwordConfirm" />
             </td>
           </tr>
@@ -70,7 +88,10 @@
         <button type="button" class="bg-secondary px-4 py-2 rounded-md text-white mr-2" (click)="onCancel()">
           Annuleren
         </button>
-        <button type="submit" class="bg-accent px-4 py-2 rounded-md">
+        <button
+          type="submit"
+          class="bg-accent px-4 py-2 rounded-md disabled:opacity-50"
+          [disabled]="userForm.invalid">
           Opslaan
         </button>
       </div>
