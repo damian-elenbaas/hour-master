@@ -3,6 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { map, catchError, tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { ApiResponse, IHourScheme, Id } from '@hour-master/shared/api';
+import { environment } from '@hour-master/shared/environments';
 
 /**
  * See https://angular.io/guide/http#requesting-data-from-a-server
@@ -14,7 +15,7 @@ export const httpOptions = {
 
 @Injectable()
 export class HourSchemeService {
-  endpoint = 'http://localhost:3000/api/hour-scheme';
+  endpoint = `${environment.dataApiUrl}/api/hour-scheme`;
 
   constructor(private readonly http: HttpClient) { }
 

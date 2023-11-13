@@ -3,6 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { map, catchError, tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { ApiResponse, IServiceResult, IUpdateUser, IUser, Id } from '@hour-master/shared/api';
+import { environment } from '@hour-master/shared/environments';
 
 /**
  * See https://angular.io/guide/http#requesting-data-from-a-server
@@ -14,7 +15,7 @@ export const httpOptions = {
 
 @Injectable()
 export class UserService {
-  endpoint = 'http://localhost:3000/api/user';
+  endpoint = `${environment.dataApiUrl}/api/user`;
 
   constructor(private readonly http: HttpClient) { }
 
