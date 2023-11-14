@@ -6,10 +6,10 @@ import {
   ReactiveFormsModule,
   Validators
 } from '@angular/forms';
-import { ICreateUser, IUpdateUser, Id, UserRole } from '@hour-master/shared/api';
-import { Subscription } from 'rxjs';
+import { ICreateUser, IUpdateUser, IUser, Id, UserRole } from '@hour-master/shared/api';
+import { Subscription, of, switchMap, tap } from 'rxjs';
 import { UserService } from '../user.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 
 @Component({
   standalone: true,
@@ -20,7 +20,9 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class UserEditComponent implements OnInit, OnDestroy {
   userId: Id | null = null;
+  user: IUser | null = null;
   subscription: Subscription | null = null;
+  roles = UserRole;
 
   userForm = new FormGroup({
     username: new FormControl('', Validators.required),
@@ -31,7 +33,6 @@ export class UserEditComponent implements OnInit, OnDestroy {
     password: new FormControl('', Validators.required),
     passwordConfirm: new FormControl('', Validators.required)
   });
-  roles = UserRole;
 
   constructor(
     private location: Location,
@@ -39,37 +40,35 @@ export class UserEditComponent implements OnInit, OnDestroy {
     private userService: UserService) { }
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
-      this.userId = params.get('id') as Id;
-
-      if(!this.userId) return;
-
-      this.subscription =
-        this.userService
-          .details(this.userId)
-          .subscribe(
-            (user) => {
-              if (!user) {
-                this.location.back();
-                return;
-              }
-
-              this.userForm.setValue({
-                username: user.username,
-                email: user.email,
-                firstname: user.firstname,
-                lastname: user.lastname,
-                role: user.role.toString(),
-                password: 'not_used',
-                passwordConfirm: 'not_used'
-              });
-            },
-            (error) => {
-              console.error(error);
-              this.location.back();
-            }
-          )
-    })
+    this.subscription = this.route.paramMap
+      .pipe(
+        tap(console.log),
+        switchMap((params: ParamMap) => {
+          if(!params.get('id')) {
+            return of(null);
+          } else {
+            return this.userService.details(params.get('id') as Id);
+          }
+        }),
+        tap(console.log)
+      )
+      .subscribe((user: IUser | null) => {
+        this.user = user;
+        if (user) {
+          this.userForm.setValue({
+            username: user.username,
+            email: user.email,
+            firstname: user.firstname,
+            lastname: user.lastname,
+            role: user.role.toString(),
+            password: 'not_used',
+            passwordConfirm: 'not_used'
+          });
+        }
+      }, (error) => {
+        console.error(error);
+        this.location.back();
+      });
   }
 
   ngOnDestroy(): void {

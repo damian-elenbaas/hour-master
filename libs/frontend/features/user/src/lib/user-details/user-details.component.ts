@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 import { IUser, Id } from '@hour-master/shared/api';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription, of, switchMap, tap } from 'rxjs';
 import { UserService } from '../user.service';
 import { Location } from '@angular/common';
 
@@ -11,9 +11,8 @@ import { Location } from '@angular/common';
   styleUrls: ['./user-details.component.scss'],
 })
 export class UserDetailsComponent implements OnInit, OnDestroy {
-  userId: Id | null = null;
-  subscription: Subscription | null = null;
-  user: IUser | null = null;
+  subscription!: Subscription | null;
+  user$!: Observable<IUser | null>;
 
   constructor(
     private route: ActivatedRoute,
@@ -24,27 +23,17 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
-      this.userId = params.get('id') as Id;
-
-      this.subscription =
-        this.userService
-          .details(this.userId)
-          .subscribe(
-            (user) => {
-              if (!user) {
-                this.location.back();
-                return;
-              }
-
-              this.user = user;
-            },
-            (error) => {
-              console.error(error);
-              this.location.back();
-            }
-          )
-    })
+    this.user$ = this.route.paramMap.pipe(
+      tap((params: ParamMap) => console.log('user.id = ', params.get('id'))),
+      switchMap((params: ParamMap) => {
+        if (!params.get('id')) {
+          return of(null);
+        } else {
+          return this.userService.details(params.get('id') as Id);
+        }
+      }),
+      tap(console.log)
+    )
   }
 
   ngOnDestroy(): void {

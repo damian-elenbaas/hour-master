@@ -7,7 +7,7 @@
             Gebruikersnaam
           </th>
           <td class="px-6">
-            {{ user?.username }}
+            {{ (user$ | async)?.username }}
           </td>
         </tr>
         <tr class="border-b">
@@ -15,7 +15,7 @@
             Voornaam
           </th>
           <td class="px-6">
-            {{ user?.firstname }}
+            {{ (user$ | async)?.firstname }}
           </td>
         </tr>
         <tr class="border-b">
@@ -23,7 +23,7 @@
             Achternaam
           </th>
           <td class="px-6">
-            {{ user?.lastname }}
+            {{ (user$ | async)?.lastname }}
           </td>
         </tr>
         <tr class="border-b">
@@ -31,7 +31,7 @@
             Email
           </th>
           <td class="px-6">
-            {{ user?.email }}
+            {{ (user$ | async)?.email }}
           </td>
         </tr>
         <tr class="border-b">
@@ -39,7 +39,7 @@
             Rol
           </th>
           <td class="px-6">
-            {{ user?.role | titlecase }}
+            {{ (user$ | async)?.role | titlecase }}
           </td>
         </tr>
       </tbody>
