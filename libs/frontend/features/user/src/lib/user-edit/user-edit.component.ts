@@ -19,9 +19,9 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
   imports: [ReactiveFormsModule, CommonModule]
 })
 export class UserEditComponent implements OnInit, OnDestroy {
-  userId: Id | null = null;
-  user: IUser | null = null;
-  subscription: Subscription | null = null;
+  userId!: Id | null;
+  user!: IUser | null;
+  subscription!: Subscription | null;
   roles = UserRole;
 
   userForm = new FormGroup({
@@ -45,14 +45,19 @@ export class UserEditComponent implements OnInit, OnDestroy {
         tap(console.log),
         switchMap((params: ParamMap) => {
           if(!params.get('id')) {
-            return of(null);
+            return of({
+              username: '',
+              email: '',
+              firstname: '',
+              lastname: '',
+            } as IUser);
           } else {
             return this.userService.details(params.get('id') as Id);
           }
         }),
         tap(console.log)
       )
-      .subscribe((user: IUser | null) => {
+      .subscribe((user: IUser) => {
         this.user = user;
         if (user) {
           this.userForm.setValue({
@@ -64,6 +69,8 @@ export class UserEditComponent implements OnInit, OnDestroy {
             password: 'not_used',
             passwordConfirm: 'not_used'
           });
+        } else {
+          this.location.back();
         }
       }, (error) => {
         console.error(error);

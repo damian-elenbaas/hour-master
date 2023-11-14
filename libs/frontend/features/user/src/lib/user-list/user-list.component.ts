@@ -9,7 +9,7 @@ import { UserService } from '../user.service';
   styleUrls: ['./user-list.component.scss'],
 })
 export class UserListComponent implements OnInit, OnDestroy {
-  users: IUser[] | null = null;
+  users: IUser[] = [];
   subscription: Subscription | null = null;
 
   constructor(private userService: UserService) { }
@@ -17,7 +17,9 @@ export class UserListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subscription = this.userService.list().subscribe((results) => {
       console.log(`results: ${results}`);
-      this.users = results;
+      if(results) {
+        this.users = results;
+      }
     });
   }
 
