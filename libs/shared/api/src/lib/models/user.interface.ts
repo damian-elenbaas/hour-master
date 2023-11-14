@@ -1,8 +1,9 @@
 import { Id } from "./id.type";
 
 export enum UserRole {
-  OFFICE = "OFFICE",
-  ROADWORKER = "ROADWORKER"
+  NONE = "Geen",
+  OFFICE = "Kantoor",
+  ROADWORKER = "Stratenmaker"
 }
 
 export interface IUser {

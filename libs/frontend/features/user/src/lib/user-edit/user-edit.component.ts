@@ -50,6 +50,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
               email: '',
               firstname: '',
               lastname: '',
+              role: UserRole.NONE
             } as IUser);
           } else {
             return this.userService.details(params.get('id') as Id);
