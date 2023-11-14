@@ -13,12 +13,13 @@ export const httpOptions = {
   responseType: 'json',
 };
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class UserService {
   endpoint = `${environment.dataApiUrl}/api/user`;
 
   constructor(private readonly http: HttpClient) { }
-
 
   /**
    * Get all users.

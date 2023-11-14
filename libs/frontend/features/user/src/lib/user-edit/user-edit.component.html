@@ -56,7 +56,7 @@
                 Rol is verplicht
               </span>
               <select id="role" formControlName="role" class="w-full">
-                <option *ngFor="let role of roles | keyvalue" [value]="role.key">{{ role.value | titlecase }}</option>
+                <option *ngFor="let role of roles | keyvalue" [value]="role.value">{{ role.value | titlecase }}</option>
               </select>
             </td>
           </tr>
