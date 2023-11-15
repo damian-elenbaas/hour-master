@@ -45,13 +45,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
         switchMap((params: ParamMap) => {
           if(!params.get('id')) {
             this.userId = null;
-            return of({
-              username: '',
-              email: '',
-              firstname: '',
-              lastname: '',
-              role: UserRole.NONE
-            } as IUser);
+            return of(null);
           } else {
             this.userId = params.get('id') as Id;
             return this.userService.details(params.get('id') as Id);
@@ -122,7 +116,6 @@ export class UserEditComponent implements OnInit, OnDestroy {
   }
 
   createUser(): void {
-
     if(this.userForm.value.password !== this.userForm.value.passwordConfirm) {
       console.error("Passwords do not match");
       // TODO: show error

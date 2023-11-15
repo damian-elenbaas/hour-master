@@ -21,11 +21,7 @@
       </tr>
     </thead>
     <tbody>
-      <a
-        class="table-row border-b hover:bg-gray-200"
-        *ngFor="let user of users"
-        routerLink="{{ user.id }}"
-      >
+      <a class="table-row border-b hover:bg-gray-200" *ngFor="let user of users" routerLink="{{ user.id }}">
         <td class="px-6 py-4">
           {{ user.id }}
         </td>
@@ -39,6 +35,14 @@
           {{ user.role | titlecase }}
         </td>
       </a>
+      <tr [class]="loading ? '' : 'hidden'">
+        <td colspan="4" class="px-6 py-4">
+          <div
+            class="px-3 py-1 text-sm font-medium leading-none text-center text-accent bg-primary rounded-full animate-pulse w-fit mx-auto">
+            laden...
+          </div>
+        </td>
+      </tr>
     </tbody>
   </table>
 </div>

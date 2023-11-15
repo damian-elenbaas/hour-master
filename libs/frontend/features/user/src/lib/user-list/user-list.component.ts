@@ -11,14 +11,17 @@ import { UserService } from '../user.service';
 export class UserListComponent implements OnInit, OnDestroy {
   users: IUser[] = [];
   subscription: Subscription | null = null;
+  loading = true;
 
   constructor(private userService: UserService) { }
 
   ngOnInit(): void {
-    this.subscription = this.userService.list().subscribe((results) => {
-      console.log(`results: ${results}`);
+    this.subscription = this.userService
+      .list()
+      .subscribe((results) => {
       if(results) {
         this.users = results;
+        this.loading = false;
       }
     });
   }

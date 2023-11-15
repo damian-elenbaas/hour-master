@@ -1,50 +1,32 @@
 <div class="p-4 relative">
   <div class="w-fit mx-auto">
-    <table class="text-left rtl:text-right">
-      <tbody>
-        <tr class="border-b">
-          <th scope="row" class="bg-primary text-white px-6 py-3">
-            Gebruikersnaam
-          </th>
-          <td class="px-6">
-            {{ (user$ | async)?.username }}
-          </td>
-        </tr>
-        <tr class="border-b">
-          <th scope="row" class="bg-primary text-white px-6 py-3">
-            Voornaam
-          </th>
-          <td class="px-6">
-            {{ (user$ | async)?.firstname }}
-          </td>
-        </tr>
-        <tr class="border-b">
-          <th scope="row" class="bg-primary text-white px-6 py-3">
-            Achternaam
-          </th>
-          <td class="px-6">
-            {{ (user$ | async)?.lastname }}
-          </td>
-        </tr>
-        <tr class="border-b">
-          <th scope="row" class="bg-primary text-white px-6 py-3">
-            Email
-          </th>
-          <td class="px-6">
-            {{ (user$ | async)?.email }}
-          </td>
-        </tr>
-        <tr class="border-b">
-          <th scope="row" class="bg-primary text-white px-6 py-3">
-            Rol
-          </th>
-          <td class="px-6">
-            {{ (user$ | async)?.role | titlecase }}
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="w-full flex justify-center mt-3">
+    <h2 class="text-xl font-semibold pb-0.5">
+      {{ (user$ | async)?.firstname | titlecase }} {{ (user$ | async)?.lastname | titlecase }}
+    </h2>
+    <div class="text-center border-b pb-4">
+      <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
+        {{ (user$ | async)?.role | titlecase }}
+      </span>
+    </div>
+    <section class="mt-8">
+      <div class="flex flex-col md:flex-row md:justify-between">
+        <div class="flex flex-col md:flex-row md:justify-between">
+          <div class="flex flex-col">
+            <span class="font-medium text-gray-500">Gebruikersnaam</span>
+            <span class="font-medium text-gray-800">
+              {{ (user$ | async)?.username }}
+            </span>
+          </div>
+          <div class="flex flex-col md:ml-4">
+            <span class="font-medium text-gray-500">Email</span>
+            <span class="font-medium text-gray-800">
+              {{ (user$ | async)?.email }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div class="w-full flex justify-center mt-10">
       <button routerLink="edit" class="bg-secondary px-4 py-2 rounded-md text-white">Bijwerken</button>
     </div>
   </div>
