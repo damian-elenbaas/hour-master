@@ -87,6 +87,8 @@ export class UserEditComponent implements OnInit, OnDestroy {
   }
 
   updateUser(): void {
+    if(!this.userForm.valid) return;
+
     const updateUser: IUpdateUser = {
       username: this.userForm.value.username as string,
       email: this.userForm.value.email as string,
@@ -111,11 +113,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
   }
 
   createUser(): void {
-    if (this.userForm.value.password !== this.userForm.value.passwordConfirm) {
-      console.error("Passwords do not match");
-      // TODO: show error
-      return;
-    }
+    if(!this.userForm.valid) return;
 
     const createUser: ICreateUser = {
       username: this.userForm.value.username as string,
