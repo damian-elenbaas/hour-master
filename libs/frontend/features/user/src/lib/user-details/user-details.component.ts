@@ -22,27 +22,6 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // BUG: this code block causes repeated requests to the API when navigating to the user details page
-    // this.user$ = this.route.paramMap.pipe(
-    //   tap(params => console.log(params)),
-    //   switchMap((params: ParamMap) => {
-    //     if (!params.get('id')) {
-    //       return of({
-    //         username: '',
-    //         email: '',
-    //         firstname: '',
-    //         lastname: '',
-    //         role: UserRole.NONE
-    //       } as IUser);
-    //     } else {
-    //       this.count++;
-    //       console.log(this.count);
-    //       return this.userService.details(params.get('id') as Id);
-    //     }
-    //   }),
-    //   tap(console.log)
-    // )
-
     this.subscription = this.route.paramMap.pipe(
       tap(params => console.log(params)),
       switchMap((params: ParamMap) => {
