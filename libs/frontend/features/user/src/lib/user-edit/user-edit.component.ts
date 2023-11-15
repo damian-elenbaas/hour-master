@@ -19,25 +19,35 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
   imports: [ReactiveFormsModule, CommonModule]
 })
 export class UserEditComponent implements OnInit, OnDestroy {
-  userId!: Id | null;
+  userId!: Id;
   user!: IUser;
-  subscription!: Subscription | null;
-  roles = UserRole;
-
   userForm!: FormGroup;
+  subscription!: Subscription;
+  roles = UserRole;
 
   constructor(
     private location: Location,
     private route: ActivatedRoute,
     private userService: UserService,
-    private fb: FormBuilder) { }
+    private fb: FormBuilder) {
+
+    this.userForm = this.fb.group({
+      username: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      firstname: ['', Validators.required],
+      lastname: ['', Validators.required],
+      role: [UserRole.NONE, Validators.required],
+      password: ['', Validators.required],
+      passwordConfirm: ['', Validators.required]
+    });
+
+  }
 
   ngOnInit(): void {
     this.subscription = this.route.paramMap
       .pipe(
         switchMap((params: ParamMap) => {
           if (!params.get('id')) {
-            this.userId = null;
             return of(null);
           } else {
             this.userId = params.get('id') as Id;
@@ -55,21 +65,11 @@ export class UserEditComponent implements OnInit, OnDestroy {
               lastname: [user.lastname, Validators.required],
               role: [user.role, Validators.required],
             });
-          } else if (!this.userId) {
-            this.userForm = this.fb.group({
-              username: ['', Validators.required],
-              email: ['', [Validators.required, Validators.email]],
-              firstname: ['', Validators.required],
-              lastname: ['', Validators.required],
-              role: [UserRole.NONE, Validators.required],
-              password: ['', Validators.required],
-              passwordConfirm: ['', Validators.required]
-            });
-          } else {
+          }  else if(!user && this.userId) {
             this.location.back();
           }
         },
-      error: (error) => {
+        error: (error) => {
           console.error(error);
           this.location.back();
         }
