@@ -45,31 +45,34 @@ export class UserEditComponent implements OnInit, OnDestroy {
           }
         })
       )
-      .subscribe((user: IUser | null) => {
-        if (user) {
-          this.userForm = this.fb.group({
-            username: [user.username, Validators.required],
-            email: [user.email, [Validators.required, Validators.email]],
-            firstname: [user.firstname, Validators.required],
-            lastname: [user.lastname, Validators.required],
-            role: [user.role, Validators.required],
-          });
-        } else if (!this.userId) {
-          this.userForm = this.fb.group({
-            username: ['', Validators.required],
-            email: ['', [Validators.required, Validators.email]],
-            firstname: ['', Validators.required],
-            lastname: ['', Validators.required],
-            role: [UserRole.NONE, Validators.required],
-            password: ['', Validators.required],
-            passwordConfirm: ['', Validators.required]
-          });
-        } else {
+      .subscribe({
+        next: (user: IUser | null) => {
+          if (user) {
+            this.userForm = this.fb.group({
+              username: [user.username, Validators.required],
+              email: [user.email, [Validators.required, Validators.email]],
+              firstname: [user.firstname, Validators.required],
+              lastname: [user.lastname, Validators.required],
+              role: [user.role, Validators.required],
+            });
+          } else if (!this.userId) {
+            this.userForm = this.fb.group({
+              username: ['', Validators.required],
+              email: ['', [Validators.required, Validators.email]],
+              firstname: ['', Validators.required],
+              lastname: ['', Validators.required],
+              role: [UserRole.NONE, Validators.required],
+              password: ['', Validators.required],
+              passwordConfirm: ['', Validators.required]
+            });
+          } else {
+            this.location.back();
+          }
+        },
+      error: (error) => {
+          console.error(error);
           this.location.back();
         }
-      }, (error) => {
-        console.error(error);
-        this.location.back();
       });
   }
 
@@ -97,12 +100,15 @@ export class UserEditComponent implements OnInit, OnDestroy {
     this.userService.update(
       this.userId as Id,
       updateUser
-    ).subscribe((success) => {
-      if (success) {
-        this.location.back();
+    ).subscribe({
+      next: (success) => {
+        if (success) {
+          this.location.back();
+        }
+      },
+      error: (error) => {
+        console.error(error);
       }
-    }, (error) => {
-      console.error(error);
     });
   }
 
@@ -123,13 +129,16 @@ export class UserEditComponent implements OnInit, OnDestroy {
     }
 
     this.userService.create(createUser)
-      .subscribe((user) => {
-        if (user) {
-          this.location.back();
+      .subscribe({
+        next: (user) => {
+          if (user) {
+            this.location.back();
+          }
+        },
+        error: (error) => {
+          // TODO: show error
+          console.error(error);
         }
-      }, (error) => {
-        // TODO: show error
-        console.error(error);
       });
   }
 
