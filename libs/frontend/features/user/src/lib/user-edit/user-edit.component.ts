@@ -1,9 +1,12 @@
 import { CommonModule, Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
+  AbstractControl,
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
+  ValidationErrors,
+  ValidatorFn,
   Validators
 } from '@angular/forms';
 import { ICreateUser, IUpdateUser, IUser, Id, UserRole } from '@hour-master/shared/api';
@@ -38,7 +41,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
       role: [UserRole.NONE, Validators.required],
       password: ['', Validators.required],
       passwordConfirm: ['', Validators.required]
-    });
+    }, { validators: passwordMatchValidator });
   }
 
   ngOnInit(): void {
@@ -141,19 +144,15 @@ export class UserEditComponent implements OnInit, OnDestroy {
   onCancel(): void {
     this.location.back();
   }
+}
 
-  validatePassword(): void {
-    const password = this.userForm.controls['password'];
-    const passwordConfirm = this.userForm.controls['passwordConfirm'];
+const passwordMatchValidator: ValidatorFn = (
+  control: AbstractControl
+): ValidationErrors | null => {
+  const password = control.get('password');
+  const passwordConfirm = control.get('passwordConfirm');
 
-    if (!password || !passwordConfirm) return;
-
-    if (password.value !== passwordConfirm.value) {
-      passwordConfirm.setErrors({ passwordMismatch: true });
-    } else {
-      passwordConfirm.setErrors(null);
-    }
-
-    // TODO: check if password is strong enough (Maybe with existing DTO?)
-  }
+  return password && passwordConfirm && password.value !== passwordConfirm.value
+    ? { passwordMismatch: true }
+    : null;
 }

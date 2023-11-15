@@ -176,8 +176,9 @@
           <label
             for="password"
             [class]="
-              userForm.controls['password'].invalid &&
-              userForm.controls['password'].touched
+              (userForm.controls['password'].invalid &&
+              userForm.controls['password'].touched) ||
+              userForm.errors?.['passwordMismatch']
               ? 'error' : ''
             "
           >
@@ -187,8 +188,9 @@
             type="password"
             id="password"
             [class]="
-              userForm.controls['password'].invalid &&
-              userForm.controls['password'].touched
+              (userForm.controls['password'].invalid &&
+              userForm.controls['password'].touched) ||
+              userForm.errors?.['passwordMismatch']
               ? 'error' : ''
             "
             formControlName="password"
@@ -206,8 +208,9 @@
           <label
             for="c-password"
             [class]="
-              userForm.controls['passwordConfirm'].invalid &&
-              userForm.controls['passwordConfirm'].touched
+              (userForm.controls['passwordConfirm'].invalid &&
+              userForm.controls['passwordConfirm'].touched) ||
+              userForm.errors?.['passwordMismatch']
               ? 'error' : ''
             "
           >
@@ -217,12 +220,12 @@
             type="password"
             id="c-password"
             [class]="
-              userForm.controls['passwordConfirm'].invalid &&
-              userForm.controls['passwordConfirm'].touched
+              (userForm.controls['passwordConfirm'].invalid &&
+              userForm.controls['passwordConfirm'].touched) ||
+              userForm.errors?.['passwordMismatch']
               ? 'error' : ''
             "
             formControlName="passwordConfirm"
-            (change)="validatePassword()"
             required>
           <p
             *ngIf="
@@ -233,10 +236,11 @@
             <span *ngIf="userForm.controls['passwordConfirm'].errors?.['required']">
               Bevestig je wachtwoord!
             </span>
-            <span *ngIf="userForm.controls['passwordConfirm'].errors?.['passwordMismatch']">
-              Wachtwoorden komen niet overeen!
-            </span>
           </p>
+          <p
+            *ngIf="userForm.errors?.['passwordMismatch']"
+            class="mt-2 text-sm text-red-600 dark:text-red-500">
+            Wachtwoorden komen niet overeen!
         </div>
       </div>
       <div>
