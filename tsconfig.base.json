@@ -33,7 +33,9 @@
       ],
       "@hour-master/frontend/static": ["libs/frontend/static/src/index.ts"],
       "@hour-master/shared/api": ["libs/shared/api/src/index.ts"],
-      "@hour-master/shared/environments": ["libs/shared/environments/src/index.ts"],
+      "@hour-master/shared/environments": [
+        "libs/shared/environments/src/index.ts"
+      ],
       "@hour-master/ui": ["libs/frontend/ui/src/index.ts"]
     }
   },

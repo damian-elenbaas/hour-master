@@ -18,14 +18,17 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [CommonModule, RouterModule.forChild(routes)],
+  imports: [
+    CommonModule,
+    HomeComponent,
+    RouterModule.forChild(routes)
+  ],
   declarations: [
-    AboutComponent,
-    HomeComponent
+    AboutComponent
   ],
   exports: [
     AboutComponent,
     HomeComponent
   ],
 })
-export class StaticModule {}
+export class StaticModule { }
