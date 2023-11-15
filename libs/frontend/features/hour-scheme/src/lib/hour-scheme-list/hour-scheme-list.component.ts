@@ -11,6 +11,7 @@ import { HourSchemeService } from '../hour-scheme.service';
 export class HourSchemeListComponent implements OnInit, OnDestroy {
   hourSchemes: IHourScheme[] | null = null;
   subscription: Subscription | null = null;
+  loading = true;
 
   constructor(private hourSchemeService: HourSchemeService) { }
 
@@ -18,6 +19,7 @@ export class HourSchemeListComponent implements OnInit, OnDestroy {
     this.subscription = this.hourSchemeService.list().subscribe((results) => {
       console.log(`results: ${results}`);
       this.hourSchemes = results;
+      this.loading = false;
     });
   }
 
