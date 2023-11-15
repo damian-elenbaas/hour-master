@@ -1,7 +1,7 @@
 import { CommonModule, Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
-  FormControl,
+  FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators
@@ -24,26 +24,19 @@ export class UserEditComponent implements OnInit, OnDestroy {
   subscription!: Subscription | null;
   roles = UserRole;
 
-  userForm = new FormGroup({
-    username: new FormControl('', Validators.required),
-    email: new FormControl('', [Validators.required, Validators.email]),
-    firstname: new FormControl('', Validators.required),
-    lastname: new FormControl('', Validators.required),
-    role: new FormControl(UserRole.NONE, Validators.required),
-    password: new FormControl('', Validators.required),
-    passwordConfirm: new FormControl('', Validators.required)
-  });
+  userForm!: FormGroup;
 
   constructor(
     private location: Location,
     private route: ActivatedRoute,
-    private userService: UserService) { }
+    private userService: UserService,
+    private fb: FormBuilder) { }
 
   ngOnInit(): void {
     this.subscription = this.route.paramMap
       .pipe(
         switchMap((params: ParamMap) => {
-          if(!params.get('id')) {
+          if (!params.get('id')) {
             this.userId = null;
             return of(null);
           } else {
@@ -54,24 +47,22 @@ export class UserEditComponent implements OnInit, OnDestroy {
       )
       .subscribe((user: IUser | null) => {
         if (user) {
-          this.userForm.setValue({
-            username: user.username,
-            email: user.email,
-            firstname: user.firstname,
-            lastname: user.lastname,
-            role: user.role,
-            password: 'not_used',
-            passwordConfirm: 'not_used'
+          this.userForm = this.fb.group({
+            username: [user.username, Validators.required],
+            email: [user.email, [Validators.required, Validators.email]],
+            firstname: [user.firstname, Validators.required],
+            lastname: [user.lastname, Validators.required],
+            role: [user.role, Validators.required],
           });
         } else if (!this.userId) {
-          this.userForm.setValue({
-            username: '',
-            email: '',
-            firstname: '',
-            lastname: '',
-            role: UserRole.NONE,
-            password: '',
-            passwordConfirm: ''
+          this.userForm = this.fb.group({
+            username: ['', Validators.required],
+            email: ['', [Validators.required, Validators.email]],
+            firstname: ['', Validators.required],
+            lastname: ['', Validators.required],
+            role: [UserRole.NONE, Validators.required],
+            password: ['', Validators.required],
+            passwordConfirm: ['', Validators.required]
           });
         } else {
           this.location.back();
@@ -87,7 +78,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
-    if(this.userId) {
+    if (this.userId) {
       this.updateUser();
     } else {
       this.createUser();
@@ -116,7 +107,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
   }
 
   createUser(): void {
-    if(this.userForm.value.password !== this.userForm.value.passwordConfirm) {
+    if (this.userForm.value.password !== this.userForm.value.passwordConfirm) {
       console.error("Passwords do not match");
       // TODO: show error
       return;
