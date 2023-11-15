@@ -124,7 +124,20 @@
               userForm.controls['email'].touched
             "
             class="mt-2 text-sm text-red-600 dark:text-red-500">
-            Email is verplicht!
+            <span
+              *ngIf="
+                userForm.controls['email'].errors?.['required']
+              "
+            >
+              Email is verplicht!
+            </span>
+            <span
+              *ngIf="
+                userForm.controls['email'].errors?.['email']
+              "
+            >
+              Email is ongeldig!
+            </span>
           </p>
         </div>
       <div class="mb-6">
@@ -209,6 +222,7 @@
               ? 'error' : ''
             "
             formControlName="passwordConfirm"
+            (change)="validatePassword()"
             required>
           <p
             *ngIf="
@@ -216,7 +230,12 @@
               userForm.controls['passwordConfirm'].touched
             "
             class="mt-2 text-sm text-red-600 dark:text-red-500">
-            Bevestig je wachtwoord!
+            <span *ngIf="userForm.controls['passwordConfirm'].errors?.['required']">
+              Bevestig je wachtwoord!
+            </span>
+            <span *ngIf="userForm.controls['passwordConfirm'].errors?.['passwordMismatch']">
+              Wachtwoorden komen niet overeen!
+            </span>
           </p>
         </div>
       </div>

@@ -30,7 +30,6 @@ export class UserEditComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private userService: UserService,
     private fb: FormBuilder) {
-
     this.userForm = this.fb.group({
       username: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -40,7 +39,6 @@ export class UserEditComponent implements OnInit, OnDestroy {
       password: ['', Validators.required],
       passwordConfirm: ['', Validators.required]
     });
-
   }
 
   ngOnInit(): void {
@@ -65,7 +63,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
               lastname: [user.lastname, Validators.required],
               role: [user.role, Validators.required],
             });
-          }  else if(!user && this.userId) {
+          } else if (!user && this.userId) {
             this.location.back();
           }
         },
@@ -144,5 +142,20 @@ export class UserEditComponent implements OnInit, OnDestroy {
 
   onCancel(): void {
     this.location.back();
+  }
+
+  validatePassword(): void {
+    const password = this.userForm.controls['password'];
+    const passwordConfirm = this.userForm.controls['passwordConfirm'];
+
+    if (!password || !passwordConfirm) return;
+
+    if (password.value !== passwordConfirm.value) {
+      passwordConfirm.setErrors({ passwordMismatch: true });
+    } else {
+      passwordConfirm.setErrors(null);
+    }
+
+    // TODO: check if password is strong enough (Maybe with existing DTO?)
   }
 }
