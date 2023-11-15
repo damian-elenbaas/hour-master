@@ -1,48 +1,44 @@
-<div class="p-4 relative overflow-x-auto">
+<div class="p-4">
   <div class="flex justify-between items-center">
     <h2 class="text-xl font-semibold">Gebruikers</h2>
     <a routerLink="new" class="bg-accent px-4 py-2 rounded-md">Nieuwe gebruiker</a>
   </div>
-  <table class="w-full text-sm text-left rtl:text-right">
-    <thead class="text-xs uppercase bg-primary text-white">
-      <tr>
-        <th scope="col" class="px-6 py-3">
-          ID
-        </th>
-        <th scope="col" class="px-6 py-3">
-          Gebruikersnaam
-        </th>
-        <th scope="col" class="px-6 py-3">
-          Email
-        </th>
-        <th scope="col" class="px-6 py-3">
-          Rol
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <a class="table-row border-b hover:bg-gray-200" *ngFor="let user of users" routerLink="{{ user.id }}">
-        <td class="px-6 py-4">
-          {{ user.id }}
-        </td>
-        <td class="px-6 py-4">
-          {{ user.username }}
-        </td>
-        <td class="px-6 py-4">
-          {{ user.email }}
-        </td>
-        <td class="px-6 py-4">
-          {{ user.role | titlecase }}
-        </td>
-      </a>
-      <tr [class]="loading ? '' : 'hidden'">
-        <td colspan="4" class="px-6 py-4">
-          <div
-            class="px-3 py-1 text-sm font-medium leading-none text-center text-accent bg-primary rounded-full animate-pulse w-fit mx-auto">
-            laden...
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="relative overflow-x-auto">
+    <table class="w-full text-sm text-left rtl:text-right">
+      <thead class="text-xs uppercase bg-primary text-white">
+        <tr>
+          <th scope="col" class="px-6 py-3">
+            ID
+          </th>
+          <th scope="col" class="px-6 py-3">
+            Email
+          </th>
+          <th scope="col" class="px-6 py-3">
+            Rol
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <a class="table-row border-b hover:bg-gray-200" *ngFor="let user of users" routerLink="{{ user.id }}">
+          <td class="px-6 py-4">
+            {{ user.id }}
+          </td>
+          <td class="px-6 py-4">
+            {{ user.username }}
+          </td>
+          <td class="px-6 py-4">
+            {{ user.role | titlecase }}
+          </td>
+        </a>
+        <tr [class]="loading ? '' : 'hidden'">
+          <td colspan="4" class="px-6 py-4">
+            <div
+              class="px-3 py-1 text-sm font-medium leading-none text-center text-accent bg-primary rounded-full animate-pulse w-fit mx-auto">
+              laden...
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

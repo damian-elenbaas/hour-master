@@ -45,4 +45,27 @@
     width: 1em;
     margin-left: -1em;
   }
+
+  form label {
+    @apply block mb-2 text-sm font-medium text-gray-900;
+  }
+
+  [type='text'], [type='email'], [type='url'], [type='password'],
+  [type='number'], [type='date'], [type='datetime-local'], [type='month'],
+  [type='search'], [type='tel'], [type='time'], [type='week'],
+  [multiple], textarea, select {
+    @apply bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-accent focus:border-accent block w-full p-2.5;
+  }
+
+  label.success {
+    @apply block mb-2 text-sm font-medium text-green-700;
+  }
+
+  label.error {
+    @apply block mb-2 text-sm font-medium text-red-700;
+  }
+
+  input.error, select.error {
+    @apply bg-red-50 border border-red-500 text-red-900 placeholder-red-700 focus:ring-red-500 focus:border-red-500;
+  }
 }

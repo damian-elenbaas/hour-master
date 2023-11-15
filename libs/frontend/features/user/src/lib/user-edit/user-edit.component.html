@@ -1,97 +1,152 @@
-<div class="p-4 relative ">
+<div class="p-4 relative">
   <div class="mx-auto w-fit">
+    <h2>
+      <span *ngIf="!userId">Nieuwe gebruiker</span>
+      <span *ngIf="userId">Gebruiker bewerken</span>
+    </h2>
     <form [formGroup]="userForm" (submit)="onSubmit()">
-      <table class="text-left rtl:text-right ">
-        <tbody>
-          <tr class="border-b">
-            <th scope="row" class="bg-primary text-white px-6 py-3">
-              <label for="username">Gebruikersnaam</label>
-            </th>
-            <td class="px-6 flex flex-col">
-              <span *ngIf="userForm.get('username')?.invalid" class="text-sm text-red-500">
-                Gebruikersnaam is verplicht
-              </span>
-              <input id="username" type="text" formControlName="username" />
-            </td>
-          </tr>
-          <tr class="border-b">
-            <th scope="row" class="bg-primary text-white px-6 py-3">
-              <label for="first-name">Voornaam</label>
-            </th>
-            <td class="px-6 flex flex-col">
-              <span *ngIf="userForm.get('firstname')?.invalid" class="text-sm text-red-500">
-                Voornaam is verplicht
-              </span>
-              <input id="first-name" type="text" formControlName="firstname" />
-            </td>
-          </tr>
-          <tr class="border-b">
-            <th scope="row" class="bg-primary text-white px-6 py-3">
-              <label for="last-name">Achternaam</label>
-            </th>
-            <td class="px-6 flex flex-col">
-              <span *ngIf="userForm.get('lastname')?.invalid" class="text-sm text-red-500">
-                Achternaam is verplicht
-              </span>
-              <input id="last-name" type="text" formControlName="lastname" />
-            </td>
-          </tr>
-          <tr class="border-b">
-            <th scope="row" class="bg-primary text-white px-6 py-3">
-              <label for="email">Email</label>
-            </th>
-            <td class="px-6 flex flex-col">
-              <span *ngIf="userForm.get('email')?.invalid" class="text-sm text-red-500">
-                Email is verplicht
-              </span>
-              <input id="email" type="email" formControlName="email" />
-            </td>
-          </tr>
-          <tr class="border-b">
-            <th scope="row" class="bg-primary text-white px-6 py-3">
-              <label for="role">Rol</label>
-            </th>
-            <td class="px-6 flex flex-col">
-              <span *ngIf="userForm.get('role')?.invalid" class="text-sm text-red-500">
-                Rol is verplicht
-              </span>
-              <select id="role" formControlName="role" class="w-full">
-                <option *ngFor="let role of roles | keyvalue" [value]="role.value">{{ role.value | titlecase }}</option>
-              </select>
-            </td>
-          </tr>
-          <tr class="border-b" *ngIf="!userId">
-            <th scope="row" class="bg-primary text-white px-6 py-3">
-              <label for="password">Wachtwoord</label>
-            </th>
-            <td class="px-6 flex flex-col">
-              <span *ngIf="userForm.get('password')?.invalid" class="text-sm text-red-500">
-                Wachtwoord is verplicht
-              </span>
-              <input id="password" type="password" formControlName="password" />
-            </td>
-          </tr>
-          <tr class="border-b" *ngIf="!userId">
-            <th scope="row" class="bg-primary text-white px-6 py-3">
-              <label for="c-password">Bevestig wachtwoord</label>
-            </th>
-            <td class="px-6 flex flex-col">
-              <span *ngIf="userForm.get('passwordConfirm')?.invalid" class="text-sm text-red-500">
-                Bevestig wachtwoord is verplicht
-              </span>
-              <input id="c-password" type="password" formControlName="passwordConfirm" />
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="w-full flex justify-center mt-3">
+      <div class="mb-6">
+        <label
+          for="username"
+          [class]="userForm.get('username')?.invalid ? 'error' : ''"
+        >
+          Gebruikersnaam
+        </label>
+        <input
+          type="text"
+          id="username"
+          [class]="userForm.get('username')?.invalid ? 'error' : ''"
+          formControlName="username"
+          required>
+        <p
+          *ngIf="userForm.get('username')?.invalid"
+          class="mt-2 text-sm text-red-600 dark:text-red-500">
+          Gebruikersnaam is verplicht!
+        </p>
+      </div>
+      <div class="grid md:grid-cols-2 md:gap-6">
+        <div class="mb-6">
+          <label
+            for="firstname"
+            [class]="userForm.get('firstname')?.invalid ? 'error' : ''"
+          >
+            Voornaam
+          </label>
+          <input
+            type="text"
+            id="firstname"
+            [class]="userForm.get('firstname')?.invalid ? 'error' : ''"
+            formControlName="firstname"
+            required>
+          <p
+            *ngIf="userForm.get('firstname')?.invalid"
+            class="mt-2 text-sm text-red-600 dark:text-red-500">
+            Voornaam is verplicht!
+          </p>
+        </div>
+        <div class="mb-6">
+          <label
+            for="lastname"
+            [class]="userForm.get('lastname')?.invalid ? 'error' : ''"
+          >
+            Achternaam
+          </label>
+          <input
+            type="text"
+            id="lastname"
+            [class]="userForm.get('lastname')?.invalid ? 'error' : ''"
+            formControlName="lastname"
+            required>
+          <p
+            *ngIf="userForm.get('lastname')?.invalid"
+            class="mt-2 text-sm text-red-600 dark:text-red-500">
+            Achternaam is verplicht!
+          </p>
+        </div>
+      </div>
+      <div class="mb-6">
+        <label
+          for="email"
+          [class]="userForm.get('email')?.invalid ? 'error' : ''"
+        >
+          Emailadres
+        </label>
+        <input
+          type="email"
+          id="email"
+          [class]="userForm.get('email')?.invalid ? 'error' : ''"
+          formControlName="email"
+          placeholder="naam@voorbeeld.nl"
+          required>
+        <p
+          *ngIf="userForm.get('email')?.invalid"
+          class="mt-2 text-sm text-red-600 dark:text-red-500">
+          Email is verplicht!
+        </p>
+      </div>
+      <div class="mb-6">
+        <label
+          for="role"
+          [class]="userForm.get('role')?.invalid ? 'error' : ''"
+        >
+          Rol
+        </label>
+        <select
+          id="role"
+          [class]="userForm.get('role')?.invalid ? 'error' : ''"
+          formControlName="role"
+          required>
+          <option *ngFor="let role of roles | keyvalue" [value]="role.value">{{ role.value | titlecase }}</option>
+        </select>
+        <p
+          *ngIf="userForm.get('role')?.invalid"
+          class="mt-2 text-sm text-red-600 dark:text-red-500">
+          Een rol is verplicht!
+        </p>
+      </div>
+      <div *ngIf="!userId">
+        <div class="mb-6">
+          <label
+            for="password"
+            [class]="userForm.get('password')?.invalid ? 'error' : ''"
+          >Wachtwoord</label>
+          <input
+            type="password"
+            id="password"
+            [class]="userForm.get('password')?.invalid ? 'error' : ''"
+            formControlName="password"
+            required>
+          <p
+            *ngIf="userForm.get('password')?.invalid"
+            class="mt-2 text-sm text-red-600 dark:text-red-500">
+            Wachtwoord is verplicht!
+          </p>
+        </div>
+        <div class="mb-6">
+          <label
+            for="c-password"
+            [class]="userForm.get('passwordConfirm')?.invalid ? 'error' : ''"
+          >
+            Bevestig wachtwoord
+          </label>
+          <input
+            type="password"
+            id="c-password"
+            [class]="userForm.get('passwordConfirm')?.invalid ? 'error' : ''"
+            formControlName="passwordConfirm"
+            required>
+          <p
+            *ngIf="userForm.get('passwordConfirm')?.invalid"
+            class="mt-2 text-sm text-red-600 dark:text-red-500">
+            Bevestig je wachtwoord!
+          </p>
+        </div>
+      </div>
+      <div>
         <button type="button" class="bg-secondary px-4 py-2 rounded-md text-white mr-2" (click)="onCancel()">
           Annuleren
         </button>
-        <button
-          type="submit"
-          class="bg-accent px-4 py-2 rounded-md disabled:opacity-50"
-          [disabled]="userForm.invalid">
+        <button type="submit" class="bg-accent px-4 py-2 rounded-md text-white" [disabled]="userForm.invalid">
           Opslaan
         </button>
       </div>

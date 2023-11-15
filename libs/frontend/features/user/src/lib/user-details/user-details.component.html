@@ -1,4 +1,10 @@
 <div class="p-4 relative">
+  <div>
+    <a routerLink="/user" class="text-secondary hover:text-accent">
+      <i class="fa-solid fa-arrow-left"></i>
+      Terug
+    </a>
+  </div>
   <div class="w-fit mx-auto">
     <h2 class="text-xl font-semibold pb-0.5">
       {{ (user$ | async)?.firstname | titlecase }} {{ (user$ | async)?.lastname | titlecase }}
@@ -11,15 +17,15 @@
     <section class="mt-8">
       <div class="flex flex-col md:flex-row md:justify-between">
         <div class="flex flex-col md:flex-row md:justify-between">
-          <div class="flex flex-col">
-            <span class="font-medium text-gray-500">Gebruikersnaam</span>
-            <span class="font-medium text-gray-800">
+          <div class="flex flex-col mb-2">
+            <span class="font-bold">Gebruikersnaam</span>
+            <span class="font-medium">
               {{ (user$ | async)?.username }}
             </span>
           </div>
           <div class="flex flex-col md:ml-4">
-            <span class="font-medium text-gray-500">Email</span>
-            <span class="font-medium text-gray-800">
+            <span class="font-bold">Email</span>
+            <span class="font-medium">
               {{ (user$ | async)?.email }}
             </span>
           </div>
