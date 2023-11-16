@@ -15,7 +15,6 @@ export class HourSchemeDetailsComponent implements OnInit {
   hourScheme: IHourScheme | null = null;
   subscription: Subscription | null = null;
   totalHours = 0;
-  loading = true;
 
   constructor(
     private route: ActivatedRoute,
@@ -34,7 +33,6 @@ export class HourSchemeDetailsComponent implements OnInit {
           this.totalHours = hourScheme?.rows?.reduce((acc, row) => {
             return acc + row.hours;
           }, 0) || 0;
-          this.loading = false;
         });
     })
   }

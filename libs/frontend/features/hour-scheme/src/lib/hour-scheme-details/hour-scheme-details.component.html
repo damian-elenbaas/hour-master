@@ -6,15 +6,8 @@
     </button>
   </div>
   <div
-    [class]="loading ? '' : 'hidden'"
-    class="mt-5"
+    *ngIf="hourScheme; else loading"
   >
-    <div
-      class="px-3 py-1 text-sm font-medium leading-none text-center text-accent bg-primary rounded-full animate-pulse w-fit mx-auto">
-      Laden...
-    </div>
-  </div>
-  <div [class]="loading ? 'hidden' : ''">
     <h3>
       Urenschema van
       <a class="underline decoration-accent hover:text-accent" routerLink="/user/{{hourScheme?.worker?.id}}">
@@ -67,4 +60,7 @@
       Totaal aantal uren: {{totalHours}}
     </div>
   </div>
+  <ng-template #loading>
+    <hour-master-loader></hour-master-loader>
+  </ng-template>
 </div>

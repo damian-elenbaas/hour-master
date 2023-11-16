@@ -33,12 +33,9 @@
           {{ hourScheme.worker.firstname | titlecase }} {{ hourScheme.worker.lastname | titlecase }}
         </td>
       </a>
-      <tr [class]="loading ? '' : 'hidden'">
+      <tr *ngIf="loading">
         <td colspan="4" class="px-6 py-4">
-          <div
-            class="px-3 py-1 text-sm font-medium leading-none text-center text-accent bg-primary rounded-full animate-pulse w-fit mx-auto">
-            Laden...
-          </div>
+          <hour-master-loader></hour-master-loader>
         </td>
       </tr>
     </tbody>

@@ -10,18 +10,7 @@
   <div
     class="w-fit mx-auto"
   >
-    <div
-      [class]="loading ? '' : 'hidden'"
-      class="mt-5"
-    >
-      <div
-        class="px-3 py-1 text-sm font-medium leading-none text-center text-accent bg-primary rounded-full animate-pulse w-fit mx-auto">
-        Laden...
-      </div>
-    </div>
-    <div
-      [class]="loading ? 'hidden' : ''"
-    >
+    <div *ngIf="loaded; else loading">
       <h2 class="text-xl font-semibold pb-0.5">
         {{ (user$ | async)?.firstname | titlecase }} {{ (user$ | async)?.lastname | titlecase }}
       </h2>
@@ -54,5 +43,8 @@
         </button>
       </div>
     </div>
+    <ng-template #loading>
+      <hour-master-loader></hour-master-loader>
+    </ng-template>
   </div>
 </div>

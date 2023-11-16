@@ -6,6 +6,8 @@ import { UserEditComponent } from './user-edit/user-edit.component';
 import { RouterModule, Routes } from '@angular/router';
 import { UserService } from './user.service';
 import { HttpClientModule } from '@angular/common/http';
+import { ReactiveFormsModule } from '@angular/forms';
+import { CommonFrontendModule } from '@hour-master/frontend/common';
 
 const routes: Routes = [
   {
@@ -35,11 +37,13 @@ const routes: Routes = [
     CommonModule,
     HttpClientModule,
     RouterModule.forChild(routes),
-    UserEditComponent
+    ReactiveFormsModule,
+    CommonFrontendModule
   ],
   declarations: [
     UserListComponent,
-    UserDetailsComponent
+    UserDetailsComponent,
+    UserEditComponent
   ],
   providers: [UserService],
   exports: [

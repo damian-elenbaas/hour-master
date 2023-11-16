@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { AboutComponent } from './about/about.component';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
+import { UiModule } from '@hour-master/ui';
 
 const routes: Routes = [
   {
@@ -20,10 +21,12 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
-    HomeComponent,
-    RouterModule.forChild(routes)
+    RouterModule,
+    RouterModule.forChild(routes),
+    UiModule
   ],
   declarations: [
+    HomeComponent,
     AboutComponent
   ],
   exports: [

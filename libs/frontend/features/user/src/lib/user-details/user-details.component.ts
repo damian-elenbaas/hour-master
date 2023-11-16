@@ -13,7 +13,7 @@ import { Location } from '@angular/common';
 export class UserDetailsComponent implements OnInit, OnDestroy {
   subscription!: Subscription | null;
   user$!: Observable<IUser>;
-  loading = true;
+  loaded = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -44,7 +44,7 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
         }
         else {
           this.user$ = of(user);
-          this.loading = false;
+          this.loaded = true;
         }
       },
       error: (error) => {

@@ -1,25 +1,22 @@
-import { CommonModule, Location } from '@angular/common';
+import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
   FormGroup,
-  ReactiveFormsModule,
   ValidationErrors,
   ValidatorFn,
   Validators
 } from '@angular/forms';
 import { ICreateUser, IUpdateUser, IUser, Id, UserRole } from '@hour-master/shared/api';
-import { Subscription, delay, of, switchMap } from 'rxjs';
+import { Subscription, of, switchMap } from 'rxjs';
 import { UserService } from '../user.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 
 @Component({
-  standalone: true,
   selector: 'hour-master-user-edit',
   templateUrl: './user-edit.component.html',
-  styleUrls: ['./user-edit.component.scss'],
-  imports: [ReactiveFormsModule, CommonModule]
+  styleUrls: ['./user-edit.component.scss']
 })
 export class UserEditComponent implements OnInit, OnDestroy {
   userId!: Id;
@@ -27,7 +24,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
   userForm!: FormGroup;
   subscription!: Subscription;
   roles = UserRole;
-  loading = true;
+  loaded = false;
 
   constructor(
     private location: Location,
@@ -70,7 +67,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
           } else if (!user && this.userId) {
             this.location.back();
           }
-          this.loading = false;
+          this.loaded = true;
         },
         error: (error) => {
           console.error(error);
