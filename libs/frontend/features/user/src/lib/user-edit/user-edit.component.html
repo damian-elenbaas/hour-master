@@ -4,7 +4,9 @@
       <span *ngIf="!userId">Nieuwe gebruiker</span>
       <span *ngIf="userId">Gebruiker bewerken</span>
     </h2>
-    <form *ngIf="loaded; else loading" [formGroup]="userForm" (submit)="onSubmit()">
+    <form
+      *ngIf="loaded; else loading" [formGroup]="userForm"
+      (submit)="onSubmit()">
       <div class="mb-6">
         <label for="username" [class]="
             userForm.controls['username'].invalid &&

@@ -73,7 +73,7 @@ export class UserService {
    */
   public update(id: Id, user: IUpdateUser, options?: any): Observable<boolean | null> {
     return this.http
-      .patch<ApiResponse<IServiceResult<IUser>>>(`${this.endpoint}/${id}`, user, {
+      .patch<ApiResponse<boolean>>(`${this.endpoint}/${id}`, user, {
         ...options,
         ...httpOptions
       })
