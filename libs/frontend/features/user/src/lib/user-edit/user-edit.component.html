@@ -4,22 +4,20 @@
       <span *ngIf="!userId">Nieuwe gebruiker</span>
       <span *ngIf="userId">Gebruiker bewerken</span>
     </h2>
-    <form
-      *ngIf="loaded; else loading" [formGroup]="userForm"
-      (submit)="onSubmit()">
+    <form *ngIf="loaded; else loading" [formGroup]="userForm" (submit)="onSubmit()">
       <div class="mb-6">
-        <label for="username" [class]="
-            userForm.controls['username'].invalid &&
-            userForm.controls['username'].touched
-            ? 'error' : ''
-          ">
+        <label for="username" [ngClass]="{
+            'error':
+              userForm.controls['username'].invalid &&
+              userForm.controls['username'].touched
+          }">
           Gebruikersnaam
         </label>
-        <input type="text" id="username" [class]="
-            userForm.controls['username'].invalid &&
-            userForm.controls['username'].touched
-            ? 'error' : ''
-          " formControlName="username" required>
+        <input type="text" id="username" [ngClass]="{
+            'error':
+              userForm.controls['username'].invalid &&
+              userForm.controls['username'].touched
+          }" formControlName="username" required>
         <p *ngIf="
             userForm.controls['username'].invalid &&
             userForm.controls['username'].touched
@@ -29,18 +27,18 @@
       </div>
       <div class="grid md:grid-cols-2 md:gap-6">
         <div class="mb-6">
-          <label for="firstname" [class]="
-              userForm.controls['firstname'].invalid &&
-              userForm.controls['firstname'].touched
-              ? 'error' : ''
-            ">
+          <label for="firstname" [ngClass]="{
+              'error':
+                userForm.controls['firstname'].invalid &&
+                userForm.controls['firstname'].touched
+            }">
             Voornaam
           </label>
-          <input type="text" id="firstname" [class]="
-              userForm.controls['firstname'].invalid &&
-              userForm.controls['firstname'].touched
-              ? 'error' : ''
-            " formControlName="firstname" required>
+          <input type="text" id="firstname" [ngClass]="{
+              'error':
+                userForm.controls['firstname'].invalid &&
+                userForm.controls['firstname'].touched
+            }" formControlName="firstname" required>
           <p *ngIf="
               userForm.controls['firstname'].invalid &&
               userForm.controls['firstname'].touched
@@ -49,18 +47,18 @@
           </p>
         </div>
         <div class="mb-6">
-          <label for="lastname" [class]="
-              userForm.controls['lastname'].invalid &&
-              userForm.controls['lastname'].touched
-              ? 'error' : ''
-            ">
+          <label for="lastname" [ngClass]="{
+              'error':
+                userForm.controls['lastname'].invalid &&
+                userForm.controls['lastname'].touched
+            }">
             Achternaam
           </label>
-          <input type="text" id="lastname" [class]="
-              userForm.controls['lastname'].invalid &&
-              userForm.controls['lastname'].touched
-              ? 'error' : ''
-            " formControlName="lastname" required>
+          <input type="text" id="lastname" [ngClass]="{
+              'error':
+                userForm.controls['lastname'].invalid &&
+                userForm.controls['lastname'].touched
+            }" formControlName="lastname" required>
           <p *ngIf="
               userForm.controls['lastname'].invalid &&
               userForm.controls['lastname'].touched
@@ -70,18 +68,18 @@
         </div>
       </div>
       <div class="mb-6">
-        <label for="email" [class]="
-              userForm.controls['email'].invalid &&
-              userForm.controls['email'].touched
-              ? 'error' : ''
-            ">
+        <label for="email" [ngClass]="{
+              'error':
+                userForm.controls['email'].invalid &&
+                userForm.controls['email'].touched
+            }">
           Email
         </label>
-        <input type="email" id="email" [class]="
-              userForm.controls['email'].invalid &&
-              userForm.controls['email'].touched
-              ? 'error' : ''
-            " formControlName="email" required>
+        <input type="email" id="email" [ngClass]="{
+              'error':
+                userForm.controls['email'].invalid &&
+                userForm.controls['email'].touched
+            }" formControlName="email" required>
         <p *ngIf="
               userForm.controls['email'].invalid &&
               userForm.controls['email'].touched
@@ -99,18 +97,18 @@
         </p>
       </div>
       <div class="mb-6">
-        <label for="role" [class]="
-            userForm.controls['role'].invalid &&
-            userForm.controls['role'].touched
-            ? 'error' : ''
-          ">
+        <label for="role" [ngClass]="{
+              'error':
+                userForm.controls['role'].invalid &&
+                userForm.controls['role'].touched
+            }">
           Rol
         </label>
-        <select id="role" [class]="
-            userForm.controls['role'].invalid &&
-            userForm.controls['role'].touched
-            ? 'error' : ''
-          " formControlName="role" required>
+        <select id="role" [ngClass]="{
+              'error':
+                userForm.controls['role'].invalid &&
+                userForm.controls['role'].touched
+            }" formControlName="role" required>
           <option *ngFor="let role of roles | keyvalue" [value]="role.value">
             {{ role.value | titlecase }}
           </option>
@@ -124,20 +122,20 @@
       </div>
       <div *ngIf="!userId">
         <div class="mb-6">
-          <label for="password" [class]="
-              (userForm.controls['password'].invalid &&
-              userForm.controls['password'].touched) ||
-              userForm.errors?.['passwordMismatch']
-              ? 'error' : ''
-            ">
+          <label for="password" [ngClass]="{
+              'error':
+                (userForm.controls['password'].invalid &&
+                userForm.controls['password'].touched) ||
+                userForm.errors?.['passwordMismatch']
+            }">
             Wachtwoord
           </label>
-          <input type="password" id="password" [class]="
-              (userForm.controls['password'].invalid &&
-              userForm.controls['password'].touched) ||
-              userForm.errors?.['passwordMismatch']
-              ? 'error' : ''
-            " formControlName="password" required>
+          <input type="password" id="password" [ngClass]="{
+              'error':
+                (userForm.controls['password'].invalid &&
+                userForm.controls['password'].touched) ||
+                userForm.errors?.['passwordMismatch']
+            }" formControlName="password" required>
           <p *ngIf="
               userForm.controls['password'].invalid &&
               userForm.controls['password'].touched
@@ -146,20 +144,20 @@
           </p>
         </div>
         <div class="mb-6">
-          <label for="c-password" [class]="
-              (userForm.controls['passwordConfirm'].invalid &&
-              userForm.controls['passwordConfirm'].touched) ||
-              userForm.errors?.['passwordMismatch']
-              ? 'error' : ''
-            ">
+          <label for="c-password" [ngClass]="{
+              'error':
+                (userForm.controls['passwordConfirm'].invalid &&
+                userForm.controls['passwordConfirm'].touched) ||
+                userForm.errors?.['passwordMismatch']
+            }">
             Bevestig wachtwoord
           </label>
-          <input type="password" id="c-password" [class]="
-              (userForm.controls['passwordConfirm'].invalid &&
-              userForm.controls['passwordConfirm'].touched) ||
-              userForm.errors?.['passwordMismatch']
-              ? 'error' : ''
-            " formControlName="passwordConfirm" required>
+          <input type="password" id="c-password" [ngClass]="{
+              'error':
+                (userForm.controls['passwordConfirm'].invalid &&
+                userForm.controls['passwordConfirm'].touched) ||
+                userForm.errors?.['passwordMismatch']
+            }" formControlName="passwordConfirm" required>
           <p *ngIf="
               userForm.controls['passwordConfirm'].invalid &&
               userForm.controls['passwordConfirm'].touched
