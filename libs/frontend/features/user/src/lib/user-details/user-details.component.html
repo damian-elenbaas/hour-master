@@ -1,9 +1,11 @@
 <div class="p-4 relative">
   <div>
-    <a routerLink="/user" class="text-secondary hover:text-accent">
+    <button
+      (click)="location.back()"
+      class="text-secondary hover:text-accent">
       <i class="fa-solid fa-arrow-left"></i>
       Terug
-    </a>
+    </button>
   </div>
   <div class="w-fit mx-auto">
     <h2 class="text-xl font-semibold pb-0.5">

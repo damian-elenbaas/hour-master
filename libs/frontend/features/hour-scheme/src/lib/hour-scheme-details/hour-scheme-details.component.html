@@ -1,12 +1,20 @@
 <div class="p-4">
   <div>
-    <a routerLink="/hour-scheme" class="text-secondary hover:text-accent">
+    <button
+      (click)="location.back()"
+      class="text-secondary hover:text-accent">
       <i class="fa-solid fa-arrow-left"></i>
       Terug
-    </a>
+    </button>
   </div>
   <div>
-    Urenschema van: {{hourScheme?.worker?.firstname}} {{hourScheme?.worker?.lastname}}
+    Urenschema van:
+    <a
+      routerLink="/user/{{hourScheme?.worker?.id}}"
+    >
+      {{hourScheme?.worker?.firstname}}
+      {{hourScheme?.worker?.lastname}}
+    </a>
   </div>
   <div>
     Datum: {{hourScheme?.date | date:'dd-MM-yyyy'}}

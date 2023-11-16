@@ -12,7 +12,7 @@ export class HourSchemeService {
       id: 'hour-scheme-1',
       date: new Date(),
       worker: {
-        id: 'worker-1',
+        id: 'user-1',
         username: 'johndoe',
         email: 'j.doe@example.com',
         firstname: 'John',
@@ -51,7 +51,7 @@ export class HourSchemeService {
       id: 'hour-scheme-2',
       date: new Date(),
       worker: {
-        id: 'worker-2',
+        id: 'user-2',
         username: 'lisaboo',
         email: 'l.boo@example.com',
         firstname: 'Lisa',

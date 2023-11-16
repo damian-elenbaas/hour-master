@@ -18,8 +18,8 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private userService: UserService,
-    private location: Location
-  ) {}
+    public location: Location
+  ) { }
 
   ngOnInit(): void {
     // BUG: this code block causes repeated requests to the API when navigating to the user details page
@@ -60,9 +60,15 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
           return this.userService.details(params.get('id') as Id);
         }
       })
-    ).subscribe((user: IUser | null) => {
-      if (!user) this.location.back();
-      else this.user$ = of(user);
+    ).subscribe({
+      next: (user: IUser | null) => {
+        if (!user) this.location.back();
+        else this.user$ = of(user);
+      },
+      error: (error) => {
+        console.error(error);
+        this.location.back();
+      }
     });
   }
 

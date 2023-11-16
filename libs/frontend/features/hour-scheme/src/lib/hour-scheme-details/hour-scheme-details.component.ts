@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { IHourScheme, Id } from '@hour-master/shared/api';
 import { HourSchemeService } from '../hour-scheme.service';
 import { Subscription } from 'rxjs';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'hour-master-hour-scheme-details',
@@ -17,7 +18,8 @@ export class HourSchemeDetailsComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private hourSchemeService: HourSchemeService
+    private hourSchemeService: HourSchemeService,
+    public location: Location
   ) { }
 
   ngOnInit(): void {
