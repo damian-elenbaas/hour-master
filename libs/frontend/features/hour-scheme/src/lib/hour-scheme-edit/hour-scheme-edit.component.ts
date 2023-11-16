@@ -2,6 +2,7 @@ import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IMachine, IProject, Id, UserRole } from '@hour-master/shared/api';
+import { initFlowbite } from 'flowbite';
 
 @Component({
   selector: 'hour-master-hour-scheme-edit',
@@ -10,17 +11,19 @@ import { IMachine, IProject, Id, UserRole } from '@hour-master/shared/api';
 })
 export class HourSchemeEditComponent implements OnInit, OnDestroy {
   hourSchemeId!: Id;
+
+  hsRowForm: FormGroup = this.fb.group({
+      project: this.fb.control('', Validators.required),
+      hours: this.fb.control(0, [Validators.required, Validators.min(0)]),
+      machine: this.fb.control('', Validators.required),
+      description: this.fb.control('', Validators.required),
+    });
+
   hsForm: FormGroup = new FormGroup({
     date: this.fb.control(this.getCurrentDate(), Validators.required),
-    rows: this.fb.array([
-      this.fb.group({
-        project: this.fb.control('', Validators.required),
-        hours: this.fb.control(0, [Validators.required, Validators.min(0)]),
-        machine: this.fb.control('', Validators.required),
-        description: this.fb.control('', Validators.required),
-      })
-    ])
+    rows: this.fb.array([])
   });
+
   projects: IProject[] = [
     {
       id: 'project-1',
@@ -60,6 +63,8 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    initFlowbite();
+
     // TODO: Get projects and machines from API
     return;
   }
@@ -68,14 +73,52 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
     return;
   }
 
+  openAddRowModal(): void {
+    this.hsRowForm.patchValue({
+      project: '',
+      hours: 0,
+      machine: '',
+      description: '',
+    });
+  }
+
+  openEditRowModal(index: number): void {
+    console.log(index);
+    const row = this.rows.at(index);
+    this.hsRowForm.patchValue({
+      project: row.get('project')?.value,
+      hours: row.get('hours')?.value,
+      machine: row.get('machine')?.value,
+      description: row.get('description')?.value,
+    });
+  }
+
   addRow(): void {
-    const rows = this.hsForm.get('rows') as FormArray;
-    rows.push(this.fb.group({
-      project: this.fb.control('', Validators.required),
-      hours: this.fb.control(0, Validators.required),
-      machine: this.fb.control('', Validators.required),
-      description: this.fb.control('', Validators.required),
+    if(this.hsRowForm.invalid) return;
+
+    const row = this.hsRowForm.value;
+    this.rows.push(this.fb.group({
+      project: this.fb.control(row.project, Validators.required),
+      hours: this.fb.control(row.hours, [Validators.required, Validators.min(0)]),
+      machine: this.fb.control(row.machine, Validators.required),
+      description: this.fb.control(row.description, Validators.required),
     }));
+  }
+
+  editRow(index: number): void {
+    if(this.hsRowForm.invalid) return;
+
+    const row = this.hsRowForm.value;
+    this.rows.at(index).patchValue({
+      project: row.project,
+      hours: row.hours,
+      machine: row.machine,
+      description: row.description,
+    });
+  }
+
+  removeRow(index: number): void {
+    this.rows.removeAt(index);
   }
 
   getCurrentDate(): string {
