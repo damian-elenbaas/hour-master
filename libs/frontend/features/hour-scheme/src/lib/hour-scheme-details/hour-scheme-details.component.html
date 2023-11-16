@@ -1,84 +1,70 @@
 <div class="p-4">
   <div>
-    <button
-      (click)="location.back()"
-      class="text-secondary hover:text-accent">
+    <button (click)="location.back()" class="text-secondary hover:text-accent">
       <i class="fa-solid fa-arrow-left"></i>
       Terug
     </button>
   </div>
-  <div>
-    Urenschema van:
-    <a
-      routerLink="/user/{{hourScheme?.worker?.id}}"
-    >
-      {{hourScheme?.worker?.firstname}}
-      {{hourScheme?.worker?.lastname}}
-    </a>
+  <div
+    [class]="loading ? '' : 'hidden'"
+    class="mt-5"
+  >
+    <div
+      class="px-3 py-1 text-sm font-medium leading-none text-center text-accent bg-primary rounded-full animate-pulse w-fit mx-auto">
+      Laden...
+    </div>
   </div>
-  <div>
-    Datum: {{hourScheme?.date | date:'dd-MM-yyyy'}}
-  </div>
-  <div>
-    Totaal aantal uren: {{totalHours}}
-  </div>
-  <div class="relative overflow-x-auto">
-    <table class="w-full text-sm text-left rtl:text-right">
-      <thead class="text-xs uppercase bg-primary text-white">
-        <tr>
-          <th
-            scope="col"
-            class="px-6 py-3"
-          >
-            Project
-          </th>
-          <th
-            scope="col"
-            class="px-6 py-3"
-          >
-            Uren
-          </th>
-          <th
-            scope="col"
-            class="px-6 py-3"
-          >
-            Machine
-          </th>
-          <th
-            scope="col"
-            class="px-6 py-3"
-          >
-            Omschrijving
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          class="border-b"
-          *ngFor="let row of hourScheme?.rows"
-        >
-          <td
-            class="px-6 py-4"
-          >
-            {{row.project.name}}
-          </td>
-          <td
-            class="px-6 py-4"
-          >
-            {{row.hours}}
-          </td>
-          <td
-            class="px-6 py-4"
-          >
-            {{row.machine?.name || 'Geen machine gebruikt'}}
-          </td>
-          <td
-            class="px-6 py-4"
-          >
-            {{row.description}}
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <div [class]="loading ? 'hidden' : ''">
+    <h3>
+      Urenschema van
+      <a class="underline decoration-accent hover:text-accent" routerLink="/user/{{hourScheme?.worker?.id}}">
+        {{hourScheme?.worker?.firstname}}
+        {{hourScheme?.worker?.lastname}}
+      </a>
+    </h3>
+    <h4>
+      Datum: {{hourScheme?.date | date:'dd-MM-yyyy'}}
+    </h4>
+    <div class="relative overflow-x-auto">
+      <table class="w-full text-sm text-left rtl:text-right">
+        <thead class="text-xs uppercase bg-primary text-white">
+          <tr>
+            <th scope="col" class="px-6 py-3">
+              Project
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Uren
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Machine
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Omschrijving
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-b" *ngFor="let row of hourScheme?.rows">
+            <td class="px-6 py-4">
+              <!-- TODO: Link to project  -->
+              {{row.project.name}}
+            </td>
+            <td class="px-6 py-4">
+              {{row.hours}}
+            </td>
+            <td class="px-6 py-4">
+              <!-- TODO: Link to machine -->
+              {{row.machine?.name || 'Geen machine gebruikt'}}
+            </td>
+            <td class="px-6 py-4">
+              {{row.description}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="text-center italic mt-5">
+      Totaal aantal uren: {{totalHours}}
+    </div>
   </div>
 </div>
