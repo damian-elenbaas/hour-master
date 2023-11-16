@@ -28,7 +28,7 @@ export class HourSchemeService {
             name: 'Project 1',
             location: {
               id: 'location-1',
-              adres: 'Location 1',
+              address: 'Location 1',
               city: 'City 1',
               postalCode: '1234 AB',
             },

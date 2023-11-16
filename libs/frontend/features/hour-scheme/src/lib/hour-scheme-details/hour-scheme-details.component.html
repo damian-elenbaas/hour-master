@@ -10,13 +10,13 @@
   >
     <h3>
       Urenschema van
-      <a class="underline decoration-accent hover:text-accent" routerLink="/user/{{hourScheme?.worker?.id}}">
-        {{hourScheme?.worker?.firstname}}
-        {{hourScheme?.worker?.lastname}}
+      <a class="underline decoration-accent hover:text-accent" routerLink="/user/{{hourScheme.worker.id}}">
+        {{hourScheme.worker.firstname}}
+        {{hourScheme.worker.lastname}}
       </a>
     </h3>
     <h4>
-      Datum: {{hourScheme?.date | date:'dd-MM-yyyy'}}
+      Datum: {{hourScheme.date | date:'dd-MM-yyyy'}}
     </h4>
     <div class="relative overflow-x-auto">
       <table class="w-full text-sm text-left rtl:text-right">
@@ -37,7 +37,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr class="border-b" *ngFor="let row of hourScheme?.rows">
+          <tr class="border-b" *ngFor="let row of hourScheme.rows">
             <td class="px-6 py-4">
               <!-- TODO: Link to project  -->
               {{row.project.name}}
