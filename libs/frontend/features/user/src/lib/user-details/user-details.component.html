@@ -5,35 +5,52 @@
       Terug
     </a>
   </div>
-  <div class="w-fit mx-auto">
-    <h2 class="text-xl font-semibold pb-0.5">
-      {{ (user$ | async)?.firstname | titlecase }} {{ (user$ | async)?.lastname | titlecase }}
-    </h2>
-    <div class="text-center border-b pb-4">
-      <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
-        {{ (user$ | async)?.role | titlecase }}
-      </span>
+  <div
+    class="w-fit mx-auto"
+  >
+    <div
+      [class]="loading ? '' : 'hidden'"
+      class="mt-5"
+    >
+      <div
+        class="px-3 py-1 text-sm font-medium leading-none text-center text-accent bg-primary rounded-full animate-pulse w-fit mx-auto">
+        Laden...
+      </div>
     </div>
-    <section class="mt-8">
-      <div class="flex flex-col md:flex-row md:justify-between">
+    <div
+      [class]="loading ? 'hidden' : ''"
+    >
+      <h2 class="text-xl font-semibold pb-0.5">
+        {{ (user$ | async)?.firstname | titlecase }} {{ (user$ | async)?.lastname | titlecase }}
+      </h2>
+      <div class="text-center border-b pb-4">
+        <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
+          {{ (user$ | async)?.role | titlecase }}
+        </span>
+      </div>
+      <section class="mt-8">
         <div class="flex flex-col md:flex-row md:justify-between">
-          <div class="flex flex-col mb-2">
-            <span class="font-bold">Gebruikersnaam</span>
-            <span class="font-medium">
-              {{ (user$ | async)?.username }}
-            </span>
-          </div>
-          <div class="flex flex-col md:ml-4">
-            <span class="font-bold">Email</span>
-            <span class="font-medium">
-              {{ (user$ | async)?.email }}
-            </span>
+          <div class="flex flex-col md:flex-row md:justify-between">
+            <div class="flex flex-col mb-2">
+              <span class="font-bold">Gebruikersnaam</span>
+              <span class="font-medium">
+                {{ (user$ | async)?.username }}
+              </span>
+            </div>
+            <div class="flex flex-col md:ml-4">
+              <span class="font-bold">Email</span>
+              <span class="font-medium">
+                {{ (user$ | async)?.email }}
+              </span>
+            </div>
           </div>
         </div>
+      </section>
+      <div class="w-full flex justify-center mt-10">
+        <button routerLink="edit" class="bg-secondary px-4 py-2 rounded-md text-white">
+          Bijwerken
+        </button>
       </div>
-    </section>
-    <div class="w-full flex justify-center mt-10">
-      <button routerLink="edit" class="bg-secondary px-4 py-2 rounded-md text-white">Bijwerken</button>
     </div>
   </div>
 </div>

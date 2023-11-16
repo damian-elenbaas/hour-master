@@ -13,13 +13,13 @@ import { Location } from '@angular/common';
 export class UserDetailsComponent implements OnInit, OnDestroy {
   subscription!: Subscription | null;
   user$!: Observable<IUser>;
-  count = 0;
+  loading = true;
 
   constructor(
     private route: ActivatedRoute,
     private userService: UserService,
     private location: Location
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.subscription = this.route.paramMap.pipe(
@@ -34,14 +34,17 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
             role: UserRole.NONE
           } as IUser);
         } else {
-          this.count++;
-          console.log(this.count);
           return this.userService.details(params.get('id') as Id);
         }
       })
     ).subscribe((user: IUser | null) => {
-      if (!user) this.location.back();
-      else this.user$ = of(user);
+      if (!user) {
+        this.location.back();
+      }
+      else {
+        this.user$ = of(user);
+        this.loading = false;
+      }
     });
   }
 

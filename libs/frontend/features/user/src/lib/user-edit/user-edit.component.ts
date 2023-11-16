@@ -10,7 +10,7 @@ import {
   Validators
 } from '@angular/forms';
 import { ICreateUser, IUpdateUser, IUser, Id, UserRole } from '@hour-master/shared/api';
-import { Subscription, of, switchMap } from 'rxjs';
+import { Subscription, delay, of, switchMap } from 'rxjs';
 import { UserService } from '../user.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 
@@ -27,6 +27,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
   userForm!: FormGroup;
   subscription!: Subscription;
   roles = UserRole;
+  loading = true;
 
   constructor(
     private location: Location,
@@ -69,6 +70,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
           } else if (!user && this.userId) {
             this.location.back();
           }
+          this.loading = false;
         },
         error: (error) => {
           console.error(error);
