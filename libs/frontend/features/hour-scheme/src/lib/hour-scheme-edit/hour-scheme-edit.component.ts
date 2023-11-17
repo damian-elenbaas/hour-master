@@ -1,8 +1,9 @@
 import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { IMachine, IProject, Id, UserRole } from '@hour-master/shared/api';
+import { IHourScheme, IMachine, IProject, Id, UserRole } from '@hour-master/shared/api';
 import { Modal } from 'flowbite';
+import { HourSchemeService } from '../hour-scheme.service';
 
 @Component({
   selector: 'hour-master-hour-scheme-edit',
@@ -61,7 +62,8 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
 
   constructor(
     private location: Location,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private service: HourSchemeService
   ) {}
 
   ngOnInit(): void {
@@ -151,10 +153,39 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
   create(): void {
     if(this.hsForm.invalid) return;
 
-    // TODO: Create hour scheme and push to API
-
     const formData = this.hsForm.value;
-    console.log(formData);
+    const date = new Date(formData.date);
+
+    // TODO: Get worker from API
+
+    const newHourScheme = {
+      date: date,
+      rows: formData.rows.map((row: any) => ({
+        project: row.project,
+        hours: row.hours,
+        machine: row.machine,
+        description: row.description,
+      })),
+      worker: {
+        id: 'user-1',
+        username: 'jdoe',
+        firstname: 'John',
+        lastname: 'Doe'
+      }
+    } as IHourScheme;
+
+    console.log(newHourScheme);
+
+    this.service.create(newHourScheme).subscribe({
+      next: (hourScheme: IHourScheme | null) => {
+        if(hourScheme === null) return;
+
+        this.location.back();
+      },
+      error: (err: any) => {
+        console.error(err);
+      }
+    });
   }
 
   get rows(): FormArray {

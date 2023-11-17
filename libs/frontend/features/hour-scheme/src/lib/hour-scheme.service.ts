@@ -55,6 +55,21 @@ export class HourSchemeService {
       );
   }
 
+  public create(scheme: IHourScheme, options?: any): Observable<IHourScheme | null> {
+    console.log(`create ${this.endpoint}`);
+
+    return this.http
+      .post<ApiResponse<IHourScheme>>(this.endpoint, scheme, {
+        ...options,
+        ...httpOptions
+      })
+      .pipe(
+        map((response: any) => response.results as IHourScheme),
+        tap(console.log),
+        catchError(this.handleError)
+      );
+  }
+
   /**
    * Handle errors.
    */
