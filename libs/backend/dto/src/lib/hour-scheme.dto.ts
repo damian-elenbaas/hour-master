@@ -1,4 +1,4 @@
-import { IsDate, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsDateString, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 import {
   ICreateHourScheme,
@@ -10,7 +10,7 @@ import {
 } from '@hour-master/shared/api';
 
 export class CreateHourSchemeDto implements ICreateHourScheme {
-  @IsDate()
+  @IsDateString()
   @IsNotEmpty()
   date!: Date;
 
@@ -26,7 +26,7 @@ export class UpsertHourSchemeDto implements IUpsertHourScheme {
   @IsNotEmpty()
   id!: Id;
 
-  @IsDate()
+  @IsDateString()
   @IsNotEmpty()
   date!: Date;
 
@@ -38,7 +38,7 @@ export class UpsertHourSchemeDto implements IUpsertHourScheme {
 }
 
 export class UpdateHourSchemeDto implements IUpdateHourScheme {
-  @IsDate()
+  @IsDateString()
   @IsOptional()
   date!: Date;
 

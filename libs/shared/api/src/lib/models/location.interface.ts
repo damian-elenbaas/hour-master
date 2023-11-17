@@ -2,14 +2,14 @@ import { Id } from "./id.type";
 
 export interface ILocation {
   id: Id;
-  adres: string;
+  address: string;
   city: string;
   postalCode: string;
 }
 
 export type ICreateLocation = Pick<
   ILocation,
-  'adres' | 'city' | 'postalCode'
+  'address' | 'city' | 'postalCode'
 >;
 
 export type IUpdateLocation = Partial<Omit<ILocation, 'id'>>;

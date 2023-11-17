@@ -1,9 +1,10 @@
-<div class="p-4">
-  <div>
+<div>
+  <div class="flex justify-between">
     <button (click)="location.back()" class="text-secondary hover:text-accent">
       <i class="fa-solid fa-arrow-left"></i>
       Terug
     </button>
+    <button routerLink="edit" class="bg-accent px-4 py-2 rounded-md">Urenschema wijzigen</button>
   </div>
   <div
     *ngIf="hourScheme; else loading"
@@ -37,7 +38,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr class="border-b" *ngFor="let row of hourScheme?.rows">
+          <tr class="border-b" *ngFor="let row of hourScheme.rows">
             <td class="px-6 py-4">
               <!-- TODO: Link to project  -->
               {{row.project.name}}

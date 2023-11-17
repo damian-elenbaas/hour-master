@@ -9,7 +9,7 @@ import { IsNotEmpty, IsOptional, IsString } from "class-validator";
 export class CreateLocationDto implements ICreateLocation {
   @IsNotEmpty()
   @IsString()
-  adres!: string;
+  address!: string;
 
   @IsNotEmpty()
   @IsString()
@@ -27,7 +27,7 @@ export class UpsertLocationDto implements IUpsertLocation {
 
   @IsNotEmpty()
   @IsString()
-  adres!: string;
+  address!: string;
 
   @IsNotEmpty()
   @IsString()
@@ -41,7 +41,7 @@ export class UpsertLocationDto implements IUpsertLocation {
 export class UpdateLocationDto implements IUpdateLocation {
   @IsOptional()
   @IsString()
-  adres!: string;
+  address!: string;
 
   @IsOptional()
   @IsString()
