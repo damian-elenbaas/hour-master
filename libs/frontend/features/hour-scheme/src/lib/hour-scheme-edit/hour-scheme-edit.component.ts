@@ -2,7 +2,7 @@ import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IMachine, IProject, Id, UserRole } from '@hour-master/shared/api';
-import { initFlowbite, Modal } from 'flowbite';
+import { Modal } from 'flowbite';
 
 @Component({
   selector: 'hour-master-hour-scheme-edit',
@@ -65,8 +65,6 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    initFlowbite();
-
     const $modalElement: HTMLElement | null = document.querySelector('#addRowModal');
     if($modalElement === null) throw new Error('Modal element not found');
     this.addRowModal = new Modal($modalElement);
