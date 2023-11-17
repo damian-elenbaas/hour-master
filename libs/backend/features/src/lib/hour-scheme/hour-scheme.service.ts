@@ -1,6 +1,6 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 
-import { ICreateHourScheme, IHourScheme, Id, UserRole } from '@hour-master/shared/api';
+import { ICreateHourScheme, IHourScheme, IUpdateHourScheme, IUpdateUser, Id, UserRole } from '@hour-master/shared/api';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable()
@@ -85,6 +85,20 @@ export class HourSchemeService {
     };
     this.hourSchemes$.next([...current, newHourScheme]);
     return newHourScheme;
+  }
+
+  update(id: Id, hourScheme: IUpdateHourScheme): boolean {
+    Logger.log('update', this.TAG);
+    const current = this.hourSchemes$.value;
+    const index = current.findIndex((hourScheme) => hourScheme.id === id);
+    if(index === -1) throw new NotFoundException("Hour scheme not found");
+    const updatedHourScheme: IHourScheme = {
+      ...current[index],
+      ...hourScheme,
+    };
+    current[index] = updatedHourScheme;
+    this.hourSchemes$.next(current);
+    return true;
   }
 
   // TODO: More methods

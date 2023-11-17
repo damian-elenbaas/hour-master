@@ -4,7 +4,7 @@
       <span *ngIf="!hourSchemeId">Nieuw urenschema</span>
       <span *ngIf="hourSchemeId">Urenschema bijwerken</span>
     </h2>
-    <form [formGroup]="hsForm" (ngSubmit)="onSubmit()">
+    <form *ngIf="loaded; else loading" [formGroup]="hsForm" (ngSubmit)="onSubmit()">
       <div class="mb-6">
         <label for="date">Datum</label>
         <input id="date" formControlName="date" type="date">
@@ -33,24 +33,20 @@
           <tbody formArrayName="rows">
             <tr class="border-b" *ngFor="let row of rows.controls; let i = index" [formGroupName]="i">
               <td>
-                <span>{{row.value.project}}</span>
+                <span>{{ findProject(row.value.project)?.name }}</span>
               </td>
               <td>
                 <span>{{row.value.hours}}</span>
               </td>
               <td>
-                <span>{{row.value.machine}}</span>
+                <span>{{ findMachine(row.value.machine)?.name }}</span>
               </td>
               <td>
                 <span>{{row.value.description}}</span>
               </td>
               <td>
                 <div class="flex justify-around">
-                  <button
-                    type="button"
-                    class="hover:underline decoration-accent"
-                    (click)="openEditRowModal(i)"
-                  >
+                  <button type="button" class="hover:underline decoration-accent" (click)="openEditRowModal(i)">
                     <i class="fas fa-edit"></i>
                   </button>
                   <button type="button" class="hover:underline decoration-accent" (click)="removeRow(i)">
@@ -61,10 +57,7 @@
             </tr>
             <tr>
               <td colspan="5" class="text-center pt-2">
-                <button
-                  id="addRowModalButton"
-                  (click)="openAddRowModal()"
-                  class="hover:underline decoration-accent"
+                <button id="addRowModalButton" (click)="openAddRowModal()" class="hover:underline decoration-accent"
                   type="button">
                   <i class="fas fa-plus"></i> Rij toevoegen
                 </button>
@@ -83,6 +76,9 @@
         </button>
       </div>
     </form>
+    <ng-template #loading>
+      <hour-master-loader></hour-master-loader>
+    </ng-template>
   </div>
 </div>
 
@@ -121,22 +117,13 @@
           </div>
           <div>
             <label for="description">Omschrijving</label>
-            <textarea
-              id="description"
-              formControlName="description"
-              rows="5"
-            ></textarea>
+            <textarea id="description" formControlName="description" rows="5"></textarea>
           </div>
         </div>
-        <button
-          type="button"
-          class="bg-secondary px-4 py-2 rounded-md text-white mr-2"
-          (click)="closeModal()">
+        <button type="button" class="bg-secondary px-4 py-2 rounded-md text-white mr-2" (click)="closeModal()">
           Annuleren
         </button>
-        <button
-          type="submit"
-          class="bg-accent px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+        <button type="submit" class="bg-accent px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
           data-modal-toggle="addRowModal">
           <i class="fas fa-plus"></i> Rij toevoegen
         </button>
