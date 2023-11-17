@@ -110,12 +110,19 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
     if(this.hsRowForm.invalid) return;
 
     const row = this.hsRowForm.value;
+
+    // Get project and machine object
+    const project = this.projects.find(p => p.id === row.project);
+    const machine = this.machines.find(m => m.id === row.machine);
+
     this.rows.push(this.fb.group({
-      project: this.fb.control(row.project, Validators.required),
+      project: this.fb.control(project?.name, Validators.required),
       hours: this.fb.control(row.hours, [Validators.required, Validators.min(0)]),
-      machine: this.fb.control(row.machine, Validators.required),
+      machine: this.fb.control(machine?.name ?? 'Geen machine gebruikt', Validators.required),
       description: this.fb.control(row.description, Validators.required),
     }));
+
+    this.addRowModal.hide();
   }
 
   editRow(index: number): void {
@@ -128,6 +135,8 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
       machine: row.machine,
       description: row.description,
     });
+
+    this.addRowModal.hide();
   }
 
   removeRow(index: number): void {
