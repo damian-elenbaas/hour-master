@@ -48,8 +48,6 @@
                 <div class="flex justify-around">
                   <button
                     type="button"
-                    data-modal-target="addRowModal"
-                    data-modal-toggle="addRowModal"
                     class="hover:underline decoration-accent"
                     (click)="openEditRowModal(i)"
                   >
@@ -66,8 +64,6 @@
                 <button
                   id="addRowModalButton"
                   (click)="openAddRowModal()"
-                  data-modal-target="addRowModal"
-                  data-modal-toggle="addRowModal"
                   class="hover:underline decoration-accent"
                   type="button">
                   <i class="fas fa-plus"></i> Rij toevoegen
@@ -90,7 +86,7 @@
   </div>
 </div>
 
-<div #addRowModal id="addRowModal" tabindex="-1" aria-hidden="true"
+<div id="addRowModal" tabindex="-1" aria-hidden="true"
   class="hidden bg-gray-200/80 overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center w-full md:inset-0 h-modal md:h-full">
   <div class="relative p-4 w-full max-w-2xl h-full md:h-auto">
     <div class="relative p-4 bg-white rounded-lg shadow sm:p-5">
@@ -100,7 +96,7 @@
         </h3>
         <button type="button"
           class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-xl p-1.5 ml-auto inline-flex items-center"
-          data-modal-toggle="addRowModal">
+          (click)="closeModal()">
           <i class="fas fa-times"></i>
           <span class="sr-only">Sluiten</span>
         </button>
@@ -135,7 +131,7 @@
         <button
           type="button"
           class="bg-secondary px-4 py-2 rounded-md text-white mr-2"
-          data-modal-toggle="addRowModal">
+          (click)="closeModal()">
           Annuleren
         </button>
         <button

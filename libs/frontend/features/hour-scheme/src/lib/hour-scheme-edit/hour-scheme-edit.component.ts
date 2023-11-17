@@ -2,7 +2,7 @@ import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IMachine, IProject, Id, UserRole } from '@hour-master/shared/api';
-import { initFlowbite } from 'flowbite';
+import { initFlowbite, Modal } from 'flowbite';
 
 @Component({
   selector: 'hour-master-hour-scheme-edit',
@@ -23,6 +23,8 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
     date: this.fb.control(this.getCurrentDate(), Validators.required),
     rows: this.fb.array([])
   });
+
+  addRowModal!: Modal;
 
   projects: IProject[] = [
     {
@@ -65,9 +67,14 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     initFlowbite();
 
+    const $modalElement: HTMLElement | null = document.querySelector('#addRowModal');
+    if($modalElement === null) throw new Error('Modal element not found');
+    this.addRowModal = new Modal($modalElement);
+
     // TODO: Get projects and machines from API
     return;
   }
+
   ngOnDestroy(): void {
     // TODO: Cleanup subscriptions
     return;
@@ -80,6 +87,7 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
       machine: '',
       description: '',
     });
+    this.addRowModal.show();
   }
 
   openEditRowModal(index: number): void {
@@ -91,6 +99,11 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
       machine: row.get('machine')?.value,
       description: row.get('description')?.value,
     });
+    this.addRowModal.show();
+  }
+
+  closeModal(): void {
+    this.addRowModal.hide();
   }
 
   addRow(): void {
