@@ -26,6 +26,33 @@ export class UserService {
       username: 'lboo',
       role: UserRole.OFFICE
     },
+    {
+      id: 'user-3',
+      firstname: 'Damian',
+      lastname: 'Elenbaas',
+      email: 'd.elenbaas1@student.avans.nl',
+      password: 'password',
+      username: 'd.elenbaas1',
+      role: UserRole.ROADWORKER
+    },
+    {
+      id: 'user-4',
+      firstname: 'Robin',
+      lastname: 'Schellius',
+      email: 'r.schellius@avans.nl',
+      password: 'password',
+      username: 'r.schellius',
+      role: UserRole.OFFICE
+    },
+    {
+      id: 'user-5',
+      firstname: 'Davide',
+      lastname: 'Ambesi',
+      email: 'd.ambesi@avans.nl',
+      password: 'password',
+      username: 'd.ambesi',
+      role: UserRole.ROADWORKER
+    },
   ]);
 
   getAll(): IUser[] {
