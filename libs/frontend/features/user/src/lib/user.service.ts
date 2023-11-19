@@ -2,7 +2,7 @@ import { Observable, throwError } from 'rxjs';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { map, catchError, tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { ApiResponse, ICreateUser, IServiceResult, IUpdateUser, IUser, Id } from '@hour-master/shared/api';
+import { ApiResponse, ICreateUser, IUpdateUser, IUser, Id } from '@hour-master/shared/api';
 import { environment } from '@hour-master/shared/environments';
 
 /**
@@ -99,6 +99,19 @@ export class UserService {
       })
       .pipe(
         map((response: any) => response.results as IUser),
+        tap(console.log),
+        catchError(this.handleError)
+      );
+  }
+
+  public delete(id: Id, options?: any): Observable<boolean | null> {
+    return this.http
+      .delete<ApiResponse<boolean>>(`${this.endpoint}/${id}`, {
+        ...options,
+        ...httpOptions
+      })
+      .pipe(
+        map((response: any) => response.results as boolean),
         tap(console.log),
         catchError(this.handleError)
       );

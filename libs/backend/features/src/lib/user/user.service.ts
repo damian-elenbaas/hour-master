@@ -89,4 +89,14 @@ export class UserService {
 
     return true;
   }
+
+  delete(id: Id): boolean {
+    Logger.log(`${this.TAG} delete(${id})`);
+    const current = this.users$.value;
+    const index = current.findIndex((user) => user.id === id);
+    if(index === -1) return false;
+    current.splice(index, 1);
+    this.users$.next(current);
+    return true;
+  }
 }

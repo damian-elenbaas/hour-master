@@ -4,6 +4,7 @@ import { IUser, Id, UserRole } from '@hour-master/shared/api';
 import { Observable, Subscription, of, switchMap, tap } from 'rxjs';
 import { UserService } from '../user.service';
 import { Location } from '@angular/common';
+import { Modal } from 'flowbite';
 
 @Component({
   selector: 'hour-master-user-details',
@@ -13,6 +14,7 @@ import { Location } from '@angular/common';
 export class UserDetailsComponent implements OnInit, OnDestroy {
   subscription!: Subscription | null;
   user$!: Observable<IUser>;
+  popUpModal!: Modal;
   loaded = false;
 
   constructor(
@@ -22,6 +24,9 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+    const modalElement = document.getElementById('popup-modal') as HTMLElement;
+    this.popUpModal = new Modal(modalElement);
+
     this.subscription = this.route.paramMap.pipe(
       tap(params => console.log(params)),
       switchMap((params: ParamMap) => {
@@ -56,5 +61,16 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     if (this.subscription) this.subscription.unsubscribe();
+  }
+
+  delete(): void {
+    this.popUpModal.hide();
+    this.user$.subscribe(user => {
+      if (user) {
+        this.userService.delete(user.id as Id).subscribe(() => {
+          this.location.back();
+        });
+      }
+    });
   }
 }
