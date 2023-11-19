@@ -85,6 +85,21 @@ export class HourSchemeService {
       );
   }
 
+  public delete(id: Id, options?: any): Observable<boolean | null> {
+    console.log(`delete ${this.endpoint}/${id}`);
+
+    return this.http
+      .delete<ApiResponse<boolean>>(`${this.endpoint}/${id}`, {
+        ...options,
+        ...httpOptions
+      })
+      .pipe(
+        map((response: any) => response.results as boolean),
+        tap(console.log),
+        catchError(this.handleError)
+      );
+  }
+
   /**
    * Handle errors.
    */

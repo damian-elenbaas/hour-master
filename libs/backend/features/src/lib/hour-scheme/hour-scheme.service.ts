@@ -101,5 +101,15 @@ export class HourSchemeService {
     return true;
   }
 
+  delete(id: Id): boolean {
+    Logger.log('delete', this.TAG);
+    const current = this.hourSchemes$.value;
+    const index = current.findIndex((hourScheme) => hourScheme.id === id);
+    if(index === -1) throw new NotFoundException("Hour scheme not found");
+    current.splice(index, 1);
+    this.hourSchemes$.next(current);
+    return true;
+  }
+
   // TODO: More methods
 }

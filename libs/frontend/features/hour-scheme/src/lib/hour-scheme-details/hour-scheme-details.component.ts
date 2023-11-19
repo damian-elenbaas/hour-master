@@ -4,6 +4,7 @@ import { IHourScheme, Id } from '@hour-master/shared/api';
 import { HourSchemeService } from '../hour-scheme.service';
 import { Subscription } from 'rxjs';
 import { Location } from '@angular/common';
+import { Modal } from 'flowbite';
 
 @Component({
   selector: 'hour-master-hour-scheme-details',
@@ -14,6 +15,7 @@ export class HourSchemeDetailsComponent implements OnInit {
   hourSchemeId: Id | null = null;
   hourScheme: IHourScheme | null = null;
   subscription: Subscription | null = null;
+  popUpModal!: Modal;
   totalHours = 0;
 
   constructor(
@@ -23,6 +25,9 @@ export class HourSchemeDetailsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    const modalElement = document.getElementById('popup-modal') as HTMLElement;
+    this.popUpModal = new Modal(modalElement);
+
     this.route.paramMap.subscribe((params) => {
       this.hourSchemeId = params.get('id') as Id;
       this.subscription = this.hourSchemeService
@@ -35,5 +40,12 @@ export class HourSchemeDetailsComponent implements OnInit {
           }, 0) || 0;
         });
     })
+  }
+
+  delete(): void {
+    this.popUpModal.hide();
+    this.hourSchemeService.delete(this.hourSchemeId as Id).subscribe(() => {
+      this.location.back();
+    });
   }
 }

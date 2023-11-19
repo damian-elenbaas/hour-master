@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { HourSchemeService } from './hour-scheme.service';
 import { IHourScheme, Id } from '@hour-master/shared/api';
 import { CreateHourSchemeDto, UpdateHourSchemeDto } from '@hour-master/backend/dto';
@@ -25,5 +25,10 @@ export class HourSchemeController {
   @Put(':id')
   update(@Param('id') id: Id, @Body() body: UpdateHourSchemeDto): boolean {
     return this.hourSchemeService.update(id, body);
+  }
+
+  @Delete(':id')
+  delete(@Param('id') id: Id): boolean {
+    return this.hourSchemeService.delete(id);
   }
 }
