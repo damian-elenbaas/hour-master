@@ -1,5 +1,6 @@
 import { IUpdateUser, UserRole } from "@hour-master/shared/api";
 import { IsEmail, IsEnum, IsOptional, IsString, IsStrongPassword } from "class-validator";
+import { StrongPasswordOptions } from "./password-options";
 
 export class UpdateUserDto implements IUpdateUser {
   @IsOptional()
