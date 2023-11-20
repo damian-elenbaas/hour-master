@@ -3,7 +3,7 @@ import { Id } from "./id.type";
 import { IUser } from "./user.interface";
 
 export interface IHourScheme {
-  id: Id;
+  _id: Id;
   date: Date;
   worker: IUser;
   rows?: IHourSchemeRow[];

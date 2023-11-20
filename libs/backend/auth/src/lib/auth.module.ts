@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
-import { jwtConstants } from '@hour-master/environments';
+import { jwtConstants } from './jwt.const';
 
 
 @Module({

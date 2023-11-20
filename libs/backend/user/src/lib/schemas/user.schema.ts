@@ -1,12 +1,15 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { IUser, UserRole } from '@hour-master/shared/api';
+import { HydratedDocument } from 'mongoose';
 import { IsMongoId } from 'class-validator';
+
+export type UserDocument = HydratedDocument<User>;
 
 @Schema()
 export class User implements IUser {
 
   @IsMongoId()
-  id!: string;
+  _id!: string;
 
   @Prop({ required: true, unique: true })
   username!: string;
@@ -26,5 +29,6 @@ export class User implements IUser {
   @Prop({ required: true, type: String, enum: UserRole })
   role!: UserRole;
 
-  static schema = SchemaFactory.createForClass(User);
 }
+
+export const UserSchema = SchemaFactory.createForClass(User);

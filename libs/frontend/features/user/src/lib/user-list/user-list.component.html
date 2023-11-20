@@ -19,9 +19,9 @@
         </tr>
       </thead>
       <tbody>
-        <a class="table-row border-b hover:bg-gray-200" *ngFor="let user of users" routerLink="{{ user.id }}">
+        <a class="table-row border-b hover:bg-gray-200" *ngFor="let user of users" routerLink="{{ user._id }}">
           <td class="px-6 py-4">
-            {{ user.id }}
+            {{ user._id }}
           </td>
           <td class="px-6 py-4">
             {{ user.username }}

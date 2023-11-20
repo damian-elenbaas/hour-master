@@ -71,10 +71,10 @@ export class HourSchemeService {
   }
 
   public update(scheme: IHourScheme, options?: any): Observable<IHourScheme | null> {
-    console.log(`update ${this.endpoint}/${scheme.id}`);
+    console.log(`update ${this.endpoint}/${scheme._id}`);
 
     return this.http
-      .put<ApiResponse<IHourScheme>>(`${this.endpoint}/${scheme.id}`, scheme, {
+      .put<ApiResponse<IHourScheme>>(`${this.endpoint}/${scheme._id}`, scheme, {
         ...options,
         ...httpOptions
       })

@@ -52,8 +52,8 @@ export class UserService {
       await this.generateHashedPassword(user.password as string);
     user.password = hashedPassword;
 
-    const createdUser = new this.userModel(user);
-    return await createdUser.save();
+    const createdUser = await this.userModel.create(user);
+    return createdUser;
   }
 
   async update(id: Id, user: IUpdateUser): Promise<boolean> {

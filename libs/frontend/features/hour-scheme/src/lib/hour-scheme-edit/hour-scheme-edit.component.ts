@@ -41,7 +41,7 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
         postalCode: 'Postal Code 1',
       },
       admin: {
-        id: 'admin-1',
+        _id: 'admin-1',
         username: 'admin1',
         firstname: 'Admin 1',
         lastname: 'Admin 1',
@@ -231,7 +231,7 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
         description: row.description,
       })),
       worker: {
-        id: 'user-1',
+        _id: 'user-1',
         username: 'jdoe',
         firstname: 'John',
         lastname: 'Doe'
@@ -259,7 +259,7 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
     const date = new Date(formData.date);
 
     const updatedHourScheme = {
-      id: this.hourSchemeId,
+      _id: this.hourSchemeId,
       date: date,
       rows: formData.rows.map((row: any) => ({
         project: this.projects.find(p => p.id === row.project),
@@ -268,7 +268,7 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
         description: row.description,
       })),
       worker: {
-        id: 'user-1',
+        _id: 'user-1',
         username: 'jdoe',
         firstname: 'John',
         lastname: 'Doe'

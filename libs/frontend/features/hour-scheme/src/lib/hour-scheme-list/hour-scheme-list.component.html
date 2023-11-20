@@ -21,10 +21,10 @@
       <a
         class="table-row border-b hover:bg-gray-200"
         *ngFor="let hourScheme of hourSchemes"
-        routerLink="{{ hourScheme.id }}"
+        routerLink="{{ hourScheme._id }}"
       >
         <td class="px-6 py-4">
-          {{ hourScheme.id }}
+          {{ hourScheme._id }}
         </td>
         <td class="px-6 py-4">
           {{ hourScheme.date | date: 'dd-MM-yyyy' }}

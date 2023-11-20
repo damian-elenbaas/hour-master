@@ -11,6 +11,19 @@ export class HourSchemeService {
 
   constructor(
     @InjectModel(HourScheme.name) private readonly hourSchemeModel: Model<HourScheme>) {
+    this.seedData();
+  }
+
+  async seedData(): Promise<void> {
+    const hourSchemes = await this.hourSchemeModel.find().exec();
+
+    if(hourSchemes.length > 0) {
+      this.logger.log('db already seeded');
+      return;
+    }
+
+    this.logger.log('seeding db');
+
   }
 
   async getAll(): Promise<IHourScheme[]> {
@@ -34,7 +47,12 @@ export class HourSchemeService {
   async create(hourScheme: ICreateHourScheme): Promise<IHourScheme> {
     this.logger.log(`create`);
 
+    this.logger.log(hourScheme);
+
     const createdHourScheme = new this.hourSchemeModel(hourScheme);
+
+    this.logger.log(createdHourScheme);
+
     return await createdHourScheme.save();
   }
 

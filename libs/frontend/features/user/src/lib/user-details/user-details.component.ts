@@ -67,7 +67,7 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
     this.popUpModal.hide();
     this.user$.subscribe(user => {
       if (user) {
-        this.userService.delete(user.id as Id).subscribe(() => {
+        this.userService.delete(user._id as Id).subscribe(() => {
           this.location.back();
         });
       }

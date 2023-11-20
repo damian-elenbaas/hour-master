@@ -10,8 +10,10 @@ import { MongooseModule } from '@nestjs/mongoose';
     ConfigModule.forRoot({isGlobal: true}),
     MongooseModule
       .forRoot(
-
-          'mongodb://localhost:27017/hour-master'
+        String(
+          process.env.MONGO_URI ||
+          'mongodb://127.0.0.1:27017/hour-master'
+        )
       ),
     HourSchemeModule,
     UserModule
