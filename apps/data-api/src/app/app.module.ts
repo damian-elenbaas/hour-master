@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 
-import { BackendFeaturesModule } from '@hour-master/backend/features';
+import { HourSchemeModule } from '@hour-master/backend/features/hour-scheme';
 import { UserModule } from '@hour-master/backend/user';
 
 @Module({
   imports: [
-    BackendFeaturesModule,
+    HourSchemeModule,
     UserModule
   ],
   controllers: [],
