@@ -1,3 +1,4 @@
+import * as bcrypt from 'bcrypt';
 import { ICreateUser, IUpdateUser, IUser, Id, UserRole } from '@hour-master/shared/api';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 
@@ -85,6 +86,16 @@ export class UserService {
     return user;
   }
 
+  findOneByUsername(username: string): IUser {
+    Logger.log(`${this.TAG} findOneByUsername(${username})`);
+    const user =
+      this.users$.value
+        .find((user) => user.username === username);
+
+    if(!user) throw new NotFoundException("User not found");
+    return user;
+  }
+
   create(user: ICreateUser): IUser {
     Logger.log(`${this.TAG} create(${user})`);
     const current = this.users$.value;
@@ -125,5 +136,9 @@ export class UserService {
     current.splice(index, 1);
     this.users$.next(current);
     return true;
+  }
+
+  async validatePassword(password: string, passwordHash: string): Promise<boolean> {
+    return await bcrypt.compare(password, passwordHash);
   }
 }
