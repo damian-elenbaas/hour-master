@@ -9,28 +9,28 @@ export class UserController {
   constructor(private userService: UserService) { }
 
   @Get('')
-  getAll(): IUser[] {
-    return this.userService.getAll();
+  async getAll(): Promise<IUser[]> {
+    return await this.userService.getAll();
   }
 
   @Get(':id')
-  getOne(@Param('id') id: Id): IUser {
-    return this.userService.getOne(id);
+  async getOne(@Param('id') id: Id): Promise<IUser> {
+    return await this.userService.getOne(id);
   }
 
   @Post('')
-  create(@Body() body: CreateUserDto): IUser {
-    return this.userService.create(body);
+  async create(@Body() body: CreateUserDto): Promise<IUser> {
+    return await this.userService.create(body);
   }
 
-  @(Patch(':id'))
-  update(@Param('id') id: Id, @Body() body: UpdateUserDto): boolean {
-    return this.userService.update(id, body);
+  @Patch(':id')
+  async update(@Param('id') id: Id, @Body() body: UpdateUserDto): Promise<boolean> {
+    return await this.userService.update(id, body);
   }
 
   @Delete(':id')
-  delete(@Param('id') id: Id): boolean {
-    return this.userService.delete(id);
+  async delete(@Param('id') id: Id): Promise<boolean> {
+    return await this.userService.delete(id);
   }
 
 }

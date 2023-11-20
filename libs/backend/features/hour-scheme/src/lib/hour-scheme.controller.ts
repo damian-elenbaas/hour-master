@@ -9,27 +9,27 @@ export class HourSchemeController {
   constructor(private hourSchemeService: HourSchemeService) { }
 
   @Get('')
-  getAll(): IHourScheme[] {
-    return this.hourSchemeService.getAll();
+  async getAll(): Promise<IHourScheme[]> {
+    return await this.hourSchemeService.getAll();
   }
 
   @Get(':id')
-  getOne(@Param('id') id: Id): IHourScheme {
-    return this.hourSchemeService.getOne(id);
+  async getOne(@Param('id') id: Id): Promise<IHourScheme> {
+    return await this.hourSchemeService.getOne(id);
   }
 
   @Post('')
-  create(@Body() body: CreateHourSchemeDto): IHourScheme {
-    return this.hourSchemeService.create(body);
+  async create(@Body() body: CreateHourSchemeDto): Promise<IHourScheme> {
+    return await this.hourSchemeService.create(body);
   }
 
   @Put(':id')
-  update(@Param('id') id: Id, @Body() body: UpdateHourSchemeDto): boolean {
-    return this.hourSchemeService.update(id, body);
+  async update(@Param('id') id: Id, @Body() body: UpdateHourSchemeDto): Promise<boolean> {
+    return await this.hourSchemeService.update(id, body);
   }
 
   @Delete(':id')
-  delete(@Param('id') id: Id): boolean {
-    return this.hourSchemeService.delete(id);
+  async delete(@Param('id') id: Id): Promise<boolean> {
+    return await this.hourSchemeService.delete(id);
   }
 }

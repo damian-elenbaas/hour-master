@@ -23,7 +23,7 @@ export class User implements IUser {
   @Prop({ required: true })
   lastname!: string;
 
-  @Prop({ required: true })
+  @Prop({ required: true, type: String, enum: UserRole })
   role!: UserRole;
 
   static schema = SchemaFactory.createForClass(User);
