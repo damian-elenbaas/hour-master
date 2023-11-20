@@ -1,6 +1,9 @@
 import { IHourSchemeRow, IMachine, IProject } from "@hour-master/shared/api";
 import { Prop, SchemaFactory } from "@nestjs/mongoose";
 import { IsMongoId } from "class-validator";
+import { HydratedDocument } from "mongoose";
+
+export type HourSchemaRowDocument = HydratedDocument<HourSchemaRow>;
 
 export class HourSchemaRow implements IHourSchemeRow {
 
@@ -19,6 +22,6 @@ export class HourSchemaRow implements IHourSchemeRow {
   @Prop({ required: true, type: String, ref: 'Machine' })
   machine?: IMachine | undefined;
 
-  static scheme = SchemaFactory.createForClass(HourSchemaRow);
-
 }
+
+export const HourSchemaRowSchema = SchemaFactory.createForClass(HourSchemaRow);

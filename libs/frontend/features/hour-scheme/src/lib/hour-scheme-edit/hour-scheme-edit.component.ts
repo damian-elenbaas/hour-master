@@ -231,10 +231,12 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
         description: row.description,
       })),
       worker: {
-        _id: 'user-1',
-        username: 'jdoe',
-        firstname: 'John',
-        lastname: 'Doe'
+        _id: '655b86d4b6267ea18bb9ddcb',
+        username: 'Magisch',
+        email: 'damian2003@outlook.com',
+        firstname: 'Damian',
+        lastname: 'Elenbaas',
+        role: 'Kantoor',
       }
     } as IHourScheme;
 
@@ -268,10 +270,12 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
         description: row.description,
       })),
       worker: {
-        _id: 'user-1',
-        username: 'jdoe',
-        firstname: 'John',
-        lastname: 'Doe'
+        _id: '655b86d4b6267ea18bb9ddcb',
+        username: 'Magisch',
+        email: 'damian2003@outlook.com',
+        firstname: 'Damian',
+        lastname: 'Elenbaas',
+        role: 'Kantoor',
       }
     } as IHourScheme;
 

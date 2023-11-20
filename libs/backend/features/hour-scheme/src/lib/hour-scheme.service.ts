@@ -11,49 +11,39 @@ export class HourSchemeService {
 
   constructor(
     @InjectModel(HourScheme.name) private readonly hourSchemeModel: Model<HourScheme>) {
-    this.seedData();
-  }
-
-  async seedData(): Promise<void> {
-    const hourSchemes = await this.hourSchemeModel.find().exec();
-
-    if(hourSchemes.length > 0) {
-      this.logger.log('db already seeded');
-      return;
-    }
-
-    this.logger.log('seeding db');
-
   }
 
   async getAll(): Promise<IHourScheme[]> {
     this.logger.log(`getAll()`);
 
-    return await this.hourSchemeModel.find().exec();
+    const hourSchemes = await this.hourSchemeModel.find().exec();
+
+    for(const hourScheme of hourSchemes) {
+      await hourScheme.populate('worker');
+    }
+
+    return hourSchemes;
   }
 
   async getOne(id: Id): Promise<IHourScheme> {
     this.logger.log(`getOne(${id})`);
 
-    const user = await this.hourSchemeModel.findById(id).exec();
+    const hourScheme = await this.hourSchemeModel.findById(id).exec();
 
-    if(!user) {
+    if(!hourScheme) {
       throw new NotFoundException(`User with id ${id} not found`);
     }
 
-    return user;
+    await hourScheme.populate('worker');
+
+    return hourScheme;
   }
 
   async create(hourScheme: ICreateHourScheme): Promise<IHourScheme> {
     this.logger.log(`create`);
-
-    this.logger.log(hourScheme);
-
-    const createdHourScheme = new this.hourSchemeModel(hourScheme);
-
-    this.logger.log(createdHourScheme);
-
-    return await createdHourScheme.save();
+    const createdHourScheme = await this.hourSchemeModel.create(hourScheme);
+    this.logger.log(`createdHourScheme: ${createdHourScheme}`);
+    return createdHourScheme;
   }
 
   async update(id: Id, hourScheme: IUpdateHourScheme): Promise<boolean> {

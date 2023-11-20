@@ -25,6 +25,8 @@ export class UserService {
 
     const user = await this.userModel.findById(id).exec();
 
+    this.logger.log(`user: ${user}`);
+
     if(!user) {
       throw new NotFoundException(`User with id ${id} not found`);
     }
