@@ -1,3 +1,4 @@
+import { AuthModule } from '@hour-master/frontend/auth';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UserListComponent } from './user-list/user-list.component';
@@ -34,6 +35,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
+    AuthModule,
     CommonModule,
     HttpClientModule,
     RouterModule.forChild(routes),

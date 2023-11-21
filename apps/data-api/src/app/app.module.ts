@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common';
 
 import { HourSchemeModule } from '@hour-master/backend/features/hour-scheme';
 import { UserModule } from '@hour-master/backend/user';
+import { AuthModule } from '@hour-master/backend/auth';
 import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
@@ -16,7 +17,8 @@ import { MongooseModule } from '@nestjs/mongoose';
         )
       ),
     HourSchemeModule,
-    UserModule
+    UserModule,
+    AuthModule
   ],
   controllers: [],
   providers: [],

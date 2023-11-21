@@ -4,6 +4,7 @@ import { AboutComponent } from './about/about.component';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { UiModule } from '@hour-master/ui';
+import { AuthModule } from '@hour-master/frontend/auth';
 
 const routes: Routes = [
   {
@@ -21,6 +22,7 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
+    AuthModule,
     RouterModule,
     RouterModule.forChild(routes),
     UiModule

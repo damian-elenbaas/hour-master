@@ -2,6 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { IUser } from '@hour-master/shared/api';
 import { Subscription } from 'rxjs';
 import { UserService } from '../user.service';
+import { Router } from '@angular/router';
+import { AuthService } from '@hour-master/frontend/auth';
 
 @Component({
   selector: 'hour-master-user-list',
@@ -10,13 +12,23 @@ import { UserService } from '../user.service';
 })
 export class UserListComponent implements OnInit, OnDestroy {
   users: IUser[] = [];
-  subscription: Subscription | null = null;
+  subscriptionList!: Subscription;
+  subscriptionAuth!: Subscription;
   loading = true;
 
-  constructor(private userService: UserService) { }
+  constructor(
+    private readonly router: Router,
+    private readonly authService: AuthService,
+    private userService: UserService) { }
 
   ngOnInit(): void {
-    this.subscription = this.userService
+    this.subscriptionAuth = this.authService.currentUserToken$.subscribe((token) => {
+      if (!token) {
+        this.router.navigate(['/auth/login']);
+      }
+    });
+
+    this.subscriptionList = this.userService
       .list()
       .subscribe((results) => {
       if(results) {
@@ -27,6 +39,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.subscription) this.subscription.unsubscribe();
+    if (this.subscriptionAuth) this.subscriptionAuth.unsubscribe();
+    if (this.subscriptionList) this.subscriptionList.unsubscribe();
   }
 }

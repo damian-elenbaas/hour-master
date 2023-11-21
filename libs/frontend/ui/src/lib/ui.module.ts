@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { AuthModule } from '@hour-master/frontend/auth';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { NavbarComponent } from './navbar/navbar.component';
@@ -8,7 +9,11 @@ import { NavbarItemDropdownItemComponent } from './navbar/navbar-item-dropdown/n
 import { DashboardButtonComponent } from './dashboard-button/dashboard-button.component';
 
 @NgModule({
-  imports: [CommonModule, RouterModule],
+  imports: [
+    AuthModule,
+    CommonModule,
+    RouterModule
+  ],
   declarations: [
     NavbarComponent,
     NavbarItemComponent,

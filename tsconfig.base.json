@@ -22,6 +22,7 @@
       ],
       "@hour-master/backend/user": ["libs/backend/user/src/index.ts"],
       "@hour-master/environments": ["libs/shared/environments/src/index.ts"],
+      "@hour-master/frontend/auth": ["libs/frontend/auth/src/index.ts"],
       "@hour-master/frontend/common": ["libs/frontend/common/src/index.ts"],
       "@hour-master/frontend/features/hour-scheme": [
         "libs/frontend/features/hour-scheme/src/index.ts"

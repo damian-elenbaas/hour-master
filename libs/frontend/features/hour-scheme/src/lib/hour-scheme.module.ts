@@ -9,6 +9,7 @@ import { UiModule } from '@hour-master/ui';
 import { HourSchemeEditComponent } from './hour-scheme-edit/hour-scheme-edit.component';
 import { CommonFrontendModule } from '@hour-master/frontend/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { AuthModule } from '@hour-master/frontend/auth';
 
 const routes: Routes = [
   {
@@ -35,6 +36,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
+    AuthModule,
     CommonModule,
     RouterModule.forChild(routes),
     HttpClientModule,

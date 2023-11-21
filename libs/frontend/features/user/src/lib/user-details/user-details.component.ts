@@ -1,10 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { IUser, Id, UserRole } from '@hour-master/shared/api';
 import { Observable, Subscription, of, switchMap, tap } from 'rxjs';
 import { UserService } from '../user.service';
 import { Location } from '@angular/common';
 import { Modal } from 'flowbite';
+import { AuthService } from '@hour-master/frontend/auth';
 
 @Component({
   selector: 'hour-master-user-details',
@@ -12,7 +13,8 @@ import { Modal } from 'flowbite';
   styleUrls: ['./user-details.component.scss'],
 })
 export class UserDetailsComponent implements OnInit, OnDestroy {
-  subscription!: Subscription | null;
+  subscriptionDetails!: Subscription;
+  subscriptionAuth!: Subscription;
   user$!: Observable<IUser>;
   popUpModal!: Modal;
   loaded = false;
@@ -20,6 +22,8 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private userService: UserService,
+    private authService: AuthService,
+    private router: Router,
     public location: Location
   ) { }
 
@@ -27,7 +31,13 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
     const modalElement = document.getElementById('popup-modal') as HTMLElement;
     this.popUpModal = new Modal(modalElement);
 
-    this.subscription = this.route.paramMap.pipe(
+    this.subscriptionAuth = this.authService.currentUserToken$.subscribe((token) => {
+      if (!token) {
+        this.router.navigate(['/auth/login']);
+      }
+    });
+
+    this.subscriptionDetails = this.route.paramMap.pipe(
       tap(params => console.log(params)),
       switchMap((params: ParamMap) => {
         if (!params.get('id')) {
@@ -60,7 +70,8 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.subscription) this.subscription.unsubscribe();
+    if (this.subscriptionAuth) this.subscriptionAuth.unsubscribe();
+    if (this.subscriptionDetails) this.subscriptionDetails.unsubscribe();
   }
 
   delete(): void {

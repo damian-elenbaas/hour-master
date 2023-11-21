@@ -11,7 +11,8 @@ import {
 import { ICreateUser, IUpdateUser, IUser, Id, UserRole } from '@hour-master/shared/api';
 import { Subscription, of, switchMap } from 'rxjs';
 import { UserService } from '../user.service';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { AuthService } from '@hour-master/frontend/auth';
 
 @Component({
   selector: 'hour-master-user-edit',
@@ -22,14 +23,17 @@ export class UserEditComponent implements OnInit, OnDestroy {
   userId!: Id;
   user!: IUser;
   userForm!: FormGroup;
-  subscription!: Subscription;
+  subscriptionDetails!: Subscription;
+  subscriptionAuth!: Subscription;
   roles = UserRole;
   loaded = false;
 
   constructor(
     private location: Location,
+    private router: Router,
     private route: ActivatedRoute,
     private userService: UserService,
+    private authService: AuthService,
     private fb: FormBuilder) {
     this.userForm = this.fb.group({
       username: ['', Validators.required],
@@ -43,7 +47,14 @@ export class UserEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.subscription = this.route.paramMap
+
+    this.subscriptionAuth = this.authService.currentUserToken$.subscribe((token) => {
+      if (!token) {
+        this.router.navigate(['/login']);
+      }
+    });
+
+    this.subscriptionDetails = this.route.paramMap
       .pipe(
         switchMap((params: ParamMap) => {
           if (!params.get('id')) {
@@ -77,7 +88,8 @@ export class UserEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.subscription) this.subscription.unsubscribe();
+    if (this.subscriptionAuth) this.subscriptionAuth.unsubscribe();
+    if (this.subscriptionDetails) this.subscriptionDetails.unsubscribe();
   }
 
   onSubmit(): void {
