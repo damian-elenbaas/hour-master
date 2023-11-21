@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { IUser } from '@hour-master/shared/api';
-import { Subscription } from 'rxjs';
+import { Subscription, of, switchMap } from 'rxjs';
 import { UserService } from '../user.service';
 import { Router } from '@angular/router';
 import { AuthService } from '@hour-master/frontend/auth';
@@ -22,15 +22,22 @@ export class UserListComponent implements OnInit, OnDestroy {
     private userService: UserService) { }
 
   ngOnInit(): void {
-    this.subscriptionAuth = this.authService.currentUserToken$.subscribe((token) => {
-      if (!token) {
-        this.router.navigate(['/auth/login']);
-      }
-    });
-
-    this.subscriptionList = this.userService
-      .list()
-      .subscribe((results) => {
+    this.subscriptionList = this.authService.currentUserToken$.pipe(
+      switchMap((token) => {
+        if (!token) {
+          this.router.navigate(['/auth/login']);
+          return of(null);
+        } else {
+          return this.userService.list({
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: 'Bearer ' + token
+            }
+          });
+        }
+      })
+    )
+    .subscribe((results) => {
       if(results) {
         this.users = results;
         this.loading = false;
