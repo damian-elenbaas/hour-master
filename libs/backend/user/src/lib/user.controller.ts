@@ -1,14 +1,16 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { UserService } from './user.service';
-import { IUser, Id } from '@hour-master/shared/api';
+import { IUser, Id, UserRole } from '@hour-master/shared/api';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { Roles } from '@hour-master/backend/decorators';
 
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) { }
 
   @Get('')
+  @Roles([UserRole.ADMIN])
   async getAll(): Promise<IUser[]> {
     return await this.userService.getAll();
   }

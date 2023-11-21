@@ -16,6 +16,9 @@
     "baseUrl": ".",
     "paths": {
       "@hour-master/backend/auth": ["libs/backend/auth/src/index.ts"],
+      "@hour-master/backend/decorators": [
+        "libs/backend/decorators/src/index.ts"
+      ],
       "@hour-master/backend/dto": ["libs/backend/dto/src/index.ts"],
       "@hour-master/backend/features/hour-scheme": [
         "libs/backend/features/hour-scheme/src/index.ts"
