@@ -29,7 +29,7 @@ export class AuthService {
       .pipe(
         switchMap((token: Token) => {
           if(token) {
-            this.currentUserToken$.next(token);
+            this.currentUserToken$.next(JSON.parse(token));
             return of(token);
           } else {
             return of('');

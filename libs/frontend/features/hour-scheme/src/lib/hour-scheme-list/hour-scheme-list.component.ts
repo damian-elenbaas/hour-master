@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { IHourScheme } from '@hour-master/shared/api';
-import { Subscription } from 'rxjs';
+import { IHourScheme, Token } from '@hour-master/shared/api';
+import { Subscription, of, switchMap } from 'rxjs';
 import { HourSchemeService } from '../hour-scheme.service';
 import { Router } from '@angular/router';
 import { AuthService } from '@hour-master/frontend/auth';
@@ -13,7 +13,6 @@ import { AuthService } from '@hour-master/frontend/auth';
 export class HourSchemeListComponent implements OnInit, OnDestroy {
   hourSchemes!: IHourScheme[];
   subscriptionList!: Subscription;
-  subscriptionAuth!: Subscription;
   loading = true;
 
   constructor(
@@ -22,15 +21,22 @@ export class HourSchemeListComponent implements OnInit, OnDestroy {
     private hourSchemeService: HourSchemeService) { }
 
   ngOnInit(): void {
-    this.subscriptionAuth = this.authService.currentUserToken$.subscribe((token) => {
-      if (!token) {
-        this.router.navigate(['/auth/login']);
-      }
-    });
-
-    this.subscriptionList = this.hourSchemeService.list().subscribe((results) => {
-      console.log(`results: ${results}`);
-      if(results) {
+    this.subscriptionList = this.authService.currentUserToken$.pipe(
+      switchMap((token: Token) => {
+        if (!token) {
+          this.router.navigate(['/auth/login']);
+          return of(null);
+        } else {
+          return this.hourSchemeService.list({
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: 'Bearer ' + token
+            }
+          });
+        }
+      })
+    ).subscribe((results) => {
+      if (results) {
         this.hourSchemes = results;
       }
       this.loading = false;
@@ -38,7 +44,6 @@ export class HourSchemeListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.subscriptionAuth) this.subscriptionAuth.unsubscribe();
     if (this.subscriptionList) this.subscriptionList.unsubscribe();
   }
 }
