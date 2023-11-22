@@ -32,7 +32,7 @@ export class HourSchemeDetailsComponent implements OnInit, OnDestroy {
     const modalElement = document.getElementById('popup-modal') as HTMLElement;
     this.popUpModal = new Modal(modalElement);
 
-    this.subscriptionAuth = this.authService.currentUser$.subscribe((token) => {
+    this.subscriptionAuth = this.authService.getUserTokenFromLocalStorage().subscribe((token) => {
       if (!token) {
         this.router.navigate(['/auth/login']);
       }

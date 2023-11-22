@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '@hour-master/frontend/auth';
+import { Token } from '@hour-master/shared/api';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -16,11 +17,12 @@ export class HomeComponent implements OnInit, OnDestroy {
     private readonly authService: AuthService) { }
 
   ngOnInit(): void {
-    this.sub = this.authService.currentUser$.subscribe((token) => {
-      if (!token) {
-        this.router.navigate(['/auth/login']);
-      }
-    });
+    this.sub = this.authService.getUserTokenFromLocalStorage()
+      .subscribe((token: Token | null) => {
+        if (!token) {
+          this.router.navigate(['/auth/login']);
+        }
+      });
   }
 
   ngOnDestroy(): void {

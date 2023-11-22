@@ -21,7 +21,7 @@ export class HourSchemeListComponent implements OnInit, OnDestroy {
     private hourSchemeService: HourSchemeService) { }
 
   ngOnInit(): void {
-    this.subscriptionList = this.authService.currentUser$
+    this.subscriptionList = this.authService.getUserTokenFromLocalStorage()
       .pipe(
         switchMap((token: Token | null) => {
           if (!token) {

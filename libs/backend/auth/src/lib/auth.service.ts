@@ -20,10 +20,14 @@ export class AuthService {
       throw new UnauthorizedException();
     }
 
+    // Filter out password from user object
+    user.password = undefined;
+
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const payload = { sub: user._id, username: user.username };
     return {
       access_token: await this.jwtService.signAsync(payload),
+      user: user,
     };
   }
 }

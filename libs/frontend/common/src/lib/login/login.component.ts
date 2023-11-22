@@ -28,7 +28,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     });
 
     this.sub = this.authService
-      .currentUser$
+      .getUserTokenFromLocalStorage()
       .subscribe((token: Token | null) => {
         if (token) {
           this.router.navigate(['/']);
@@ -37,11 +37,11 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if(this.sub) this.sub.unsubscribe();
+    if (this.sub) this.sub.unsubscribe();
   }
 
   onSubmit(): void {
-    if(this.loginForm.invalid) return;
+    if (this.loginForm.invalid) return;
 
     const { username, password } = this.loginForm.value;
 
