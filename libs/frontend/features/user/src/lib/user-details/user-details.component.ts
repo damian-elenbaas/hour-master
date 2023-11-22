@@ -33,7 +33,7 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
     this.popUpModal = new Modal(modalElement);
 
     this.subscriptionDetails =
-      this.authService.currentUserToken$
+      this.authService.getUserTokenFromLocalStorage()
       .pipe(
         switchMap((token) => {
           if (!token) {

@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AuthService } from '../auth.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { Token } from '@hour-master/shared/api';
 import { Router } from '@angular/router'
+import { AuthService } from '@hour-master/frontend/auth';
 
 @Component({
   selector: 'hour-master-login',
@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     this.sub = this.authService
       .getUserTokenFromLocalStorage()
-      .subscribe((token: Token) => {
+      .subscribe((token: Token | null) => {
         if (token) {
           this.router.navigate(['/']);
         }

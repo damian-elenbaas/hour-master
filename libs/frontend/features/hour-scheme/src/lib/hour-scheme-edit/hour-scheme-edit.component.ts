@@ -80,7 +80,7 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
     if ($modalElement === null) throw new Error('Modal element not found');
     this.addRowModal = new Modal($modalElement);
 
-    this.subscriptionAuth = this.authService.currentUserToken$.subscribe((token) => {
+    this.subscriptionAuth = this.authService.getUserTokenFromLocalStorage().subscribe((token) => {
       if (!token) {
         this.router.navigate(['/auth/login']);
       }

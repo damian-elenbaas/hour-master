@@ -16,7 +16,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     private readonly authService: AuthService) { }
 
   ngOnInit(): void {
-    this.sub = this.authService.currentUserToken$.subscribe((token) => {
+    this.sub = this.authService.getUserTokenFromLocalStorage().subscribe((token) => {
       if(token) {
         console.log(`token: ${token}`);
       } else {

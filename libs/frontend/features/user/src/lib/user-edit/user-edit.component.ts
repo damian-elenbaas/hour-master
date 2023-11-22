@@ -48,7 +48,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-    this.subscriptionAuth = this.authService.currentUserToken$.subscribe((token) => {
+    this.subscriptionAuth = this.authService.getUserTokenFromLocalStorage().subscribe((token) => {
       if (!token) {
         this.router.navigate(['/login']);
       }

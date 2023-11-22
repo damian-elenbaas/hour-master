@@ -5,6 +5,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { UiModule } from '@hour-master/ui';
 import { AuthModule } from '@hour-master/frontend/auth';
+import { LoginComponent } from './login/login.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 const routes: Routes = [
   {
@@ -17,6 +19,11 @@ const routes: Routes = [
     pathMatch: 'full',
     component: AboutComponent,
   },
+  {
+    path: 'auth/login',
+    pathMatch: 'full',
+    component: LoginComponent
+  }
 ];
 
 @NgModule({
@@ -25,15 +32,18 @@ const routes: Routes = [
     AuthModule,
     RouterModule,
     RouterModule.forChild(routes),
+    ReactiveFormsModule,
     UiModule
   ],
   declarations: [
     HomeComponent,
-    AboutComponent
+    AboutComponent,
+    LoginComponent
   ],
   exports: [
     AboutComponent,
-    HomeComponent
+    HomeComponent,
+    LoginComponent
   ],
 })
 export class StaticModule { }

@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { AuthModule } from '@hour-master/frontend/auth';
 import { UiModule } from '@hour-master/ui';
 import { initFlowbite } from 'flowbite';
 
 @Component({
   standalone: true,
   imports: [
+    AuthModule,
     RouterModule,
     UiModule
   ],

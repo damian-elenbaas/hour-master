@@ -1,8 +1,8 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from "@angular/core";
 import { environment } from '@hour-master/shared/environments';
-import { BehaviorSubject, Observable, catchError, map, of, switchMap, throwError } from 'rxjs';
-import { IUser, Token } from '@hour-master/shared/api';
+import { Observable, catchError, map, of, throwError } from 'rxjs';
+import { Token } from '@hour-master/shared/api';
 
 /**
  * See https://angular.io/guide/http#requesting-data-from-a-server
@@ -12,11 +12,11 @@ export const httpOptions = {
   responseType: 'json',
 };
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class AuthService {
   endpoint = `${environment.dataApiUrl}/api/auth`;
-
-  public currentUserToken$ = new BehaviorSubject<Token>('');
 
   private readonly CURRENT_USER = 'currentuser';
 
@@ -24,20 +24,7 @@ export class AuthService {
     'Content-Type': 'application/json',
   })
 
-  constructor(private readonly http: HttpClient) {
-    this.getUserTokenFromLocalStorage()
-      .pipe(
-        switchMap((token: Token) => {
-          if(token) {
-            this.currentUserToken$.next(JSON.parse(token));
-            return of(token);
-          } else {
-            return of('');
-          }
-        })
-      )
-      .subscribe(() => console.log('currentUserToken$ initialized'));
-  }
+  constructor(private readonly http: HttpClient) {}
 
   public login(username: string, password: string): Observable<Token> {
     console.log(`login at ${this.endpoint}/login`);
@@ -50,7 +37,6 @@ export class AuthService {
         map((response: any) => {
           const token = response.results.access_token;
           this.saveUserTokenToLocalStorage(token);
-          this.currentUserToken$.next(token);
           return token;
         }),
         catchError((error: any) => {
@@ -59,9 +45,13 @@ export class AuthService {
       )
   }
 
-  getUserTokenFromLocalStorage(): Observable<Token> {
+  getUserTokenFromLocalStorage(): Observable<Token | null> {
     const localToken = localStorage.getItem(this.CURRENT_USER);
-    return of(localToken || '');
+    if(localToken) {
+      return of(JSON.parse(localToken));
+    } else {
+      return of(null);
+    }
   }
 
   private saveUserTokenToLocalStorage(user: Token): void {
