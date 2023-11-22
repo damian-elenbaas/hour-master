@@ -16,15 +16,15 @@
     <div class="hidden w-full md:block md:w-auto" id="navbar-dropdown">
       <ul
         class="flex flex-col font-medium p-4 md:p-0 mt-4 rounded-lg bg-primary md:flex-row md:space-x-8 md:mt-0 md:border-0">
-        <li>
+        <li *ngIf="(authService.getUserTokenFromLocalStorage() | async) !== null">
           <hour-master-navbar-item [link]="''" [activeOptions]="{exact: true}">Home</hour-master-navbar-item>
         </li>
-        <li>
+        <li *ngIf="(authService.getUserTokenFromLocalStorage() | async) !== null">
           <hour-master-navbar-item [link]="'/hour-scheme'">
             Urenschema's
           </hour-master-navbar-item>
         </li>
-        <li>
+        <li *ngIf="(authService.getUserTokenFromLocalStorage() | async) !== null">
           <hour-master-navbar-item [link]="'/user'">
             Gebruikers
           </hour-master-navbar-item>
@@ -32,16 +32,14 @@
         <li>
           <hour-master-navbar-item [link]="'/about'">About</hour-master-navbar-item>
         </li>
-        <li *ngIf="(authService.currentUser$ | async) !== null">
-          <button
-            class="block text-white py-2 pl-3 pr-4 rounded md:border-0 md:hover:text-secondary md:p-0"
-            (click)="logout()"
-          >
+        <li *ngIf="(authService.getUserTokenFromLocalStorage() | async) !== null">
+          <button class="block text-white py-2 pl-3 pr-4 rounded md:border-0 md:hover:text-secondary md:p-0"
+            (click)="logout()">
             Uitloggen
           </button>
 
         </li>
-        <li *ngIf="(authService.currentUser$ | async) == null">
+        <li *ngIf="(authService.getUserTokenFromLocalStorage() | async) == null">
           <hour-master-navbar-item [link]="'/auth/login'">Inloggen</hour-master-navbar-item>
         </li>
       </ul>
