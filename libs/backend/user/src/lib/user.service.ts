@@ -20,7 +20,7 @@ export class UserService {
 
     const users = await this.userModel.find().exec();
 
-    if(users.length > 0) return;
+    if (users.length > 0) return;
 
     await this.userModel.create({
       username: 'admin',
@@ -41,15 +41,19 @@ export class UserService {
   async getOne(id: Id): Promise<IUser> {
     this.logger.log(`getOne(${id})`);
 
-    const user = await this.userModel.findById(id).exec();
+    try {
+      const user = await this.userModel.findById(id).exec();
 
-    this.logger.log(`user: ${user}`);
+      this.logger.log(`user: ${user}`);
 
-    if(!user) {
+      if (!user) {
+        throw new NotFoundException(`User with id ${id} not found`);
+      }
+
+      return user;
+    } catch(e) {
       throw new NotFoundException(`User with id ${id} not found`);
     }
-
-    return user;
   }
 
   async findOneByUsername(username: string): Promise<IUser> {
@@ -57,7 +61,7 @@ export class UserService {
 
     const user = await this.userModel.findOne({ username: username }).exec();
 
-    if(!user) {
+    if (!user) {
       throw new NotFoundException(`User with username ${username} not found`);
     }
 
@@ -81,7 +85,7 @@ export class UserService {
 
     const updatedUser = await this.userModel.findByIdAndUpdate(id, user).exec();
 
-    if(!updatedUser) {
+    if (!updatedUser) {
       throw new NotFoundException(`User with id ${id} not found`);
     }
 
@@ -93,7 +97,7 @@ export class UserService {
 
     const deletedUser = await this.userModel.findByIdAndDelete(id).exec();
 
-    if(!deletedUser) {
+    if (!deletedUser) {
       throw new NotFoundException(`User with id ${id} not found`);
     }
 

@@ -16,21 +16,25 @@ export class UserController {
   }
 
   @Get(':id')
+  @Roles([UserRole.ADMIN])
   async getOne(@Param('id') id: Id): Promise<IUser> {
     return await this.userService.getOne(id);
   }
 
   @Post('')
+  @Roles([UserRole.ADMIN])
   async create(@Body() body: CreateUserDto): Promise<IUser> {
     return await this.userService.create(body);
   }
 
   @Patch(':id')
+  @Roles([UserRole.ADMIN])
   async update(@Param('id') id: Id, @Body() body: UpdateUserDto): Promise<boolean> {
     return await this.userService.update(id, body);
   }
 
   @Delete(':id')
+  @Roles([UserRole.ADMIN])
   async delete(@Param('id') id: Id): Promise<boolean> {
     return await this.userService.delete(id);
   }

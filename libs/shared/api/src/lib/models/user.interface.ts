@@ -1,7 +1,6 @@
 import { Id } from "./id.type";
 
 export enum UserRole {
-  NONE = "Geen",
   OFFICE = "Kantoor",
   ROADWORKER = "Stratenmaker",
   ADMIN = "Admin",

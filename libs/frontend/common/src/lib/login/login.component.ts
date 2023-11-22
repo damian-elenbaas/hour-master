@@ -49,7 +49,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       .login(username, password)
       .subscribe({
         next: (token) => {
-          console.log(`token: ${token}`);
+          this.router.navigate(['/']);
         },
         error: (error) => {
           console.error(error);

@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { IUser, Id, Token, UserRole } from '@hour-master/shared/api';
-import { Observable, Subscription, of, switchMap, tap } from 'rxjs';
+import { IUser, Id, Token } from '@hour-master/shared/api';
+import { Observable, Subscription, of, switchMap } from 'rxjs';
 import { UserService } from '../user.service';
 import { Location } from '@angular/common';
 import { Modal } from 'flowbite';
@@ -34,55 +34,56 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
 
     this.subscriptionDetails =
       this.authService.getUserTokenFromLocalStorage()
-      .pipe(
-        switchMap((token) => {
-          if (!token) {
-            this.router.navigate(['/auth/login']);
-            return of(null);
-          } else {
-            this.token = token;
-            return this.route.paramMap;
-          }
-        })
-      ).pipe(
-        switchMap((params: ParamMap | null) => {
-          if(!params) return of(null)
+        .pipe(
+          switchMap((token) => {
+            if (!token) {
+              this.router.navigate(['/auth/login']);
+              return of(null);
+            } else {
+              this.token = token;
+              return this.route.paramMap;
+            }
+          })
+        )
+        .pipe(
+          switchMap((params: ParamMap | null) => {
+            if (!params) return of(null)
 
-          if (!params.get('id')) {
-            return of({
-              username: '',
-              email: '',
-              firstname: '',
-              lastname: '',
-              role: UserRole.NONE
-            } as IUser);
-          } else {
-            return this.userService.details(
-              params.get('id') as Id,
-              {
-                headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': 'Bearer ' + this.token
+            if (!params.get('id')) {
+              return of({
+                username: '',
+                email: '',
+                firstname: '',
+                lastname: '',
+              } as IUser);
+            } else {
+              return this.userService.details(
+                params.get('id') as Id,
+                {
+                  headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${this.token}`
+                  }
                 }
-              }
-            );
+              );
+            }
+          })
+        )
+        .subscribe({
+          next: (user: IUser | null) => {
+            if (!user) {
+              this.location.back();
+            }
+            else {
+              this.user$ = of(user);
+              this.loaded = true;
+            }
+          },
+          error: (error) => {
+            console.error(error);
+            this.location.back();
           }
-        })
-      ).subscribe({
-      next: (user: IUser | null) => {
-        if (!user) {
-          this.location.back();
-        }
-        else {
-          this.user$ = of(user);
-          this.loaded = true;
-        }
-      },
-      error: (error) => {
-        console.error(error);
-        this.location.back();
-      }
-    });
+        });
   }
 
   ngOnDestroy(): void {
@@ -94,7 +95,12 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
     this.popUpModal.hide();
     this.user$.subscribe(user => {
       if (user) {
-        this.userService.delete(user._id as Id).subscribe(() => {
+        this.userService.delete(user._id as Id, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${this.token}`
+          }
+        }).subscribe(() => {
           this.location.back();
         });
       }

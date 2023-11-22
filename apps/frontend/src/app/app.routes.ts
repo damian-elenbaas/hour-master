@@ -4,8 +4,8 @@ export const appRoutes: Route[] = [
   {
     path: '',
     loadChildren: () =>
-      import('@hour-master/frontend/static').then(
-        (m) => m.StaticModule
+      import('@hour-master/frontend/common').then(
+        (m) => m.CommonFrontendModule
       )
   },
   {

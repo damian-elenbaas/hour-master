@@ -109,6 +109,7 @@
                 userForm.controls['role'].invalid &&
                 userForm.controls['role'].touched
             }" formControlName="role" required>
+          <option value="" disabled selected>Selecteer een rol</option>
           <option *ngFor="let role of roles | keyvalue" [value]="role.value">
             {{ role.value | titlecase }}
           </option>
