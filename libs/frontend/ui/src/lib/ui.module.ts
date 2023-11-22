@@ -6,6 +6,7 @@ import { NavbarItemComponent } from './navbar/navbar-item/navbar-item.component'
 import { NavbarItemDropdownComponent } from './navbar/navbar-item-dropdown/navbar-item-dropdown.component';
 import { NavbarItemDropdownItemComponent } from './navbar/navbar-item-dropdown/navbar-item-dropdown-item/navbar-item-dropdown-item.component';
 import { DashboardButtonComponent } from './dashboard-button/dashboard-button.component';
+import { LoaderComponent } from './loader/loader.component';
 
 @NgModule({
   imports: [CommonModule, RouterModule],
@@ -15,7 +16,12 @@ import { DashboardButtonComponent } from './dashboard-button/dashboard-button.co
     NavbarItemDropdownComponent,
     NavbarItemDropdownItemComponent,
     DashboardButtonComponent,
+    LoaderComponent
   ],
-  exports: [NavbarComponent, DashboardButtonComponent],
+  exports: [
+    NavbarComponent,
+    DashboardButtonComponent,
+    LoaderComponent
+  ],
 })
 export class UiModule {}

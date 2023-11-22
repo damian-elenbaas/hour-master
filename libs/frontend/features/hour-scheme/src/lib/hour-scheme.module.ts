@@ -7,7 +7,6 @@ import { HourSchemeService } from './hour-scheme.service';
 import { HttpClientModule } from '@angular/common/http';
 import { UiModule } from '@hour-master/ui';
 import { HourSchemeEditComponent } from './hour-scheme-edit/hour-scheme-edit.component';
-import { CommonFrontendModule } from '@hour-master/frontend/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
 const routes: Routes = [
@@ -39,7 +38,6 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     HttpClientModule,
     UiModule,
-    CommonFrontendModule,
     ReactiveFormsModule
   ],
   declarations: [

@@ -7,7 +7,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { UserService } from './user.service';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
-import { CommonFrontendModule } from '@hour-master/frontend/common';
+import { UiModule } from '@hour-master/ui';
 
 const routes: Routes = [
   {
@@ -38,7 +38,7 @@ const routes: Routes = [
     HttpClientModule,
     RouterModule.forChild(routes),
     ReactiveFormsModule,
-    CommonFrontendModule
+    UiModule
   ],
   declarations: [
     UserListComponent,
