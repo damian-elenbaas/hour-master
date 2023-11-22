@@ -5,7 +5,8 @@ import { IHourScheme, IMachine, IProject, Id, UserRole } from '@hour-master/shar
 import { Modal } from 'flowbite';
 import { HourSchemeService } from '../hour-scheme.service';
 import { Subscription, of, switchMap } from 'rxjs';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { AuthService } from '@hour-master/frontend/auth';
 
 @Component({
   selector: 'hour-master-hour-scheme-edit',
@@ -25,7 +26,8 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
     date: this.fb.control(this.getCurrentDate(), Validators.required),
     rows: this.fb.array([])
   });
-  subscription!: Subscription;
+  subscriptionDetails!: Subscription;
+  subscriptionAuth!: Subscription;
   addRowModal!: Modal;
   loaded = false;
 
@@ -67,8 +69,10 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
   constructor(
     private location: Location,
     private fb: FormBuilder,
-    private service: HourSchemeService,
-    private route: ActivatedRoute
+    private hourSchemeService: HourSchemeService,
+    private authService: AuthService,
+    private route: ActivatedRoute,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -76,14 +80,20 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
     if ($modalElement === null) throw new Error('Modal element not found');
     this.addRowModal = new Modal($modalElement);
 
-    this.subscription = this.route.paramMap
+    this.subscriptionAuth = this.authService.currentUserToken$.subscribe((token) => {
+      if (!token) {
+        this.router.navigate(['/auth/login']);
+      }
+    });
+
+    this.subscriptionDetails = this.route.paramMap
       .pipe(
         switchMap((params: ParamMap) => {
           if (!params.get('id')) {
             return of(null);
           } else {
             this.hourSchemeId = params.get('id') as Id;
-            return this.service.details(params.get('id') as Id);
+            return this.hourSchemeService.details(params.get('id') as Id);
           }
         })
       )
@@ -125,8 +135,8 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-    return;
+    this.subscriptionAuth.unsubscribe();
+    this.subscriptionDetails.unsubscribe();
   }
 
   openAddRowModal(): void {
@@ -242,7 +252,7 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
 
     console.log(newHourScheme);
 
-    this.service.create(newHourScheme).subscribe({
+    this.hourSchemeService.create(newHourScheme).subscribe({
       next: (hourScheme: IHourScheme | null) => {
         if (hourScheme === null) return;
 
@@ -281,7 +291,7 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
 
     console.log(updatedHourScheme);
 
-    this.service.update(updatedHourScheme).subscribe({
+    this.hourSchemeService.update(updatedHourScheme).subscribe({
       next: (hourScheme: IHourScheme | null) => {
         if (hourScheme === null) return;
 

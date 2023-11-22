@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { AuthModule } from '@hour-master/frontend/auth';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { NavbarComponent } from './navbar/navbar.component';
@@ -9,7 +10,11 @@ import { DashboardButtonComponent } from './dashboard-button/dashboard-button.co
 import { LoaderComponent } from './loader/loader.component';
 
 @NgModule({
-  imports: [CommonModule, RouterModule],
+  imports: [
+    AuthModule,
+    CommonModule,
+    RouterModule
+  ],
   declarations: [
     NavbarComponent,
     NavbarItemComponent,
