@@ -49,7 +49,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-    this.subscriptionDetails = this.authService.getUserTokenFromLocalStorage()
+    this.subscriptionDetails = this.authService.currentUser$
       .pipe(
         switchMap((token) => {
           if (!token) {

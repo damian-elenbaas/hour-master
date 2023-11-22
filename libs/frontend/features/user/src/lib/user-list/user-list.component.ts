@@ -22,7 +22,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     private userService: UserService) { }
 
   ngOnInit(): void {
-    this.subscriptionList = this.authService.getUserTokenFromLocalStorage().pipe(
+    this.subscriptionList = this.authService.currentUser$.pipe(
       switchMap((token) => {
         if (!token) {
           this.router.navigate(['/auth/login']);

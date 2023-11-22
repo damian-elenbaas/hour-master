@@ -21,26 +21,27 @@ export class HourSchemeListComponent implements OnInit, OnDestroy {
     private hourSchemeService: HourSchemeService) { }
 
   ngOnInit(): void {
-    this.subscriptionList = this.authService.getUserTokenFromLocalStorage().pipe(
-      switchMap((token: Token | null) => {
-        if (!token) {
-          this.router.navigate(['/auth/login']);
-          return of(null);
-        } else {
-          return this.hourSchemeService.list({
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: 'Bearer ' + token
-            }
-          });
+    this.subscriptionList = this.authService.currentUser$
+      .pipe(
+        switchMap((token: Token | null) => {
+          if (!token) {
+            this.router.navigate(['/auth/login']);
+            return of(null);
+          } else {
+            return this.hourSchemeService.list({
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + token
+              }
+            });
+          }
+        })
+      ).subscribe((results) => {
+        if (results) {
+          this.hourSchemes = results;
         }
-      })
-    ).subscribe((results) => {
-      if (results) {
-        this.hourSchemes = results;
-      }
-      this.loading = false;
-    });
+        this.loading = false;
+      });
   }
 
   ngOnDestroy(): void {

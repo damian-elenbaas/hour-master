@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from "@angular/core";
 import { environment } from '@hour-master/shared/environments';
-import { Observable, catchError, map, of, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, map, of, throwError } from 'rxjs';
 import { Token } from '@hour-master/shared/api';
 
 /**
@@ -18,13 +18,19 @@ export const httpOptions = {
 export class AuthService {
   endpoint = `${environment.dataApiUrl}/api/auth`;
 
+  public readonly currentUser$ = new BehaviorSubject<Token | null>(null);
+
   private readonly CURRENT_USER = 'currentuser';
 
   private readonly headers = new HttpHeaders({
     'Content-Type': 'application/json',
   })
 
-  constructor(private readonly http: HttpClient) {}
+  constructor(private readonly http: HttpClient) {
+    this.getUserTokenFromLocalStorage().subscribe((token) => {
+      this.currentUser$.next(token);
+    })
+  }
 
   public login(username: string, password: string): Observable<Token> {
     console.log(`login at ${this.endpoint}/login`);
@@ -36,6 +42,7 @@ export class AuthService {
     ).pipe(
         map((response: any) => {
           const token = response.results.access_token;
+          this.currentUser$.next(token);
           this.saveUserTokenToLocalStorage(token);
           return token;
         }),

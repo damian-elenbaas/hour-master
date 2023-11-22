@@ -32,7 +32,7 @@
         <li>
           <hour-master-navbar-item [link]="'/about'">About</hour-master-navbar-item>
         </li>
-        <li *ngIf="(authService.getUserTokenFromLocalStorage() | async) === null">
+        <li *ngIf="isLoggedIn">
           <hour-master-navbar-item [link]="'/auth/login'">Inloggen</hour-master-navbar-item>
         </li>
       </ul>

@@ -28,7 +28,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     });
 
     this.sub = this.authService
-      .getUserTokenFromLocalStorage()
+      .currentUser$
       .subscribe((token: Token | null) => {
         if (token) {
           this.router.navigate(['/']);

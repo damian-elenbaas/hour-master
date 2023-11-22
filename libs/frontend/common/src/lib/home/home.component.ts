@@ -16,16 +16,14 @@ export class HomeComponent implements OnInit, OnDestroy {
     private readonly authService: AuthService) { }
 
   ngOnInit(): void {
-    this.sub = this.authService.getUserTokenFromLocalStorage().subscribe((token) => {
-      if(token) {
-        console.log(`token: ${token}`);
-      } else {
+    this.sub = this.authService.currentUser$.subscribe((token) => {
+      if (!token) {
         this.router.navigate(['/auth/login']);
       }
     });
   }
 
   ngOnDestroy(): void {
-    if(this.sub) this.sub.unsubscribe();
+    if (this.sub) this.sub.unsubscribe();
   }
 }
