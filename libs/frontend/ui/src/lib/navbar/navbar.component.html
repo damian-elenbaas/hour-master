@@ -32,7 +32,16 @@
         <li>
           <hour-master-navbar-item [link]="'/about'">About</hour-master-navbar-item>
         </li>
-        <li *ngIf="isLoggedIn">
+        <li *ngIf="(authService.currentUser$ | async) !== null">
+          <button
+            class="block text-white py-2 pl-3 pr-4 rounded md:border-0 md:hover:text-secondary md:p-0"
+            (click)="logout()"
+          >
+            Uitloggen
+          </button>
+
+        </li>
+        <li *ngIf="(authService.currentUser$ | async) == null">
           <hour-master-navbar-item [link]="'/auth/login'">Inloggen</hour-master-navbar-item>
         </li>
       </ul>

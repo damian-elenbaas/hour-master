@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from '@hour-master/frontend/auth';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'hour-master-navbar',
@@ -8,16 +8,15 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent {
-  sub!: Subscription;
-  isLoggedIn: boolean = false;
 
   constructor(
-    public readonly authService: AuthService
-  ) {
-    this.sub = this.authService
-      .currentUser$
-      .subscribe((user) => {
-        console.log(user);
-      });
+    public readonly authService: AuthService,
+    public readonly router: Router
+  ) {}
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/auth/login']);
   }
+
 }

@@ -52,6 +52,11 @@ export class AuthService {
       )
   }
 
+  public logout(): void {
+    this.currentUser$.next(null);
+    localStorage.removeItem(this.CURRENT_USER);
+  }
+
   getUserTokenFromLocalStorage(): Observable<Token | null> {
     const localToken = localStorage.getItem(this.CURRENT_USER);
     if(localToken) {
