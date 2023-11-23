@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationStart, Router, RouterModule } from '@angular/router';
 import { AuthModule, AuthService } from '@hour-master/frontend/auth';
+import { CommonFrontendModule } from '@hour-master/frontend/common';
+import { HourSchemeModule } from '@hour-master/frontend/features/hour-scheme';
+import { UserModule } from '@hour-master/frontend/features/user';
 import { Token } from '@hour-master/shared/api';
 import { UiModule } from '@hour-master/ui';
 import { initFlowbite } from 'flowbite';
@@ -10,6 +13,9 @@ import { of, switchMap } from 'rxjs';
 @Component({
   standalone: true,
   imports: [
+    CommonFrontendModule,
+    UserModule,
+    HourSchemeModule,
     AuthModule,
     RouterModule,
     UiModule
