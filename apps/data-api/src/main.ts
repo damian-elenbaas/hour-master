@@ -8,9 +8,11 @@ import { NestFactory } from '@nestjs/core';
 
 import { AppModule } from './app/app.module';
 import { ApiResponseInterceptor } from '@hour-master/backend/dto';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const configService = app.get(ConfigService);
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
 
@@ -20,7 +22,7 @@ async function bootstrap() {
   app.useGlobalInterceptors(new ApiResponseInterceptor());
   app.useGlobalPipes(new ValidationPipe());
 
-  const port = process.env.PORT || 3000;
+  const port = configService.get<number>('PORT') || 3000;
   await app.listen(port);
   Logger.log(
     `🚀 Data-API is running on: http://localhost:${port}/${globalPrefix}`

@@ -1,4 +1,4 @@
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Module } from '@nestjs/common';
 
 import { HourSchemeModule } from '@hour-master/backend/features/hour-scheme';
@@ -8,14 +8,15 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({isGlobal: true}),
+    ConfigModule.forRoot({ isGlobal: true }),
     MongooseModule
-      .forRoot(
-        String(
-          process.env.MONGO_URI ||
-          'mongodb://127.0.0.1:27017/hour-master'
-        )
-      ),
+      .forRootAsync({
+        imports: [ConfigModule],
+        inject: [ConfigService],
+        useFactory: (configService: ConfigService) => ({
+          uri: configService.get<string>('MONGO_URI') || 'mongodb://127.0.0.1:27017/hour-master',
+        }),
+      }),
     HourSchemeModule,
     UserModule,
     AuthModule
@@ -23,4 +24,4 @@ import { MongooseModule } from '@nestjs/mongoose';
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule { }
