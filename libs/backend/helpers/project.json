@@ -1,0 +1,29 @@
+{
+  "name": "helpers",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/backend/helpers/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/backend/helpers",
+        "main": "libs/backend/helpers/src/index.ts",
+        "tsConfig": "libs/backend/helpers/tsconfig.lib.json",
+        "assets": ["libs/backend/helpers/*.md"]
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "libs/backend/helpers/**/*.ts",
+          "libs/backend/helpers/package.json"
+        ]
+      }
+    }
+  },
+  "tags": []
+}

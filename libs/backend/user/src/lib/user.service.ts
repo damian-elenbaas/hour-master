@@ -8,15 +8,22 @@ import {
 } from '@hour-master/shared/api';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 
-import { InjectModel } from '@nestjs/mongoose';
+import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { User } from './schemas/user.schema';
 import { Model } from 'mongoose';
+import { RecommendationsService } from '@hour-master/backend/recommendations';
+import { transaction } from '@hour-master/backend/helpers';
+import { Connection } from 'mongoose';
 
 @Injectable()
 export class UserService {
   private readonly logger: Logger = new Logger(UserService.name);
 
-  constructor(@InjectModel(User.name) private readonly userModel: Model<User>) {
+  constructor(
+    @InjectModel(User.name) private readonly userModel: Model<User>,
+    @InjectConnection() private connection: Connection,
+    private readonly recommendationsService: RecommendationsService
+  ) {
     this.seedData();
   }
 
@@ -73,41 +80,73 @@ export class UserService {
     return user;
   }
 
-  async create(user: ICreateUser): Promise<IUser> {
-    this.logger.log(`create`);
+  async create(user: ICreateUser): Promise<IUser | null> {
+    return transaction(this.connection, async (session) => {
+      this.logger.log(`Creating new user: ${JSON.stringify(user)}`);
 
-    // Generate hashed password
-    const hashedPassword = await this.generateHashedPassword(
-      user.password as string
-    );
-    user.password = hashedPassword;
+      const hashedPassword = await this.generateHashedPassword(
+        user.password as string
+      );
+      user.password = hashedPassword;
 
-    const createdUser = await this.userModel.create(user);
-    return createdUser;
+      const newUser = new this.userModel(user);
+      const createdUser = await newUser.save({ session });
+
+      const result = await this.recommendationsService.createOrUpdateUser(createdUser);
+
+      if (!result) {
+        await session.abortTransaction();
+      } else {
+        await session.commitTransaction();
+      }
+
+      return createdUser;
+    });
   }
 
   async update(id: Id, user: IUpdateUser): Promise<boolean> {
-    this.logger.log(`update(${id})`);
+    return transaction(this.connection, async (session) => {
+      this.logger.log(`update(${id})`);
 
-    const updatedUser = await this.userModel.findByIdAndUpdate(id, user).exec();
+      const updatedUser = await this.userModel.findByIdAndUpdate(id, user).exec();
 
-    if (!updatedUser) {
-      throw new NotFoundException(`User with id ${id} not found`);
-    }
+      if (!updatedUser) {
+        throw new NotFoundException(`User with id ${id} not found`);
+      }
 
-    return true;
+      const result = await this.recommendationsService.createOrUpdateUser(updatedUser);
+
+      if (!result) {
+        await session.abortTransaction();
+        return false;
+      }
+
+      await session.commitTransaction();
+      return true;
+    });
+
   }
 
   async delete(id: Id): Promise<boolean> {
-    this.logger.log(`delete(${id})`);
+    return transaction(this.connection, async (session) => {
+      this.logger.log(`delete(${id})`);
 
-    const deletedUser = await this.userModel.findByIdAndDelete(id).exec();
+      const deletedUser = await this.userModel.findByIdAndDelete(id).exec();
 
-    if (!deletedUser) {
-      throw new NotFoundException(`User with id ${id} not found`);
-    }
+      if (!deletedUser) {
+        throw new NotFoundException(`User with id ${id} not found`);
+      }
 
-    return true;
+      const result = await this.recommendationsService.deleteUser(id);
+
+      if (!result) {
+        await session.abortTransaction();
+        return false;
+      }
+
+      await session.commitTransaction();
+      return true;
+    });
   }
 
   async generateHashedPassword(password: string): Promise<string> {
