@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { IUser, Id, UserRole } from '@hour-master/shared/api';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -7,7 +15,7 @@ import { Roles } from '@hour-master/backend/decorators';
 
 @Controller('user')
 export class UserController {
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService) {}
 
   @Get('')
   @Roles([UserRole.ADMIN])
@@ -29,7 +37,10 @@ export class UserController {
 
   @Patch(':id')
   @Roles([UserRole.ADMIN])
-  async update(@Param('id') id: Id, @Body() body: UpdateUserDto): Promise<boolean> {
+  async update(
+    @Param('id') id: Id,
+    @Body() body: UpdateUserDto
+  ): Promise<boolean> {
     return await this.userService.update(id, body);
   }
 
@@ -38,5 +49,4 @@ export class UserController {
   async delete(@Param('id') id: Id): Promise<boolean> {
     return await this.userService.delete(id);
   }
-
 }

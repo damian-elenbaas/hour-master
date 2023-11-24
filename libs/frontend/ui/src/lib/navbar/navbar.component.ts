@@ -8,7 +8,6 @@ import { AuthService } from '@hour-master/frontend/auth';
   styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent {
-
   constructor(
     public readonly authService: AuthService,
     public readonly router: Router
@@ -18,5 +17,4 @@ export class NavbarComponent {
     this.authService.logout();
     this.router.navigate(['/auth/login']);
   }
-
 }

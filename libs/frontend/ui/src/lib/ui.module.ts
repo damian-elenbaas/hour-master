@@ -10,23 +10,15 @@ import { DashboardButtonComponent } from './dashboard-button/dashboard-button.co
 import { LoaderComponent } from './loader/loader.component';
 
 @NgModule({
-  imports: [
-    AuthModule,
-    CommonModule,
-    RouterModule
-  ],
+  imports: [AuthModule, CommonModule, RouterModule],
   declarations: [
     NavbarComponent,
     NavbarItemComponent,
     NavbarItemDropdownComponent,
     NavbarItemDropdownItemComponent,
     DashboardButtonComponent,
-    LoaderComponent
+    LoaderComponent,
   ],
-  exports: [
-    NavbarComponent,
-    DashboardButtonComponent,
-    LoaderComponent
-  ],
+  exports: [NavbarComponent, DashboardButtonComponent, LoaderComponent],
 })
 export class UiModule {}

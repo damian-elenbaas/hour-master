@@ -4,14 +4,10 @@ import {
   IUpdateProject,
   IUpsertProject,
   IUser,
-  Id
-} from "@hour-master/shared/api";
+  Id,
+} from '@hour-master/shared/api';
 
-import {
-  IsNotEmpty,
-  IsOptional,
-  IsString
-} from "class-validator";
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateProjectDto implements ICreateProject {
   @IsNotEmpty()
@@ -55,4 +51,3 @@ export class UpdateProjectDto implements IUpdateProject {
   @IsOptional()
   admin!: IUser;
 }
-

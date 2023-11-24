@@ -4,15 +4,10 @@ import {
   IUpdateHourSchemeRow,
   IMachine,
   IProject,
-  Id
-} from "@hour-master/shared/api";
+  Id,
+} from '@hour-master/shared/api';
 
-import {
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  IsString
-} from "class-validator";
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateHourSchemeRowDto implements ICreateHourSchemeRow {
   @IsNotEmpty()
@@ -61,4 +56,3 @@ export class UpdateHourSchemeRowDto implements IUpdateHourSchemeRow {
   @IsOptional()
   machine?: IMachine;
 }
-

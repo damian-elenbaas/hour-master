@@ -1,10 +1,29 @@
-<button id="dropdownNavbarLink" data-dropdown-toggle="dropdownNavbar"
-  class="flex items-center justify-between w-full py-2 pl-3 pr-4 rounded md:hover:bg-transparent md:border-0 md:hover:text-secondary md:p-0 md:w-auto text-white hover:bg-secondary">{{label}}
-  <svg class="w-2.5 h-2.5 ml-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" />
-  </svg></button>
+<button
+  id="dropdownNavbarLink"
+  data-dropdown-toggle="dropdownNavbar"
+  class="flex items-center justify-between w-full py-2 pl-3 pr-4 rounded md:hover:bg-transparent md:border-0 md:hover:text-secondary md:p-0 md:w-auto text-white hover:bg-secondary"
+>
+  {{ label }}
+  <svg
+    class="w-2.5 h-2.5 ml-2.5"
+    aria-hidden="true"
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 10 6"
+  >
+    <path
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      d="m1 1 4 4 4-4"
+    />
+  </svg>
+</button>
 <!-- Dropdown menu -->
-<div id="dropdownNavbar"
-  class="z-10 hidden font-normal bg-secondary divide-y divide-gray-100 rounded-lg shadow w-44">
+<div
+  id="dropdownNavbar"
+  class="z-10 hidden font-normal bg-secondary divide-y divide-gray-100 rounded-lg shadow w-44"
+>
   <ng-content></ng-content>
 </div>

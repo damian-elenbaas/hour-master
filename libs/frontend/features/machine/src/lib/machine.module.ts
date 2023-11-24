@@ -15,6 +15,6 @@ import { MachineEditComponent } from './machine-edit/machine-edit.component';
     MachineListComponent,
     MachineDetailsComponent,
     MachineEditComponent,
-  ]
+  ],
 })
 export class MachineModule {}

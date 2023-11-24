@@ -5,4 +5,3 @@ export * from './lib/project.dto';
 export * from './lib/location.dto';
 
 export * from './lib/api-response.interceptor';
-

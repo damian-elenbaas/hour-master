@@ -26,17 +26,19 @@ export class HourSchemeDetailsComponent implements OnInit, OnDestroy {
     private readonly authService: AuthService,
     private readonly router: Router,
     public location: Location
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     const modalElement = document.getElementById('popup-modal') as HTMLElement;
     this.popUpModal = new Modal(modalElement);
 
-    this.subscriptionAuth = this.authService.getUserTokenFromLocalStorage().subscribe((token) => {
-      if (!token) {
-        this.router.navigate(['/auth/login']);
-      }
-    });
+    this.subscriptionAuth = this.authService
+      .getUserTokenFromLocalStorage()
+      .subscribe((token) => {
+        if (!token) {
+          this.router.navigate(['/auth/login']);
+        }
+      });
 
     this.route.paramMap.subscribe((params) => {
       this.hourSchemeId = params.get('id') as Id;
@@ -48,11 +50,12 @@ export class HourSchemeDetailsComponent implements OnInit, OnDestroy {
           if (!hourScheme) return;
 
           this.hourScheme = hourScheme;
-          this.totalHours = hourScheme?.rows?.reduce((acc, row) => {
-            return acc + row.hours;
-          }, 0) || 0;
+          this.totalHours =
+            hourScheme?.rows?.reduce((acc, row) => {
+              return acc + row.hours;
+            }, 0) || 0;
         });
-    })
+    });
   }
 
   ngOnDestroy(): void {

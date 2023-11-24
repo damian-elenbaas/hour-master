@@ -1,6 +1,11 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 
-import { ICreateHourScheme, IHourScheme, IUpdateHourScheme, Id } from '@hour-master/shared/api';
+import {
+  ICreateHourScheme,
+  IHourScheme,
+  IUpdateHourScheme,
+  Id,
+} from '@hour-master/shared/api';
 import { HourScheme } from './schemas/hour-scheme.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
@@ -10,15 +15,16 @@ export class HourSchemeService {
   private readonly logger: Logger = new Logger(HourSchemeService.name);
 
   constructor(
-    @InjectModel(HourScheme.name) private readonly hourSchemeModel: Model<HourScheme>) {
-  }
+    @InjectModel(HourScheme.name)
+    private readonly hourSchemeModel: Model<HourScheme>
+  ) {}
 
   async getAll(): Promise<IHourScheme[]> {
     this.logger.log(`getAll()`);
 
     const hourSchemes = await this.hourSchemeModel.find().exec();
 
-    for(const hourScheme of hourSchemes) {
+    for (const hourScheme of hourSchemes) {
       await hourScheme.populate('worker');
     }
 
@@ -30,7 +36,7 @@ export class HourSchemeService {
 
     const hourScheme = await this.hourSchemeModel.findById(id).exec();
 
-    if(!hourScheme) {
+    if (!hourScheme) {
       throw new NotFoundException(`User with id ${id} not found`);
     }
 
@@ -49,11 +55,11 @@ export class HourSchemeService {
   async update(id: Id, hourScheme: IUpdateHourScheme): Promise<boolean> {
     this.logger.log(`update(${id})`);
 
-    const updatedHourScheme =
-      await this.hourSchemeModel
-        .findByIdAndUpdate(id, hourScheme).exec();
+    const updatedHourScheme = await this.hourSchemeModel
+      .findByIdAndUpdate(id, hourScheme)
+      .exec();
 
-    if(!updatedHourScheme) {
+    if (!updatedHourScheme) {
       throw new NotFoundException(`Hour scheme with id ${id} not found`);
     }
 
@@ -63,10 +69,11 @@ export class HourSchemeService {
   async delete(id: Id): Promise<boolean> {
     this.logger.log(`delete(${id})`);
 
-    const deletedHourScheme =
-      await this.hourSchemeModel.findByIdAndDelete(id).exec();
+    const deletedHourScheme = await this.hourSchemeModel
+      .findByIdAndDelete(id)
+      .exec();
 
-    if(!deletedHourScheme) {
+    if (!deletedHourScheme) {
       throw new NotFoundException(`Hour scheme with id ${id} not found`);
     }
 

@@ -1,4 +1,4 @@
-import { IsStrongPasswordOptions } from "class-validator";
+import { IsStrongPasswordOptions } from 'class-validator';
 
 export const StrongPasswordOptions: IsStrongPasswordOptions = {
   // TODO: change to better values
@@ -6,5 +6,5 @@ export const StrongPasswordOptions: IsStrongPasswordOptions = {
   minNumbers: 0,
   minSymbols: 0,
   minLowercase: 0,
-  minUppercase: 0
-}
+  minUppercase: 0,
+};

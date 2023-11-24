@@ -6,9 +6,16 @@ import {
   FormGroup,
   ValidationErrors,
   ValidatorFn,
-  Validators
+  Validators,
 } from '@angular/forms';
-import { ICreateUser, IUpdateUser, IUser, Id, Token, UserRole } from '@hour-master/shared/api';
+import {
+  ICreateUser,
+  IUpdateUser,
+  IUser,
+  Id,
+  Token,
+  UserRole,
+} from '@hour-master/shared/api';
 import { Subscription, of, switchMap } from 'rxjs';
 import { UserService } from '../user.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
@@ -17,7 +24,7 @@ import { AuthService } from '@hour-master/frontend/auth';
 @Component({
   selector: 'hour-master-user-edit',
   templateUrl: './user-edit.component.html',
-  styleUrls: ['./user-edit.component.scss']
+  styleUrls: ['./user-edit.component.scss'],
 })
 export class UserEditComponent implements OnInit, OnDestroy {
   userId!: Id;
@@ -35,21 +42,25 @@ export class UserEditComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private userService: UserService,
     private authService: AuthService,
-    private fb: FormBuilder) {
-    this.userForm = this.fb.group({
-      username: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      firstname: ['', Validators.required],
-      lastname: ['', Validators.required],
-      role: ['', Validators.required],
-      password: ['', Validators.required],
-      passwordConfirm: ['', Validators.required]
-    }, { validators: passwordMatchValidator });
+    private fb: FormBuilder
+  ) {
+    this.userForm = this.fb.group(
+      {
+        username: ['', Validators.required],
+        email: ['', [Validators.required, Validators.email]],
+        firstname: ['', Validators.required],
+        lastname: ['', Validators.required],
+        role: ['', Validators.required],
+        password: ['', Validators.required],
+        passwordConfirm: ['', Validators.required],
+      },
+      { validators: passwordMatchValidator }
+    );
   }
 
   ngOnInit(): void {
-
-    this.subscriptionDetails = this.authService.getUserTokenFromLocalStorage()
+    this.subscriptionDetails = this.authService
+      .getUserTokenFromLocalStorage()
       .pipe(
         switchMap((token) => {
           if (!token) {
@@ -64,14 +75,14 @@ export class UserEditComponent implements OnInit, OnDestroy {
       .pipe(
         switchMap((params: ParamMap | null) => {
           if (params) {
-            if (!params.get('id')) return of(null)
+            if (!params.get('id')) return of(null);
 
             this.userId = params.get('id') as Id;
             return this.userService.details(this.userId, {
               headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${this.currentUserToken}`
-              }
+                Authorization: `Bearer ${this.currentUserToken}`,
+              },
             });
           } else {
             return of(null);
@@ -96,7 +107,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
         error: (error) => {
           console.error(error);
           this.location.back();
-        }
+        },
       });
   }
 
@@ -120,28 +131,26 @@ export class UserEditComponent implements OnInit, OnDestroy {
       email: this.userForm.value.email as string,
       firstname: this.userForm.value.firstname as string,
       lastname: this.userForm.value.lastname as string,
-      role: this.userForm.value.role as UserRole
-    }
+      role: this.userForm.value.role as UserRole,
+    };
 
-    this.userService.update(
-      this.userId as Id,
-      updateUser,
-      {
+    this.userService
+      .update(this.userId as Id, updateUser, {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${this.currentUserToken}`
-        }
-      }
-    ).subscribe({
-      next: (success) => {
-        if (success) {
-          this.location.back();
-        }
-      },
-      error: (error) => {
-        console.error(error);
-      }
-    });
+          Authorization: `Bearer ${this.currentUserToken}`,
+        },
+      })
+      .subscribe({
+        next: (success) => {
+          if (success) {
+            this.location.back();
+          }
+        },
+        error: (error) => {
+          console.error(error);
+        },
+      });
   }
 
   createUser(): void {
@@ -153,15 +162,16 @@ export class UserEditComponent implements OnInit, OnDestroy {
       firstname: this.userForm.value.firstname as string,
       lastname: this.userForm.value.lastname as string,
       role: this.userForm.value.role as UserRole,
-      password: this.userForm.value.password as string
-    }
+      password: this.userForm.value.password as string,
+    };
 
-    this.userService.create(createUser, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${this.currentUserToken}`
-      }
-    })
+    this.userService
+      .create(createUser, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${this.currentUserToken}`,
+        },
+      })
       .subscribe({
         next: (user) => {
           if (user) {
@@ -171,7 +181,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
         error: (error) => {
           // TODO: show error
           console.error(error);
-        }
+        },
       });
   }
 
@@ -189,4 +199,4 @@ const passwordMatchValidator: ValidatorFn = (
   return password && passwordConfirm && password.value !== passwordConfirm.value
     ? { passwordMismatch: true }
     : null;
-}
+};

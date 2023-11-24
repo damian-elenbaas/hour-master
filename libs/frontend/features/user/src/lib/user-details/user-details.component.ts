@@ -26,64 +26,60 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private router: Router,
     public location: Location
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     const modalElement = document.getElementById('popup-modal') as HTMLElement;
     this.popUpModal = new Modal(modalElement);
 
-    this.subscriptionDetails =
-      this.authService.getUserTokenFromLocalStorage()
-        .pipe(
-          switchMap((token) => {
-            if (!token) {
-              this.router.navigate(['/auth/login']);
-              return of(null);
-            } else {
-              this.token = token;
-              return this.route.paramMap;
-            }
-          })
-        )
-        .pipe(
-          switchMap((params: ParamMap | null) => {
-            if (!params) return of(null)
-
-            if (!params.get('id')) {
-              return of({
-                username: '',
-                email: '',
-                firstname: '',
-                lastname: '',
-              } as IUser);
-            } else {
-              return this.userService.details(
-                params.get('id') as Id,
-                {
-                  headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${this.token}`
-                  }
-                }
-              );
-            }
-          })
-        )
-        .subscribe({
-          next: (user: IUser | null) => {
-            if (!user) {
-              this.location.back();
-            }
-            else {
-              this.user$ = of(user);
-              this.loaded = true;
-            }
-          },
-          error: (error) => {
-            console.error(error);
-            this.location.back();
+    this.subscriptionDetails = this.authService
+      .getUserTokenFromLocalStorage()
+      .pipe(
+        switchMap((token) => {
+          if (!token) {
+            this.router.navigate(['/auth/login']);
+            return of(null);
+          } else {
+            this.token = token;
+            return this.route.paramMap;
           }
-        });
+        })
+      )
+      .pipe(
+        switchMap((params: ParamMap | null) => {
+          if (!params) return of(null);
+
+          if (!params.get('id')) {
+            return of({
+              username: '',
+              email: '',
+              firstname: '',
+              lastname: '',
+            } as IUser);
+          } else {
+            return this.userService.details(params.get('id') as Id, {
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${this.token}`,
+              },
+            });
+          }
+        })
+      )
+      .subscribe({
+        next: (user: IUser | null) => {
+          if (!user) {
+            this.location.back();
+          } else {
+            this.user$ = of(user);
+            this.loaded = true;
+          }
+        },
+        error: (error) => {
+          console.error(error);
+          this.location.back();
+        },
+      });
   }
 
   ngOnDestroy(): void {
@@ -93,16 +89,18 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
 
   delete(): void {
     this.popUpModal.hide();
-    this.user$.subscribe(user => {
+    this.user$.subscribe((user) => {
       if (user) {
-        this.userService.delete(user._id as Id, {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${this.token}`
-          }
-        }).subscribe(() => {
-          this.location.back();
-        });
+        this.userService
+          .delete(user._id as Id, {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${this.token}`,
+            },
+          })
+          .subscribe(() => {
+            this.location.back();
+          });
       }
     });
   }

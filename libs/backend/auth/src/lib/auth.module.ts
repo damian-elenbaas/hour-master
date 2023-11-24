@@ -16,10 +16,10 @@ import { UserModule } from '@hour-master/backend/user';
       secret: jwtConstants.secret,
       signOptions: { expiresIn: '3600s' },
     }),
-    UserModule
+    UserModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, { provide: APP_GUARD, useClass: AuthGuard }],
   exports: [AuthService],
 })
-export class AuthModule { }
+export class AuthModule {}

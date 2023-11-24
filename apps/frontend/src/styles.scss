@@ -11,7 +11,9 @@
     font-family: 'Poppins', sans-serif;
   }
 
-  h1, h2, h3 {
+  h1,
+  h2,
+  h3 {
     @apply text-center py-4;
     font-family: 'Montserrat', sans-serif;
   }
@@ -38,7 +40,7 @@
   }
 
   section ul li::before {
-    content: "•";
+    content: '•';
     @apply text-accent;
     font-weight: bold;
     display: inline-block;
@@ -50,10 +52,21 @@
     @apply block mb-2 text-sm font-medium text-gray-900;
   }
 
-  [type='text'], [type='email'], [type='url'], [type='password'],
-  [type='number'], [type='date'], [type='datetime-local'], [type='month'],
-  [type='search'], [type='tel'], [type='time'], [type='week'],
-  [multiple], textarea, select {
+  [type='text'],
+  [type='email'],
+  [type='url'],
+  [type='password'],
+  [type='number'],
+  [type='date'],
+  [type='datetime-local'],
+  [type='month'],
+  [type='search'],
+  [type='tel'],
+  [type='time'],
+  [type='week'],
+  [multiple],
+  textarea,
+  select {
     @apply bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-accent focus:border-accent block w-full p-2.5;
   }
 
@@ -65,11 +78,13 @@
     @apply block mb-2 text-sm font-medium text-red-700;
   }
 
-  input.error, select.error {
+  input.error,
+  select.error {
     @apply bg-red-50 border border-red-500 text-red-900 placeholder-red-700 focus:ring-red-500 focus:border-red-500;
   }
 
-  th, td {
+  th,
+  td {
     @apply px-6 py-4;
   }
 }

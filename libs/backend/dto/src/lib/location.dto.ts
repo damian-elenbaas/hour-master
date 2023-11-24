@@ -2,9 +2,9 @@ import {
   ICreateLocation,
   IUpsertLocation,
   IUpdateLocation,
-  Id
-} from "@hour-master/shared/api";
-import { IsNotEmpty, IsOptional, IsString } from "class-validator";
+  Id,
+} from '@hour-master/shared/api';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateLocationDto implements ICreateLocation {
   @IsNotEmpty()
@@ -51,4 +51,3 @@ export class UpdateLocationDto implements IUpdateLocation {
   @IsString()
   postalCode!: string;
 }
-

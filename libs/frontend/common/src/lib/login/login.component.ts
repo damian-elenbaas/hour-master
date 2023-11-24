@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { Token } from '@hour-master/shared/api';
-import { Router } from '@angular/router'
+import { Router } from '@angular/router';
 import { AuthService } from '@hour-master/frontend/auth';
 
 @Component({
@@ -11,7 +11,6 @@ import { AuthService } from '@hour-master/frontend/auth';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit, OnDestroy {
-
   loginForm!: FormGroup;
 
   sub!: Subscription;
@@ -19,7 +18,8 @@ export class LoginComponent implements OnInit, OnDestroy {
   constructor(
     private readonly authService: AuthService,
     private readonly router: Router,
-    private readonly fb: FormBuilder) { }
+    private readonly fb: FormBuilder
+  ) {}
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
@@ -33,7 +33,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         if (token) {
           this.router.navigate(['/']);
         }
-      })
+      });
   }
 
   ngOnDestroy(): void {
@@ -45,15 +45,13 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     const { username, password } = this.loginForm.value;
 
-    this.authService
-      .login(username, password)
-      .subscribe({
-        next: (token) => {
-          this.router.navigate(['/']);
-        },
-        error: (error) => {
-          console.error(error);
-        }
-      });
+    this.authService.login(username, password).subscribe({
+      next: (token) => {
+        this.router.navigate(['/']);
+      },
+      error: (error) => {
+        console.error(error);
+      },
+    });
   }
 }

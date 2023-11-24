@@ -30,7 +30,7 @@ const routes: Routes = [
     path: ':id/edit',
     pathMatch: 'full',
     component: HourSchemeEditComponent,
-  }
+  },
 ];
 
 @NgModule({
@@ -40,7 +40,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     HttpClientModule,
     UiModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
   declarations: [
     HourSchemeListComponent,

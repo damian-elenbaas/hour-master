@@ -14,10 +14,12 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly router: Router,
-    private readonly authService: AuthService) { }
+    private readonly authService: AuthService
+  ) {}
 
   ngOnInit(): void {
-    this.sub = this.authService.getUserTokenFromLocalStorage()
+    this.sub = this.authService
+      .getUserTokenFromLocalStorage()
       .subscribe((token: Token | null) => {
         if (!token) {
           this.router.navigate(['/auth/login']);

@@ -19,30 +19,33 @@ export class UserListComponent implements OnInit, OnDestroy {
   constructor(
     private readonly router: Router,
     private readonly authService: AuthService,
-    private userService: UserService) { }
+    private userService: UserService
+  ) {}
 
   ngOnInit(): void {
-    this.subscriptionList = this.authService.getUserTokenFromLocalStorage().pipe(
-      switchMap((token) => {
-        if (!token) {
-          this.router.navigate(['/auth/login']);
-          return of(null);
-        } else {
-          return this.userService.list({
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: 'Bearer ' + token
-            }
-          });
+    this.subscriptionList = this.authService
+      .getUserTokenFromLocalStorage()
+      .pipe(
+        switchMap((token) => {
+          if (!token) {
+            this.router.navigate(['/auth/login']);
+            return of(null);
+          } else {
+            return this.userService.list({
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + token,
+              },
+            });
+          }
+        })
+      )
+      .subscribe((results) => {
+        if (results) {
+          this.users = results;
+          this.loading = false;
         }
-      })
-    )
-    .subscribe((results) => {
-      if(results) {
-        this.users = results;
-        this.loading = false;
-      }
-    });
+      });
   }
 
   ngOnDestroy(): void {

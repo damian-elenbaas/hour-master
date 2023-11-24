@@ -3,7 +3,7 @@ import { IsDateString, IsNotEmpty, IsOptional } from 'class-validator';
 import {
   ICreateHourScheme,
   IHourSchemeRow,
-  IUser
+  IUser,
 } from '@hour-master/shared/api';
 
 export class CreateHourSchemeDto implements ICreateHourScheme {
@@ -17,4 +17,3 @@ export class CreateHourSchemeDto implements ICreateHourScheme {
   @IsOptional()
   rows?: IHourSchemeRow[];
 }
-

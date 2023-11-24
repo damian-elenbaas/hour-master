@@ -9,12 +9,12 @@ import { ProjectEditComponent } from './project-edit/project-edit.component';
   declarations: [
     ProjectListComponent,
     ProjectDetailsComponent,
-    ProjectEditComponent
+    ProjectEditComponent,
   ],
   exports: [
     ProjectListComponent,
     ProjectDetailsComponent,
-    ProjectEditComponent
+    ProjectEditComponent,
   ],
 })
 export class ProjectModule {}

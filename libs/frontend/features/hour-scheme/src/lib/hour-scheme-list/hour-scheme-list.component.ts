@@ -18,10 +18,12 @@ export class HourSchemeListComponent implements OnInit, OnDestroy {
   constructor(
     private readonly router: Router,
     private readonly authService: AuthService,
-    private hourSchemeService: HourSchemeService) { }
+    private hourSchemeService: HourSchemeService
+  ) {}
 
   ngOnInit(): void {
-    this.subscriptionList = this.authService.getUserTokenFromLocalStorage()
+    this.subscriptionList = this.authService
+      .getUserTokenFromLocalStorage()
       .pipe(
         switchMap((token: Token | null) => {
           if (!token) {
@@ -31,12 +33,13 @@ export class HourSchemeListComponent implements OnInit, OnDestroy {
             return this.hourSchemeService.list({
               headers: {
                 'Content-Type': 'application/json',
-                Authorization: 'Bearer ' + token
-              }
+                Authorization: 'Bearer ' + token,
+              },
             });
           }
         })
-      ).subscribe((results) => {
+      )
+      .subscribe((results) => {
         if (results) {
           this.hourSchemes = results;
         }

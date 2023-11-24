@@ -4,7 +4,7 @@ import { AppComponent } from './app/app.component';
 import { environment } from '@hour-master/environments';
 import { enableProdMode } from '@angular/core';
 
-if(environment.production) {
+if (environment.production) {
   enableProdMode();
 }
 

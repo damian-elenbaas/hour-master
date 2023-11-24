@@ -18,11 +18,11 @@ import { of, switchMap } from 'rxjs';
     HourSchemeModule,
     AuthModule,
     RouterModule,
-    UiModule
+    UiModule,
   ],
   selector: 'hour-master-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
   title = 'Hour Master';
@@ -30,7 +30,7 @@ export class AppComponent implements OnInit {
   constructor(
     private readonly router: Router,
     private readonly authService: AuthService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     initFlowbite();

@@ -1,4 +1,4 @@
-import { Injectable, Logger, UnauthorizedException } from "@nestjs/common";
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '@hour-master/backend/user';
 import { ISignInResult } from '@hour-master/shared/api';
@@ -16,7 +16,9 @@ export class AuthService {
 
     this.logger.log(`username: ${username} trying to authenticate...`);
 
-    if (!await this.userService.validatePassword(pass, user.password as string )) {
+    if (
+      !(await this.userService.validatePassword(pass, user.password as string))
+    ) {
       throw new UnauthorizedException();
     }
 

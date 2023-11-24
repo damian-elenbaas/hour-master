@@ -2,19 +2,18 @@ import { Route } from '@angular/router';
 import {
   AboutComponent,
   HomeComponent,
-  LoginComponent
+  LoginComponent,
 } from '@hour-master/frontend/common';
 import {
   HourSchemeDetailsComponent,
   HourSchemeEditComponent,
-  HourSchemeListComponent
+  HourSchemeListComponent,
 } from '@hour-master/frontend/features/hour-scheme';
 import {
   UserDetailsComponent,
   UserEditComponent,
-  UserListComponent
+  UserListComponent,
 } from '@hour-master/frontend/features/user';
-
 
 // Lazy loading is not working as expected because of the following:
 // https://angular.io/guide/providers#limiting-provider-scope-by-lazy-loading-modules
@@ -26,14 +25,14 @@ export const appRoutes: Route[] = [
       {
         path: '',
         pathMatch: 'full',
-        component: HomeComponent
+        component: HomeComponent,
       },
       {
         path: 'about',
         pathMatch: 'full',
-        component: AboutComponent
+        component: AboutComponent,
       },
-    ]
+    ],
   },
   {
     path: 'auth',
@@ -41,9 +40,9 @@ export const appRoutes: Route[] = [
       {
         path: 'login',
         pathMatch: 'full',
-        component: LoginComponent
-      }
-    ]
+        component: LoginComponent,
+      },
+    ],
   },
   {
     path: 'hour-scheme',
@@ -51,24 +50,24 @@ export const appRoutes: Route[] = [
       {
         path: '',
         pathMatch: 'full',
-        component: HourSchemeListComponent
+        component: HourSchemeListComponent,
       },
       {
         path: 'edit',
         pathMatch: 'full',
-        component: HourSchemeEditComponent
+        component: HourSchemeEditComponent,
       },
       {
         path: ':id',
         pathMatch: 'full',
-        component: HourSchemeDetailsComponent
+        component: HourSchemeDetailsComponent,
       },
       {
         path: ':id/edit',
         pathMatch: 'full',
-        component: HourSchemeEditComponent
+        component: HourSchemeEditComponent,
       },
-    ]
+    ],
   },
   {
     path: 'user',
@@ -76,23 +75,23 @@ export const appRoutes: Route[] = [
       {
         path: '',
         pathMatch: 'full',
-        component: UserListComponent
+        component: UserListComponent,
       },
       {
         path: 'edit',
         pathMatch: 'full',
-        component: UserEditComponent
+        component: UserEditComponent,
       },
       {
         path: ':id',
         pathMatch: 'full',
-        component: UserDetailsComponent
+        component: UserDetailsComponent,
       },
       {
         path: ':id/edit',
         pathMatch: 'full',
-        component: UserEditComponent
+        component: UserEditComponent,
       },
-    ]
-  }
+    ],
+  },
 ];

@@ -1,14 +1,10 @@
-import {
-  IsNotEmpty,
-  IsString,
-  IsOptional
-} from 'class-validator';
+import { IsNotEmpty, IsString, IsOptional } from 'class-validator';
 
 import {
   ICreateMachine,
   IUpsertMachine,
   IUpdateMachine,
-  Id
+  Id,
 } from '@hour-master/shared/api';
 
 export class CreateMachineDto implements ICreateMachine {

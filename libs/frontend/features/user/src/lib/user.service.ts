@@ -2,7 +2,13 @@ import { Observable, throwError } from 'rxjs';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { map, catchError, tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { ApiResponse, ICreateUser, IUpdateUser, IUser, Id } from '@hour-master/shared/api';
+import {
+  ApiResponse,
+  ICreateUser,
+  IUpdateUser,
+  IUser,
+  Id,
+} from '@hour-master/shared/api';
 import { environment } from '@hour-master/shared/environments';
 
 /**
@@ -14,12 +20,12 @@ export const httpOptions = {
 };
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UserService {
   endpoint = `${environment.dataApiUrl}/api/user`;
 
-  constructor(private readonly http: HttpClient) { }
+  constructor(private readonly http: HttpClient) {}
 
   /**
    * Get all users.
@@ -48,13 +54,13 @@ export class UserService {
    * @param options - optional URL queryparam options
    * @returns Observable<IUser | null>
    */
-  public details(id: Id, options?: any): Observable<IUser| null> {
+  public details(id: Id, options?: any): Observable<IUser | null> {
     console.log(`details ${this.endpoint}/${id}`);
 
     return this.http
       .get<ApiResponse<IUser>>(`${this.endpoint}/${id}`, {
         ...options,
-        ...httpOptions
+        ...httpOptions,
       })
       .pipe(
         map((response: any) => response.results as IUser),
@@ -71,11 +77,15 @@ export class UserService {
    * @param options - optional URL queryparam options
    * @returns Observable<boolean | null>
    */
-  public update(id: Id, user: IUpdateUser, options?: any): Observable<boolean | null> {
+  public update(
+    id: Id,
+    user: IUpdateUser,
+    options?: any
+  ): Observable<boolean | null> {
     return this.http
       .patch<ApiResponse<boolean>>(`${this.endpoint}/${id}`, user, {
         ...options,
-        ...httpOptions
+        ...httpOptions,
       })
       .pipe(
         map((response: any) => response.results as boolean),
@@ -95,7 +105,7 @@ export class UserService {
     return this.http
       .post<ApiResponse<IUser>>(`${this.endpoint}`, user, {
         ...options,
-        ...httpOptions
+        ...httpOptions,
       })
       .pipe(
         map((response: any) => response.results as IUser),
@@ -108,7 +118,7 @@ export class UserService {
     return this.http
       .delete<ApiResponse<boolean>>(`${this.endpoint}/${id}`, {
         ...options,
-        ...httpOptions
+        ...httpOptions,
       })
       .pipe(
         map((response: any) => response.results as boolean),
@@ -125,5 +135,4 @@ export class UserService {
 
     return throwError(() => new Error(error.error.message));
   }
-
 }

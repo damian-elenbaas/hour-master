@@ -6,7 +6,9 @@ import { HourSchemeSchema } from './schemas/hour-scheme.schema';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: 'HourScheme', schema: HourSchemeSchema }])
+    MongooseModule.forFeature([
+      { name: 'HourScheme', schema: HourSchemeSchema },
+    ]),
   ],
   controllers: [HourSchemeController],
   providers: [HourSchemeService],

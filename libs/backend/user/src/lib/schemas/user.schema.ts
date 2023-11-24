@@ -7,7 +7,6 @@ export type UserDocument = HydratedDocument<User>;
 
 @Schema()
 export class User implements IUser {
-
   @IsMongoId()
   _id!: string;
 
@@ -28,7 +27,6 @@ export class User implements IUser {
 
   @Prop({ required: true, type: String, enum: UserRole })
   role!: UserRole;
-
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

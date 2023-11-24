@@ -8,4 +8,3 @@ import { Component, Input } from '@angular/core';
 export class DashboardButtonComponent {
   @Input() link!: string;
 }
-

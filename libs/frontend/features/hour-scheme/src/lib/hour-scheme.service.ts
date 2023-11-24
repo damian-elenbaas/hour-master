@@ -17,8 +17,7 @@ export const httpOptions = {
 export class HourSchemeService {
   endpoint = `${environment.dataApiUrl}/api/hour-scheme`;
 
-  constructor(private readonly http: HttpClient) { }
-
+  constructor(private readonly http: HttpClient) {}
 
   /**
    * Get all items.
@@ -46,7 +45,7 @@ export class HourSchemeService {
     return this.http
       .get<ApiResponse<IHourScheme>>(`${this.endpoint}/${id}`, {
         ...options,
-        ...httpOptions
+        ...httpOptions,
       })
       .pipe(
         map((response: any) => response.results as IHourScheme),
@@ -55,13 +54,16 @@ export class HourSchemeService {
       );
   }
 
-  public create(scheme: IHourScheme, options?: any): Observable<IHourScheme | null> {
+  public create(
+    scheme: IHourScheme,
+    options?: any
+  ): Observable<IHourScheme | null> {
     console.log(`create ${this.endpoint}`);
 
     return this.http
       .post<ApiResponse<IHourScheme>>(this.endpoint, scheme, {
         ...options,
-        ...httpOptions
+        ...httpOptions,
       })
       .pipe(
         map((response: any) => response.results as IHourScheme),
@@ -70,13 +72,16 @@ export class HourSchemeService {
       );
   }
 
-  public update(scheme: IHourScheme, options?: any): Observable<IHourScheme | null> {
+  public update(
+    scheme: IHourScheme,
+    options?: any
+  ): Observable<IHourScheme | null> {
     console.log(`update ${this.endpoint}/${scheme._id}`);
 
     return this.http
       .put<ApiResponse<IHourScheme>>(`${this.endpoint}/${scheme._id}`, scheme, {
         ...options,
-        ...httpOptions
+        ...httpOptions,
       })
       .pipe(
         map((response: any) => response.results as IHourScheme),
@@ -91,7 +96,7 @@ export class HourSchemeService {
     return this.http
       .delete<ApiResponse<boolean>>(`${this.endpoint}/${id}`, {
         ...options,
-        ...httpOptions
+        ...httpOptions,
       })
       .pipe(
         map((response: any) => response.results as boolean),
@@ -108,5 +113,4 @@ export class HourSchemeService {
 
     return throwError(() => new Error(error.message));
   }
-
 }

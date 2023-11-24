@@ -14,24 +14,24 @@ const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    component: UserListComponent
+    component: UserListComponent,
   },
   {
     path: 'new',
     pathMatch: 'full',
-    component: UserEditComponent
+    component: UserEditComponent,
   },
   {
     path: ':id',
     pathMatch: 'full',
-    component: UserDetailsComponent
+    component: UserDetailsComponent,
   },
   {
     path: ':id/edit',
     pathMatch: 'full',
-    component: UserEditComponent
-  }
-]
+    component: UserEditComponent,
+  },
+];
 
 @NgModule({
   imports: [
@@ -40,18 +40,10 @@ const routes: Routes = [
     HttpClientModule,
     RouterModule.forChild(routes),
     ReactiveFormsModule,
-    UiModule
+    UiModule,
   ],
-  declarations: [
-    UserListComponent,
-    UserDetailsComponent,
-    UserEditComponent
-  ],
+  declarations: [UserListComponent, UserDetailsComponent, UserEditComponent],
   providers: [UserService],
-  exports: [
-    UserListComponent,
-    UserDetailsComponent,
-    UserEditComponent
-  ]
+  exports: [UserListComponent, UserDetailsComponent, UserEditComponent],
 })
 export class UserModule {}

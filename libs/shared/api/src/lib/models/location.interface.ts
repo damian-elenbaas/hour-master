@@ -1,4 +1,4 @@
-import { Id } from "./id.type";
+import { Id } from './id.type';
 
 export interface ILocation {
   id: Id;

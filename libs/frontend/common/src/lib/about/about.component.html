@@ -3,11 +3,13 @@
   <section class="border-b pb-5">
     <p>
       Hour Master is een applicatie dat gebouwd is voor bedrijven in de bouw.
-      Deze applicatie biedt de mogelijkheid voor bedrijven om urenregistratie makkelijker te maken.
-      Werknemers die aan projecten werken kunnen hun uren aangeven die ze aan een project hebben gewerkt.
-      Daarbij kunnen ze aangeven welke werkzaamheden ze hebben uitgevoerd en of er eventueel machines zijn gebruikt.
-      Dit geeft een beter inzicht voor het kantoor om een kostenplaatje te maken voor de klant en
-      eventueel vroegtijdig onderhoud in te plannen voor de machines.
+      Deze applicatie biedt de mogelijkheid voor bedrijven om urenregistratie
+      makkelijker te maken. Werknemers die aan projecten werken kunnen hun uren
+      aangeven die ze aan een project hebben gewerkt. Daarbij kunnen ze aangeven
+      welke werkzaamheden ze hebben uitgevoerd en of er eventueel machines zijn
+      gebruikt. Dit geeft een beter inzicht voor het kantoor om een
+      kostenplaatje te maken voor de klant en eventueel vroegtijdig onderhoud in
+      te plannen voor de machines.
     </p>
   </section>
   <section>
@@ -16,145 +18,139 @@
       <table class="w-full text-sm text-left rtl:text-right">
         <thead class="text-xs uppercase bg-primary text-white">
           <tr>
-            <th scope="col" class="px-6 py-3">
-              ID
-            </th>
-            <th scope="col" class="px-6 py-3">
-              Titel
-            </th>
-            <th scope="col" class="px-6 py-3">
-              Beschrijving
-            </th>
-            <th scope="col" class="px-6 py-3">
-              Prio
-            </th>
+            <th scope="col" class="px-6 py-3">ID</th>
+            <th scope="col" class="px-6 py-3">Titel</th>
+            <th scope="col" class="px-6 py-3">Beschrijving</th>
+            <th scope="col" class="px-6 py-3">Prio</th>
           </tr>
         </thead>
         <tbody>
           <tr class="border-b">
+            <td class="px-6 py-4">1</td>
             <td class="px-6 py-4">
-              1
+              Een kantoormedewerker moet CRUD operaties kunnen uitvoeren op
+              projecten.
             </td>
             <td class="px-6 py-4">
-              Een kantoormedewerker moet CRUD operaties kunnen uitvoeren op projecten.
-            </td>
-            <td class="px-6 py-4">
-              Een kantoormedewerker moet een project kunnen aanmaken, lezen, wijzigen en verwijderen dat op een locatie bevindt.
-              De stratenmakers moeten op dit project uiteindelijk hun uren kunnen registreren.
+              Een kantoormedewerker moet een project kunnen aanmaken, lezen,
+              wijzigen en verwijderen dat op een locatie bevindt. De
+              stratenmakers moeten op dit project uiteindelijk hun uren kunnen
+              registreren.
             </td>
             <td class="px-6 py-4 text-center">
               <b>M</b>
             </td>
           </tr>
           <tr class="border-b">
+            <td class="px-6 py-4">2</td>
             <td class="px-6 py-4">
-              2
+              Een stratenmaker moet CRUD operaties kunnen uitvoeren op
+              urenschema's.
             </td>
             <td class="px-6 py-4">
-              Een stratenmaker moet CRUD operaties kunnen uitvoeren op urenschema's.
-            </td>
-            <td class="px-6 py-4">
-              Een stratenmaker moet een urenschema kunnen invullen, lezen wijzigen en verwijderen voor een project.
-              Hierbij moet hij kunnen aangeven welke werkzaamheden hij heeft uitgevoerd en of er machines zijn
-              gebruikt. Deze operaties kan een stratenmaker alleen op zijn eigen urenschema uitvoeren.
+              Een stratenmaker moet een urenschema kunnen invullen, lezen
+              wijzigen en verwijderen voor een project. Hierbij moet hij kunnen
+              aangeven welke werkzaamheden hij heeft uitgevoerd en of er
+              machines zijn gebruikt. Deze operaties kan een stratenmaker alleen
+              op zijn eigen urenschema uitvoeren.
             </td>
             <td class="px-6 py-4 text-center">
               <b>M</b>
             </td>
           </tr>
           <tr class="border-b">
+            <td class="px-6 py-4">3</td>
             <td class="px-6 py-4">
-              3
+              Een kantoormedewerker moet CRUD operaties kunnen uitvoeren op
+              machine's.
             </td>
             <td class="px-6 py-4">
-              Een kantoormedewerker moet CRUD operaties kunnen uitvoeren op machine's.
-            </td>
-            <td class="px-6 py-4">
-              Een kantoormedewerker moet machines kunnen toevoegen, lezen, wijzigen en verwijderen.
+              Een kantoormedewerker moet machines kunnen toevoegen, lezen,
+              wijzigen en verwijderen.
             </td>
             <td class="px-6 py-4 text-center">
               <b>M</b>
             </td>
           </tr>
           <tr class="border-b">
+            <td class="px-6 py-4">4</td>
             <td class="px-6 py-4">
-              4
+              Een kantoormedewerker moet een overzicht kunnen zien van alle
+              urenregistraties voor een bepaald project.
             </td>
             <td class="px-6 py-4">
-              Een kantoormedewerker moet een overzicht kunnen zien van alle urenregistraties voor een bepaald project.
-            </td>
-            <td class="px-6 py-4">
-              Wanneer een kantoormedewerker de detailpagina van een project opent, moet er een overzicht komen van alle urenregistraties die op dat project zijn gemaakt. Daarnaast worden er statistieken zoals totaal aantal uren en gebruikte machines weergegeven.
+              Wanneer een kantoormedewerker de detailpagina van een project
+              opent, moet er een overzicht komen van alle urenregistraties die
+              op dat project zijn gemaakt. Daarnaast worden er statistieken
+              zoals totaal aantal uren en gebruikte machines weergegeven.
             </td>
             <td class="px-6 py-4 text-center">
               <b>S</b>
             </td>
           </tr>
           <tr class="border-b">
-            <td class="px-6 py-4">
-              5
-            </td>
+            <td class="px-6 py-4">5</td>
             <td class="px-6 py-4">
               Een kantoormedewerker kan accounts aanmaken voor stratenmakers
             </td>
             <td class="px-6 py-4">
-              Wanneer er een nieuwe stratenmaker indienst komt, moet hij een acccount krijgen. De taak voor een kantoormedewerker is om deze aan te maken.
+              Wanneer er een nieuwe stratenmaker indienst komt, moet hij een
+              acccount krijgen. De taak voor een kantoormedewerker is om deze
+              aan te maken.
             </td>
             <td class="px-6 py-4 text-center">
               <b>S</b>
             </td>
           </tr>
           <tr class="border-b">
-            <td class="px-6 py-4">
-              6
-            </td>
+            <td class="px-6 py-4">6</td>
             <td class="px-6 py-4">
               Er wordt aangegeven wanneer er een machine onderhoud nodig heeft
             </td>
             <td class="px-6 py-4">
-              Er wordt op het beginscherm van het dashboard aangegeven als een melding dat er een machine onderhoud nodig heeft. Dit wordt bepaald door de hoeveelheid uren dat een machine heeft gedraaid, dat berekend is uit de ingevulde uren.
+              Er wordt op het beginscherm van het dashboard aangegeven als een
+              melding dat er een machine onderhoud nodig heeft. Dit wordt
+              bepaald door de hoeveelheid uren dat een machine heeft gedraaid,
+              dat berekend is uit de ingevulde uren.
             </td>
             <td class="px-6 py-4 text-center">
               <b>S</b>
             </td>
           </tr>
           <tr class="border-b">
+            <td class="px-6 py-4">7</td>
             <td class="px-6 py-4">
-              7
+              Er kan aangegeven worden dat er onderhoud uitgevoerd op een
+              machine
             </td>
             <td class="px-6 py-4">
-              Er kan aangegeven worden dat er onderhoud uitgevoerd op een machine
-            </td>
-            <td class="px-6 py-4">
-              Een kantoormedewerker kan bij een machine aangeven dat er onderhoud is gepleegd. Dit wordt geregistreerd bij de machine.
+              Een kantoormedewerker kan bij een machine aangeven dat er
+              onderhoud is gepleegd. Dit wordt geregistreerd bij de machine.
             </td>
             <td class="px-6 py-4 text-center">
               <b>S</b>
             </td>
           </tr>
           <tr class="border-b">
+            <td class="px-6 py-4">8</td>
+            <td class="px-6 py-4">Er is een administrator account</td>
             <td class="px-6 py-4">
-              8
-            </td>
-            <td class="px-6 py-4">
-              Er is een administrator account
-            </td>
-            <td class="px-6 py-4">
-              Er is een administrator account die alle CRUD operaties kan uitvoeren op alle entiteiten. Deze moet ook kantoormedewerker en stratenmaker accounts kunnen aanmaken.
+              Er is een administrator account die alle CRUD operaties kan
+              uitvoeren op alle entiteiten. Deze moet ook kantoormedewerker en
+              stratenmaker accounts kunnen aanmaken.
             </td>
             <td class="px-6 py-4 text-center">
               <b>S</b>
             </td>
           </tr>
           <tr class="border-b">
-            <td class="px-6 py-4">
-              9
-            </td>
+            <td class="px-6 py-4">9</td>
             <td class="px-6 py-4">
               Er is een overzicht scherm van alle projecten in een bepaalde stad
             </td>
             <td class="px-6 py-4">
-              Een kantoormedewerker kan een overzicht scherm zien waarin alle projecten in een bepaalde stad worden weergegeven.
+              Een kantoormedewerker kan een overzicht scherm zien waarin alle
+              projecten in een bepaalde stad worden weergegeven.
             </td>
             <td class="px-6 py-4 text-center">
               <b>C</b>
@@ -170,45 +166,37 @@
       <table class="w-full text-sm text-left rtl:text-right">
         <thead class="text-xs uppercase bg-primary text-white">
           <tr>
-            <th scope="col" class="px-6 py-3">
-              ID
-            </th>
-            <th scope="col" class="px-6 py-3">
-              Titel
-            </th>
-            <th scope="col" class="px-6 py-3">
-              Beschrijving
-            </th>
-            <th scope="col" class="px-6 py-3">
-              Prio
-            </th>
+            <th scope="col" class="px-6 py-3">ID</th>
+            <th scope="col" class="px-6 py-3">Titel</th>
+            <th scope="col" class="px-6 py-3">Beschrijving</th>
+            <th scope="col" class="px-6 py-3">Prio</th>
           </tr>
         </thead>
         <tbody>
           <tr class="border-b">
-            <td class="px-6 py-4">
-              1
-            </td>
+            <td class="px-6 py-4">1</td>
             <td class="px-6 py-4">
               De applicatie is op alle devices te gebruiken
             </td>
             <td class="px-6 py-4">
-              De applicatie moet op alle scherm formaten die in deze tijd gebruikt worden te gebruiken zijn.
-              Met name desktop, tablet en mobiel is belangrijk.
+              De applicatie moet op alle scherm formaten die in deze tijd
+              gebruikt worden te gebruiken zijn. Met name desktop, tablet en
+              mobiel is belangrijk.
             </td>
             <td class="px-6 py-4 text-center">
               <b>M</b>
             </td>
           </tr>
           <tr class="border-b">
+            <td class="px-6 py-4">2</td>
             <td class="px-6 py-4">
-              2
+              Er wordt gebruik gemaakt van een primaraire, secundaire en accent
+              kleur
             </td>
             <td class="px-6 py-4">
-              Er wordt gebruik gemaakt van een primaraire, secundaire en accent kleur
-            </td>
-            <td class="px-6 py-4">
-              De applicatie moet een primaraire, secundaire en accent kleur hebben. Deze kleuren moeten overal in de applicatie terugkomen en op de juiste manier gebruikt worden.
+              De applicatie moet een primaraire, secundaire en accent kleur
+              hebben. Deze kleuren moeten overal in de applicatie terugkomen en
+              op de juiste manier gebruikt worden.
             </td>
             <td class="px-6 py-4 text-center">
               <b>M</b>
@@ -221,39 +209,56 @@
   <section class="pb-5">
     <h2>Entiteit Relatie Diagram</h2>
     <div class="p-5 bg-white rounded-lg">
-      <img src="assets/images/ERD.png" alt="ERD" class="w-full">
+      <img src="assets/images/ERD.png" alt="ERD" class="w-full" />
     </div>
     <article class="border-t lg:w-1/2 mx-auto">
       <h2>Uitleg</h2>
       <p>
-        We hebben in dit project te maken met verschillende entiteiten. Die zijn als volgt:
+        We hebben in dit project te maken met verschillende entiteiten. Die zijn
+        als volgt:
       </p>
       <h4>Gebruiker</h4>
       <p>
-        De gebruiker is het hart van de applicatie. Een gebruiker kan een kantoormedewerker of een stratenmaker zijn.
-        Deze heeft een naam, email en wachtwoord. Daarnaast heeft een gebruiker een rol. Deze rol bepaald welke type gebruiker ze zijn (Kantoormedewerker of stratenmaker).
+        De gebruiker is het hart van de applicatie. Een gebruiker kan een
+        kantoormedewerker of een stratenmaker zijn. Deze heeft een naam, email
+        en wachtwoord. Daarnaast heeft een gebruiker een rol. Deze rol bepaald
+        welke type gebruiker ze zijn (Kantoormedewerker of stratenmaker).
       </p>
       <h4>Project</h4>
       <p>
-        Een project is een locatie waar stratenmakers aan het werk zijn. Een project heeft een naam en een locatie.
-        Daarnaast heeft een project een kantoormedewerker die verantwoordelijk is voor het project.
+        Een project is een locatie waar stratenmakers aan het werk zijn. Een
+        project heeft een naam en een locatie. Daarnaast heeft een project een
+        kantoormedewerker die verantwoordelijk is voor het project.
       </p>
       <h4>Locatie</h4>
       <p>
-        Een locatie is een plek waar een project zich bevindt. Een locatie heeft een adres, postcode en stad.
+        Een locatie is een plek waar een project zich bevindt. Een locatie heeft
+        een adres, postcode en stad.
       </p>
       <h4>Urenschema</h4>
       <p>
-        Een urenschema is een schema waarin een stratenmaker zijn uren kan registreren. Een urenschema heeft een datum en een project.
-        Daarnaast heeft een urenschema een stratenmaker die verantwoordelijk is voor het urenschema.
+        Een urenschema is een schema waarin een stratenmaker zijn uren kan
+        registreren. Een urenschema heeft een datum en een project. Daarnaast
+        heeft een urenschema een stratenmaker die verantwoordelijk is voor het
+        urenschema.
       </p>
       <h4>Urenschema Rij</h4>
       <p>
-        Een urenschema rij is een rij van een urenschema. Dit is een los entiteit, omdat je bij meerdere projecten op een dag werkzaamheden kan hebben uitgevoerd. Bij een urenschema rij wordt er een omschrijving van de werkzaamheden ingevuld met de gemaakte uren. Daarnaast kan er eventueel een machine er aan verbonden worden, als deze gebruikt is op dat moment
+        Een urenschema rij is een rij van een urenschema. Dit is een los
+        entiteit, omdat je bij meerdere projecten op een dag werkzaamheden kan
+        hebben uitgevoerd. Bij een urenschema rij wordt er een omschrijving van
+        de werkzaamheden ingevuld met de gemaakte uren. Daarnaast kan er
+        eventueel een machine er aan verbonden worden, als deze gebruikt is op
+        dat moment
       </p>
       <h4>Machine</h4>
       <p>
-        Een machine spreekt voorzich. Deze wordt gebruikt bij werkzaamheden en kan aan een urenschema rij gekoppeld worden. Voor een machine wordt de naam en typenummer bijgehouden. Daarnaast ook het aantal uren dat gedraait moet worden, voordat er onderhoud nodig is. Daarnaast wordt er bijgehouden hoeveel keer er onderhoud is gedaan aan de machine, zodat er berekend kan worden wanneer het volgende moment is.
+        Een machine spreekt voorzich. Deze wordt gebruikt bij werkzaamheden en
+        kan aan een urenschema rij gekoppeld worden. Voor een machine wordt de
+        naam en typenummer bijgehouden. Daarnaast ook het aantal uren dat
+        gedraait moet worden, voordat er onderhoud nodig is. Daarnaast wordt er
+        bijgehouden hoeveel keer er onderhoud is gedaan aan de machine, zodat er
+        berekend kan worden wanneer het volgende moment is.
       </p>
     </article>
   </section>

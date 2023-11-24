@@ -22,8 +22,8 @@ const routes: Routes = [
   {
     path: 'auth/login',
     pathMatch: 'full',
-    component: LoginComponent
-  }
+    component: LoginComponent,
+  },
 ];
 
 @NgModule({
@@ -33,17 +33,9 @@ const routes: Routes = [
     RouterModule,
     RouterModule.forChild(routes),
     ReactiveFormsModule,
-    UiModule
+    UiModule,
   ],
-  declarations: [
-    HomeComponent,
-    AboutComponent,
-    LoginComponent
-  ],
-  exports: [
-    AboutComponent,
-    HomeComponent,
-    LoginComponent
-  ],
+  declarations: [HomeComponent, AboutComponent, LoginComponent],
+  exports: [AboutComponent, HomeComponent, LoginComponent],
 })
-export class CommonFrontendModule { }
+export class CommonFrontendModule {}

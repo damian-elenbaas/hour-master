@@ -1,5 +1,11 @@
 import * as bcrypt from 'bcrypt';
-import { ICreateUser, IUpdateUser, IUser, Id, UserRole } from '@hour-master/shared/api';
+import {
+  ICreateUser,
+  IUpdateUser,
+  IUser,
+  Id,
+  UserRole,
+} from '@hour-master/shared/api';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 
 import { InjectModel } from '@nestjs/mongoose';
@@ -10,8 +16,7 @@ import { Model } from 'mongoose';
 export class UserService {
   private readonly logger: Logger = new Logger(UserService.name);
 
-  constructor(
-    @InjectModel(User.name) private readonly userModel: Model<User>) {
+  constructor(@InjectModel(User.name) private readonly userModel: Model<User>) {
     this.seedData();
   }
 
@@ -28,8 +33,8 @@ export class UserService {
       firstname: 'Admin',
       lastname: 'Admin',
       email: 'admin@admin.com',
-      role: UserRole.ADMIN
-    })
+      role: UserRole.ADMIN,
+    });
   }
 
   async getAll(): Promise<IUser[]> {
@@ -51,7 +56,7 @@ export class UserService {
       }
 
       return user;
-    } catch(e) {
+    } catch (e) {
       throw new NotFoundException(`User with id ${id} not found`);
     }
   }
@@ -72,8 +77,9 @@ export class UserService {
     this.logger.log(`create`);
 
     // Generate hashed password
-    const hashedPassword =
-      await this.generateHashedPassword(user.password as string);
+    const hashedPassword = await this.generateHashedPassword(
+      user.password as string
+    );
     user.password = hashedPassword;
 
     const createdUser = await this.userModel.create(user);
@@ -108,7 +114,10 @@ export class UserService {
     return await bcrypt.hash(password, 10);
   }
 
-  async validatePassword(password: string, passwordHash: string): Promise<boolean> {
+  async validatePassword(
+    password: string,
+    passwordHash: string
+  ): Promise<boolean> {
     return await bcrypt.compare(password, passwordHash);
   }
 }

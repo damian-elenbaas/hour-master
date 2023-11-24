@@ -1,6 +1,6 @@
-import { Id } from "./id.type";
-import { IMachine } from "./machine.interface";
-import { IProject } from "./project.interface";
+import { Id } from './id.type';
+import { IMachine } from './machine.interface';
+import { IProject } from './project.interface';
 
 export interface IHourSchemeRow {
   id: Id;

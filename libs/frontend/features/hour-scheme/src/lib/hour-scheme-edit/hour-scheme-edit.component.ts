@@ -1,7 +1,13 @@
 import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { IHourScheme, IMachine, IProject, Id, UserRole } from '@hour-master/shared/api';
+import {
+  IHourScheme,
+  IMachine,
+  IProject,
+  Id,
+  UserRole,
+} from '@hour-master/shared/api';
 import { Modal } from 'flowbite';
 import { HourSchemeService } from '../hour-scheme.service';
 import { Subscription, of, switchMap } from 'rxjs';
@@ -24,7 +30,7 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
   });
   hsForm: FormGroup = new FormGroup({
     date: this.fb.control(this.getCurrentDate(), Validators.required),
-    rows: this.fb.array([])
+    rows: this.fb.array([]),
   });
   subscriptionDetails!: Subscription;
   subscriptionAuth!: Subscription;
@@ -48,9 +54,9 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
         firstname: 'Admin 1',
         lastname: 'Admin 1',
         email: 'test@test.nl',
-        role: UserRole.OFFICE
+        role: UserRole.OFFICE,
       },
-    }
+    },
   ].sort((a, b) => a.name.localeCompare(b.name));
   // TODO: Get projects and machines from API
   machines: IMachine[] = [
@@ -73,18 +79,21 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private route: ActivatedRoute,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    const $modalElement: HTMLElement | null = document.querySelector('#addRowModal');
+    const $modalElement: HTMLElement | null =
+      document.querySelector('#addRowModal');
     if ($modalElement === null) throw new Error('Modal element not found');
     this.addRowModal = new Modal($modalElement);
 
-    this.subscriptionAuth = this.authService.getUserTokenFromLocalStorage().subscribe((token) => {
-      if (!token) {
-        this.router.navigate(['/auth/login']);
-      }
-    });
+    this.subscriptionAuth = this.authService
+      .getUserTokenFromLocalStorage()
+      .subscribe((token) => {
+        if (!token) {
+          this.router.navigate(['/auth/login']);
+        }
+      });
 
     this.subscriptionDetails = this.route.paramMap
       .pipe(
@@ -102,24 +111,31 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
           if (scheme) {
             this.hsForm.patchValue({
               date: this.convertDate(new Date(scheme.date)),
-              rows: scheme.rows?.map(row => ({
+              rows: scheme.rows?.map((row) => ({
                 project: row.project.id,
                 hours: row.hours,
                 machine: row.machine?.id,
                 description: row.description,
-              }))
+              })),
             });
 
             this.rows.clear();
-            scheme.rows?.forEach(row => {
-              this.rows.push(this.fb.group({
-                project: this.fb.control(row.project.id, Validators.required),
-                hours: this.fb.control(row.hours, [Validators.required, Validators.min(0)]),
-                machine: this.fb.control(row.machine?.id),
-                description: this.fb.control(row.description, Validators.required),
-              }));
+            scheme.rows?.forEach((row) => {
+              this.rows.push(
+                this.fb.group({
+                  project: this.fb.control(row.project.id, Validators.required),
+                  hours: this.fb.control(row.hours, [
+                    Validators.required,
+                    Validators.min(0),
+                  ]),
+                  machine: this.fb.control(row.machine?.id),
+                  description: this.fb.control(
+                    row.description,
+                    Validators.required
+                  ),
+                })
+              );
             });
-
           } else if (!scheme && this.hourSchemeId) {
             this.location.back();
           }
@@ -128,7 +144,7 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
         error: (error) => {
           console.error(error);
           this.location.back();
-        }
+        },
       });
 
     return;
@@ -168,16 +184,22 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
 
   addRow(): void {
     if (this.hsRowForm.invalid) return;
-    if(this.hsRowForm.value.id !== '') return this.editRow(this.hsRowForm.value.id);
+    if (this.hsRowForm.value.id !== '')
+      return this.editRow(this.hsRowForm.value.id);
 
     const row = this.hsRowForm.value;
 
-    this.rows.push(this.fb.group({
-      project: this.fb.control(row.project, Validators.required),
-      hours: this.fb.control(row.hours, [Validators.required, Validators.min(0)]),
-      machine: this.fb.control(row.machine),
-      description: this.fb.control(row.description, Validators.required),
-    }));
+    this.rows.push(
+      this.fb.group({
+        project: this.fb.control(row.project, Validators.required),
+        hours: this.fb.control(row.hours, [
+          Validators.required,
+          Validators.min(0),
+        ]),
+        machine: this.fb.control(row.machine),
+        description: this.fb.control(row.description, Validators.required),
+      })
+    );
 
     this.addRowModal.hide();
   }
@@ -235,9 +257,9 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
     const newHourScheme = {
       date: date,
       rows: formData.rows.map((row: any) => ({
-        project: this.projects.find(p => p.id === row.project),
+        project: this.projects.find((p) => p.id === row.project),
         hours: row.hours,
-        machine: this.machines.find(m => m.id === row.machine),
+        machine: this.machines.find((m) => m.id === row.machine),
         description: row.description,
       })),
       worker: {
@@ -247,7 +269,7 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
         firstname: 'Damian',
         lastname: 'Elenbaas',
         role: 'Kantoor',
-      }
+      },
     } as IHourScheme;
 
     console.log(newHourScheme);
@@ -260,7 +282,7 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
       },
       error: (err: any) => {
         console.error(err);
-      }
+      },
     });
   }
 
@@ -274,9 +296,9 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
       _id: this.hourSchemeId,
       date: date,
       rows: formData.rows.map((row: any) => ({
-        project: this.projects.find(p => p.id === row.project),
+        project: this.projects.find((p) => p.id === row.project),
         hours: row.hours,
-        machine: this.machines.find(m => m.id === row.machine),
+        machine: this.machines.find((m) => m.id === row.machine),
         description: row.description,
       })),
       worker: {
@@ -286,7 +308,7 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
         firstname: 'Damian',
         lastname: 'Elenbaas',
         role: 'Kantoor',
-      }
+      },
     } as IHourScheme;
 
     console.log(updatedHourScheme);
@@ -299,7 +321,7 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
       },
       error: (err: any) => {
         console.error(err);
-      }
+      },
     });
   }
 
@@ -308,10 +330,10 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
   }
 
   findProject(id: Id): IProject | undefined {
-    return this.projects.find(p => p.id === id);
+    return this.projects.find((p) => p.id === id);
   }
 
   findMachine(id: Id): IMachine | undefined {
-    return this.machines.find(m => m.id === id);
+    return this.machines.find((m) => m.id === id);
   }
 }

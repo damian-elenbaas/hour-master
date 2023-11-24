@@ -1,16 +1,13 @@
-import {
-  IUpsertUser,
-  UserRole
-} from "@hour-master/shared/api";
+import { IUpsertUser, UserRole } from '@hour-master/shared/api';
 
 import {
   IsEmail,
   IsEnum,
   IsNotEmpty,
   IsString,
-  IsStrongPassword
-} from "class-validator";
-import { StrongPasswordOptions } from "./password-options";
+  IsStrongPassword,
+} from 'class-validator';
+import { StrongPasswordOptions } from './password-options';
 
 export class UpsertUserDto implements IUpsertUser {
   @IsNotEmpty()
@@ -42,4 +39,3 @@ export class UpsertUserDto implements IUpsertUser {
   @IsEnum(UserRole)
   role!: UserRole;
 }
-

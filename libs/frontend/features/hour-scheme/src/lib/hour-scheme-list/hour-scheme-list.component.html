@@ -1,20 +1,16 @@
 <div class="relative overflow-x-auto">
   <div class="flex justify-between items-center">
     <h2 class="text-xl font-semibold">Urenschema's</h2>
-    <button routerLink="new" class="bg-accent px-4 py-2 rounded-md">Nieuw urenschema</button>
+    <button routerLink="new" class="bg-accent px-4 py-2 rounded-md">
+      Nieuw urenschema
+    </button>
   </div>
   <table class="w-full text-sm text-left rtl:text-right">
     <thead class="text-xs uppercase bg-primary text-white">
       <tr>
-        <th scope="col" class="px-6 py-3">
-          ID
-        </th>
-        <th scope="col" class="px-6 py-3">
-          Datum
-        </th>
-        <th scope="col" class="px-6 py-3">
-          Werknemer
-        </th>
+        <th scope="col" class="px-6 py-3">ID</th>
+        <th scope="col" class="px-6 py-3">Datum</th>
+        <th scope="col" class="px-6 py-3">Werknemer</th>
       </tr>
     </thead>
     <tbody>
@@ -27,10 +23,11 @@
           {{ hourScheme._id }}
         </td>
         <td class="px-6 py-4">
-          {{ hourScheme.date | date: 'dd-MM-yyyy' }}
+          {{ hourScheme.date | date : 'dd-MM-yyyy' }}
         </td>
         <td class="px-6 py-4">
-          {{ hourScheme.worker.firstname | titlecase }} {{ hourScheme.worker.lastname | titlecase }}
+          {{ hourScheme.worker.firstname | titlecase }}
+          {{ hourScheme.worker.lastname | titlecase }}
         </td>
       </a>
       <tr *ngIf="loading">

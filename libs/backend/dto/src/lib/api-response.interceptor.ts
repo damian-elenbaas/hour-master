@@ -10,7 +10,6 @@ import { map } from 'rxjs/operators';
 
 @Injectable()
 export class ApiResponseInterceptor implements NestInterceptor {
-
   intercept(
     context: ExecutionContext,
     next: CallHandler
@@ -23,8 +22,7 @@ export class ApiResponseInterceptor implements NestInterceptor {
             info: {
               version: '1.0',
               type: results instanceof Array ? 'list' : 'object',
-              count:
-                results instanceof Array ? results.length : 1,
+              count: results instanceof Array ? results.length : 1,
             },
           };
         } else {
@@ -41,5 +39,3 @@ export class ApiResponseInterceptor implements NestInterceptor {
     );
   }
 }
-
-
