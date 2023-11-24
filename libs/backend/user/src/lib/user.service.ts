@@ -108,7 +108,10 @@ export class UserService {
     return transaction(this.connection, async (session) => {
       this.logger.log(`update(${id})`);
 
-      const updatedUser = await this.userModel.findByIdAndUpdate(id, user).exec();
+      const updatedUser = await this.userModel
+        .findByIdAndUpdate(id, user)
+        .session(session)
+        .exec();
 
       if (!updatedUser) {
         throw new NotFoundException(`User with id ${id} not found`);
