@@ -1,7 +1,7 @@
 import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { IHourScheme, IMachine, IProject, Id } from '@hour-master/shared/api';
+import { IHourScheme, IMachine, IProject, IUser, Id } from '@hour-master/shared/api';
 import { Modal } from 'flowbite';
 import { HourSchemeService } from '../hour-scheme.service';
 import { Subscription, of, switchMap } from 'rxjs';
@@ -28,6 +28,7 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
     date: this.fb.control(this.getCurrentDate(), Validators.required),
     rows: this.fb.array([]),
   });
+  worker!: IUser;
   addRowModal!: Modal;
   token!: string;
   loaded = false;
@@ -116,6 +117,8 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
                 })
               );
             });
+
+            this.worker = scheme.worker;
           } else if (!scheme && this.hourSchemeId) {
             this.location.back();
           }
@@ -289,7 +292,7 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
     const date = new Date(formData.date);
 
     this.authService
-      .getUserFromLocalStorage()
+      .currentUser$
       .pipe(
         switchMap((user) => {
           if (!user) {
@@ -336,7 +339,7 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
     const date = new Date(formData.date);
 
     this.authService
-      .getUserFromLocalStorage()
+      .currentUser$
       .pipe(
         switchMap((user) => {
           if (!user) {
@@ -353,7 +356,7 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
                 machine: this.machines.find((m) => m._id === row.machine),
                 description: row.description,
               })),
-              worker: user,
+              worker: this.worker,
             } as IHourScheme;
 
             console.log(updatedHourScheme);
