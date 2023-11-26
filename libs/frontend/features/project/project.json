@@ -1,5 +1,5 @@
 {
-  "name": "project",
+  "name": "frontend-project",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/frontend/features/project/src",
   "prefix": "hour-master",

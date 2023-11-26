@@ -25,7 +25,7 @@ export class CreateProjectDto implements ICreateProject {
 export class UpsertProjectDto implements IUpsertProject {
   @IsNotEmpty()
   @IsString()
-  id!: Id;
+  _id!: Id;
 
   @IsNotEmpty()
   @IsString()

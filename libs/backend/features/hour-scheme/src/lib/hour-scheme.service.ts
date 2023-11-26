@@ -37,7 +37,7 @@ export class HourSchemeService {
     const hourScheme = await this.hourSchemeModel.findById(id).exec();
 
     if (!hourScheme) {
-      throw new NotFoundException(`User with id ${id} not found`);
+      throw new NotFoundException(`Hour scheme with id ${id} not found`);
     }
 
     await hourScheme.populate('worker');

@@ -3,11 +3,11 @@ import { Prop, SchemaFactory } from '@nestjs/mongoose';
 import { IsMongoId } from 'class-validator';
 import { HydratedDocument } from 'mongoose';
 
-export type HourSchemaRowDocument = HydratedDocument<HourSchemaRow>;
+export type HourSchemaRowDocument = HydratedDocument<HourSchemeRow>;
 
-export class HourSchemaRow implements IHourSchemeRow {
+export class HourSchemeRow implements IHourSchemeRow {
   @IsMongoId()
-  id!: string;
+  _id!: string;
 
   @Prop({ required: true, type: String, ref: 'Project' })
   project!: IProject;
@@ -22,4 +22,4 @@ export class HourSchemaRow implements IHourSchemeRow {
   machine?: IMachine | undefined;
 }
 
-export const HourSchemaRowSchema = SchemaFactory.createForClass(HourSchemaRow);
+export const HourSchemaRowSchema = SchemaFactory.createForClass(HourSchemeRow);

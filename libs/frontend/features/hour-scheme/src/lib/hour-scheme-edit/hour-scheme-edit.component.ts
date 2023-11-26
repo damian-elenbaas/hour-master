@@ -40,10 +40,10 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
   // TODO: Get projects and machines from API
   projects: IProject[] = [
     {
-      id: 'project-1',
+      _id: 'project-1',
       name: 'Project 1',
       location: {
-        id: 'location-1',
+        _id: 'location-1',
         address: 'Address 1',
         city: 'City 1',
         postalCode: 'Postal Code 1',
@@ -61,12 +61,12 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
   // TODO: Get projects and machines from API
   machines: IMachine[] = [
     {
-      id: 'machine-1',
+      _id: 'machine-1',
       typeNumber: 'KTER-12-GBF',
       name: 'Kubota 4t',
     },
     {
-      id: 'machine-2',
+      _id: 'machine-2',
       typeNumber: 'GAWE-8-WWF',
       name: 'Alhmann 4t AE',
     },
@@ -112,9 +112,9 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
             this.hsForm.patchValue({
               date: this.convertDate(new Date(scheme.date)),
               rows: scheme.rows?.map((row) => ({
-                project: row.project.id,
+                project: row.project._id,
                 hours: row.hours,
-                machine: row.machine?.id,
+                machine: row.machine?._id,
                 description: row.description,
               })),
             });
@@ -123,12 +123,12 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
             scheme.rows?.forEach((row) => {
               this.rows.push(
                 this.fb.group({
-                  project: this.fb.control(row.project.id, Validators.required),
+                  project: this.fb.control(row.project._id, Validators.required),
                   hours: this.fb.control(row.hours, [
                     Validators.required,
                     Validators.min(0),
                   ]),
-                  machine: this.fb.control(row.machine?.id),
+                  machine: this.fb.control(row.machine?._id),
                   description: this.fb.control(
                     row.description,
                     Validators.required
@@ -257,9 +257,9 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
     const newHourScheme = {
       date: date,
       rows: formData.rows.map((row: any) => ({
-        project: this.projects.find((p) => p.id === row.project),
+        project: this.projects.find((p) => p._id === row.project),
         hours: row.hours,
-        machine: this.machines.find((m) => m.id === row.machine),
+        machine: this.machines.find((m) => m._id === row.machine),
         description: row.description,
       })),
       worker: {
@@ -296,9 +296,9 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
       _id: this.hourSchemeId,
       date: date,
       rows: formData.rows.map((row: any) => ({
-        project: this.projects.find((p) => p.id === row.project),
+        project: this.projects.find((p) => p._id === row.project),
         hours: row.hours,
-        machine: this.machines.find((m) => m.id === row.machine),
+        machine: this.machines.find((m) => m._id === row.machine),
         description: row.description,
       })),
       worker: {
@@ -330,10 +330,10 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
   }
 
   findProject(id: Id): IProject | undefined {
-    return this.projects.find((p) => p.id === id);
+    return this.projects.find((p) => p._id === id);
   }
 
   findMachine(id: Id): IMachine | undefined {
-    return this.machines.find((m) => m.id === id);
+    return this.machines.find((m) => m._id === id);
   }
 }

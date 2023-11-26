@@ -23,6 +23,9 @@
       "@hour-master/backend/features/hour-scheme": [
         "libs/backend/features/hour-scheme/src/index.ts"
       ],
+      "@hour-master/backend/features/project": [
+        "libs/backend/features/project/src/index.ts"
+      ],
       "@hour-master/backend/user": ["libs/backend/user/src/index.ts"],
       "@hour-master/environments": ["libs/shared/environments/src/index.ts"],
       "@hour-master/frontend/auth": ["libs/frontend/auth/src/index.ts"],
