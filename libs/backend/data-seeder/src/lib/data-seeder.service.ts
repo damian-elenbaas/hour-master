@@ -7,6 +7,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UserRole } from '@hour-master/shared/api';
 import { Machine } from '@hour-master/backend/features/machine';
+import { faker } from '@faker-js/faker';
 
 @Injectable()
 export class DataSeederService {
@@ -30,9 +31,12 @@ export class DataSeederService {
 
     let users = await this.userModel.find().exec();
 
-    if (users.length == 0) {
+    if (users.length < 6) {
       this.logger.log(`No users found, seeding data...`);
-      const user = new this.userModel({
+      this.userModel.deleteMany({}).exec();
+
+      // create admin user
+      const admin = new this.userModel({
         username: 'admin',
         password: await this.generateHashedPassword('admin'),
         firstname: 'Admin',
@@ -41,61 +45,116 @@ export class DataSeederService {
         role: UserRole.ADMIN,
       });
 
-      await user.save();
+      await admin.save();
+
+      // create 2 office workers
+      for(let i = 0; i < 2; i++) {
+        const user = new this.userModel({
+          username: faker.internet.userName(),
+          password: await this.generateHashedPassword('password'),
+          firstname: faker.person.firstName(),
+          lastname: faker.person.lastName(),
+          email: faker.internet.email(),
+          role: UserRole.OFFICE,
+        });
+
+        await user.save();
+      }
+
+      // create 3 roadworkers
+      for(let i = 0; i < 3; i++) {
+        const user = new this.userModel({
+          username: faker.internet.userName(),
+          password: await this.generateHashedPassword('password'),
+          firstname: faker.person.firstName(),
+          lastname: faker.person.lastName(),
+          email: faker.internet.email(),
+          role: UserRole.ROADWORKER,
+        });
+
+        await user.save();
+      }
 
       users = await this.userModel.find().exec();
     }
 
     let projects = await this.projectModel.find().exec();
 
-    if (projects.length == 0) {
+    if (projects.length < 5) {
       this.logger.log(`No projects found, seeding data...`);
-      const project = new this.projectModel({
-        name: 'OV Hub, Gemeente Breda',
-        location: {
-          address: 'Grote Markt 38',
-          postalCode: '4811 XR',
-          city: 'Breda',
-        },
-        admin: users[0]._id,
-      });
+      this.projectModel.deleteMany({}).exec();
 
-      await project.save();
+      for(let i = 0; i <= 5; i++) {
+        const user = users[Math.floor(Math.random() * 2) + 1];
+
+        const project = new this.projectModel({
+          name: faker.company.name(),
+          description: faker.lorem.sentence(),
+          admin: user._id,
+          location: {
+            address: faker.location.streetAddress(),
+            city: faker.location.city(),
+            country: faker.location.country(),
+            postalCode: faker.location.zipCode()
+          }
+        });
+
+        await project.save();
+      }
 
       projects = await this.projectModel.find().exec();
     }
 
     let machines = await this.machineModel.find().exec();
 
-    if (machines.length == 0) {
+    if (machines.length < 5) {
       this.logger.log(`No machines found, seeding data...`);
-      const machine = new this.machineModel({
-        typeNumber: 'CAT 320D',
-        name: 'CAT 320D Kraan',
-      });
+      this.machineModel.deleteMany({}).exec();
 
-      await machine.save();
+      for(let i = 0; i <= 5; i++) {
+        const machine = new this.machineModel({
+          typeNumber: faker.vehicle.vehicle(),
+          name: faker.vehicle.model(),
+        });
+
+        await machine.save();
+      }
 
       machines = await this.machineModel.find().exec();
     }
 
     const hourSchemes = await this.hourSchemeModel.find().exec();
 
-    if (hourSchemes.length == 0) {
+    if (hourSchemes.length < 5) {
       this.logger.log(`No hourSchemes found, seeding data...`);
-      const hourScheme = new this.hourSchemeModel({
-        worker: users[0]._id,
-        date: new Date(),
-        rows: [
-          {
-            project: projects[0]._id,
-            hours: 8,
-            description: 'Ondergrond geëgaliseerd en puin gestort',
-          },
-        ],
-      });
+      this.hourSchemeModel.deleteMany({}).exec();
 
-      await hourScheme.save();
+      for(let i = 0; i <= 5; i++) {
+        const roadworker = users[Math.floor(Math.random() * 3) + 3];
+
+        const rows = [];
+        for(let j = 0; j < 5; j++) {
+          const project = projects[Math.floor(Math.random() * 4)];
+          const machine = machines[Math.floor(Math.random() * 4)];
+          rows.push({
+            project: project._id,
+            machine: machine._id,
+            hours: faker.number.int({
+              min: 1,
+              max: 8
+            }),
+            description: faker.lorem.sentence()
+          })
+        }
+
+        const hourScheme = new this.hourSchemeModel({
+          worker: roadworker._id,
+          date: faker.date.recent(),
+          rows: rows
+        });
+
+        await hourScheme.save();
+      }
     }
   }
 

@@ -17,7 +17,7 @@ export class HourSchemeService {
   constructor(
     @InjectModel(HourScheme.name)
     private readonly hourSchemeModel: Model<HourScheme>
-  ) {}
+  ) { }
 
   async getAll(): Promise<IHourScheme[]> {
     this.logger.log(`getAll()`);
@@ -38,10 +38,16 @@ export class HourSchemeService {
       .populate('worker')
       .populate({
         path: 'rows',
-        populate: {
-          path: 'project',
-          model: 'Project',
-        },
+        populate: [
+          {
+            path: 'project',
+            model: 'Project',
+          },
+          {
+            path: 'machine',
+            model: 'Machine',
+          }
+        ]
       })
       .exec();
 
