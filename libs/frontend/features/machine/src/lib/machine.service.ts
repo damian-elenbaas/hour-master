@@ -2,7 +2,7 @@ import { Observable, throwError } from 'rxjs';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { map, catchError, tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { ApiResponse, IProject, Id } from '@hour-master/shared/api';
+import { ApiResponse, IMachine, Id } from '@hour-master/shared/api';
 import { environment } from '@hour-master/shared/environments';
 
 /**
@@ -14,8 +14,8 @@ export const httpOptions = {
 };
 
 @Injectable()
-export class ProjectService {
-  endpoint = `${environment.dataApiUrl}/api/project`;
+export class MachineService {
+  endpoint = `${environment.dataApiUrl}/api/machine`;
 
   constructor(private readonly http: HttpClient) {}
 
@@ -24,61 +24,61 @@ export class ProjectService {
    *
    * @options options - optional URL queryparam options
    */
-  public list(options?: any): Observable<IProject[] | null> {
+  public list(options?: any): Observable<IMachine[] | null> {
     console.log(`list ${this.endpoint}`);
 
     return this.http
-      .get<ApiResponse<IProject[]>>(this.endpoint, {
+      .get<ApiResponse<IMachine[]>>(this.endpoint, {
         ...options,
         ...httpOptions,
       })
       .pipe(
-        map((response: any) => response.results as IProject[]),
+        map((response: any) => response.results as IMachine[]),
         tap(console.log),
         catchError(this.handleError)
       );
   }
 
-  public details(id: Id, options?: any): Observable<IProject | null> {
+  public details(id: Id, options?: any): Observable<IMachine | null> {
     console.log(`details ${this.endpoint}/${id}`);
 
     return this.http
-      .get<ApiResponse<IProject>>(`${this.endpoint}/${id}`, {
+      .get<ApiResponse<IMachine>>(`${this.endpoint}/${id}`, {
         ...options,
         ...httpOptions,
       })
       .pipe(
-        map((response: any) => response.results as IProject),
+        map((response: any) => response.results as IMachine),
         tap(console.log),
         catchError(this.handleError)
       );
   }
 
-  public create(scheme: IProject, options?: any): Observable<IProject | null> {
+  public create(scheme: IMachine, options?: any): Observable<IMachine | null> {
     console.log(`create ${this.endpoint}`);
 
     return this.http
-      .post<ApiResponse<IProject>>(this.endpoint, scheme, {
+      .post<ApiResponse<IMachine>>(this.endpoint, scheme, {
         ...options,
         ...httpOptions,
       })
       .pipe(
-        map((response: any) => response.results as IProject),
+        map((response: any) => response.results as IMachine),
         tap(console.log),
         catchError(this.handleError)
       );
   }
 
-  public update(project: IProject, options?: any): Observable<IProject | null> {
-    console.log(`update ${this.endpoint}/${project._id}`);
+  public update(machine: IMachine, options?: any): Observable<IMachine | null> {
+    console.log(`update ${this.endpoint}/${machine._id}`);
 
     return this.http
-      .put<ApiResponse<IProject>>(`${this.endpoint}/${project._id}`, project, {
+      .put<ApiResponse<IMachine>>(`${this.endpoint}/${machine._id}`, machine, {
         ...options,
         ...httpOptions,
       })
       .pipe(
-        map((response: any) => response.results as IProject),
+        map((response: any) => response.results as IMachine),
         tap(console.log),
         catchError(this.handleError)
       );
