@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { IHourScheme, Id } from '@hour-master/shared/api';
 import { HourSchemeService } from '../hour-scheme.service';
-import { Subscription } from 'rxjs';
+import { Subscription, of, switchMap } from 'rxjs';
 import { Location } from '@angular/common';
 import { Modal } from 'flowbite';
 import { AuthService } from '@hour-master/frontend/auth';
@@ -16,8 +16,8 @@ export class HourSchemeDetailsComponent implements OnInit, OnDestroy {
   hourSchemeId!: Id;
   hourScheme!: IHourScheme;
   subscriptionDetails!: Subscription;
-  subscriptionAuth!: Subscription;
   popUpModal!: Modal;
+  token!: string;
   totalHours = 0;
 
   constructor(
@@ -32,34 +32,50 @@ export class HourSchemeDetailsComponent implements OnInit, OnDestroy {
     const modalElement = document.getElementById('popup-modal') as HTMLElement;
     this.popUpModal = new Modal(modalElement);
 
-    this.subscriptionAuth = this.authService
+    this.subscriptionDetails = this.authService
       .getUserTokenFromLocalStorage()
-      .subscribe((token) => {
-        if (!token) {
-          this.router.navigate(['/auth/login']);
+      .pipe(
+        switchMap((token) => {
+          if (!token) {
+            this.router.navigate(['/login']);
+            return of(null);
+          }
+          this.token = token;
+          return this.route.paramMap;
+        })
+      )
+      .pipe(
+        switchMap((params: ParamMap | null) => {
+          if (!params || !params.get('id')) {
+            return of(null);
+          } else {
+            this.hourSchemeId = params.get('id') as Id;
+            return this.hourSchemeService.details(params.get('id') as Id, {
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${this.token}`,
+              },
+            });
+          }
+        })
+      )
+      .subscribe((hourScheme) => {
+        console.log('hourScheme', hourScheme);
+
+        if (!hourScheme) {
+          this.router.navigate(['/hour-schemes']);
+          return;
         }
+
+        this.hourScheme = hourScheme;
+        this.totalHours =
+          hourScheme?.rows?.reduce((acc, row) => {
+            return acc + row.hours;
+          }, 0) || 0;
       });
-
-    this.route.paramMap.subscribe((params) => {
-      this.hourSchemeId = params.get('id') as Id;
-      this.subscriptionDetails = this.hourSchemeService
-        .details(this.hourSchemeId)
-        .subscribe((hourScheme) => {
-          console.log('hourScheme', hourScheme);
-
-          if (!hourScheme) return;
-
-          this.hourScheme = hourScheme;
-          this.totalHours =
-            hourScheme?.rows?.reduce((acc, row) => {
-              return acc + row.hours;
-            }, 0) || 0;
-        });
-    });
   }
 
   ngOnDestroy(): void {
-    if (this.subscriptionAuth) this.subscriptionAuth.unsubscribe();
     if (this.subscriptionDetails) this.subscriptionDetails.unsubscribe();
   }
 

@@ -1,22 +1,22 @@
 import { Module } from '@nestjs/common';
-import { HourSchemeController } from './hour-scheme.controller';
-import { HourSchemeService } from './hour-scheme.service';
+import { DataSeederService } from './data-seeder.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { HourSchemeSchema } from './schemas/hour-scheme.schema';
+import { HourSchemeSchema } from '@hour-master/backend/features/hour-scheme';
 import { UserSchema } from '@hour-master/backend/user';
 import { ProjectSchema } from '@hour-master/backend/features/project';
+import { MachineSchema } from '@hour-master/backend/features/machine';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: 'HourScheme', schema: HourSchemeSchema },
-      // WARN: Temp for seeding fake data
       { name: 'User', schema: UserSchema },
       { name: 'Project', schema: ProjectSchema },
+      { name: 'Machine', schema: MachineSchema },
     ]),
   ],
-  controllers: [HourSchemeController],
-  providers: [HourSchemeService],
-  exports: [HourSchemeService],
+  controllers: [],
+  providers: [DataSeederService],
+  exports: [DataSeederService],
 })
-export class HourSchemeModule {}
+export class DataSeederModule {}

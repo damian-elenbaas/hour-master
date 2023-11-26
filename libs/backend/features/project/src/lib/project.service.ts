@@ -21,13 +21,9 @@ export class ProjectService {
   async getAll(): Promise<IProject[]> {
     this.logger.log(`getAll()`);
 
-    const hourSchemes = await this.projectModel.find().exec();
+    const projects = await this.projectModel.find().populate('admin').exec();
 
-    for (const hourScheme of hourSchemes) {
-      await hourScheme.populate('worker');
-    }
-
-    return hourSchemes;
+    return projects;
   }
 
   async getOne(id: Id): Promise<IProject> {
@@ -71,7 +67,7 @@ export class ProjectService {
     const deletedProject = await this.projectModel.findByIdAndDelete(id).exec();
 
     if (!deletedProject) {
-      throw new NotFoundException(`Hour scheme with id ${id} not found`);
+      throw new NotFoundException(`Project with id ${id} not found`);
     }
 
     return true;

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ProjectListComponent } from './project-list/project-list.component';
 import { ProjectDetailsComponent } from './project-details/project-details.component';
 import { ProjectEditComponent } from './project-edit/project-edit.component';
+import { ProjectService } from './project.service';
 
 @NgModule({
   imports: [CommonModule],
@@ -11,6 +12,7 @@ import { ProjectEditComponent } from './project-edit/project-edit.component';
     ProjectDetailsComponent,
     ProjectEditComponent,
   ],
+  providers: [ProjectService],
   exports: [
     ProjectListComponent,
     ProjectDetailsComponent,

@@ -19,7 +19,7 @@ export class HourScheme implements IHourScheme {
   @Prop({ required: true, type: mongoose.SchemaTypes.ObjectId, ref: 'User' })
   worker!: User;
 
-  @Prop({ required: true, type: [HourSchemeRow] })
+  @Prop({ type: [HourSchemeRow] })
   rows?: HourSchemeRow[] | undefined;
 }
 

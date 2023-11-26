@@ -30,9 +30,10 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
   subscriptionDetails!: Subscription;
   subscriptionProjects!: Subscription;
   addRowModal!: Modal;
+  token!: string;
   loaded = false;
 
-  projects!: IProject[];
+  projects: IProject[] = [];
 
   // TODO: Get projects and machines from API
   machines: IMachine[] = [
@@ -72,6 +73,7 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
             this.router.navigate(['/auth/login']);
             return of(null);
           } else {
+            this.token = token;
             return this.route.paramMap;
           }
         })
@@ -82,7 +84,12 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
             return of(null);
           } else {
             this.hourSchemeId = params.get('id') as Id;
-            return this.hourSchemeService.details(params.get('id') as Id);
+            return this.hourSchemeService.details(params.get('id') as Id, {
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${this.token}`,
+              },
+            });
           }
         })
       )
@@ -127,6 +134,35 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
         error: (error) => {
           console.error(error);
           this.location.back();
+        },
+      });
+
+    this.subscriptionProjects = this.authService
+      .getUserTokenFromLocalStorage()
+      .pipe(
+        switchMap((token) => {
+          if (!token) {
+            this.router.navigate(['/auth/login']);
+            return of(null);
+          } else {
+            this.token = token;
+            return this.projectService.list({
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${this.token}`,
+              },
+            });
+          }
+        })
+      )
+      .subscribe({
+        next: (projects: IProject[] | null) => {
+          if (!projects) return;
+
+          this.projects = projects;
+        },
+        error: (error) => {
+          console.error(error);
         },
       });
 
@@ -256,16 +292,23 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
 
     console.log(newHourScheme);
 
-    this.hourSchemeService.create(newHourScheme).subscribe({
-      next: (hourScheme: IHourScheme | null) => {
-        if (hourScheme === null) return;
+    this.hourSchemeService
+      .create(newHourScheme, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${this.token}`,
+        },
+      })
+      .subscribe({
+        next: (hourScheme: IHourScheme | null) => {
+          if (hourScheme === null) return;
 
-        this.location.back();
-      },
-      error: (err: any) => {
-        console.error(err);
-      },
-    });
+          this.location.back();
+        },
+        error: (err: any) => {
+          console.error(err);
+        },
+      });
   }
 
   update(): void {
@@ -295,16 +338,23 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
 
     console.log(updatedHourScheme);
 
-    this.hourSchemeService.update(updatedHourScheme).subscribe({
-      next: (hourScheme: IHourScheme | null) => {
-        if (hourScheme === null) return;
+    this.hourSchemeService
+      .update(updatedHourScheme, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${this.token}`,
+        },
+      })
+      .subscribe({
+        next: (hourScheme: IHourScheme | null) => {
+          if (hourScheme === null) return;
 
-        this.location.back();
-      },
-      error: (err: any) => {
-        console.error(err);
-      },
-    });
+          this.location.back();
+        },
+        error: (err: any) => {
+          console.error(err);
+        },
+      });
   }
 
   get rows(): FormArray {

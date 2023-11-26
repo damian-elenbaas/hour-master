@@ -53,7 +53,7 @@ export const appRoutes: Route[] = [
         component: HourSchemeListComponent,
       },
       {
-        path: 'edit',
+        path: 'new',
         pathMatch: 'full',
         component: HourSchemeEditComponent,
       },

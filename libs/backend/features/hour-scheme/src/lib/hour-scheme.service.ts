@@ -22,11 +22,10 @@ export class HourSchemeService {
   async getAll(): Promise<IHourScheme[]> {
     this.logger.log(`getAll()`);
 
-    const hourSchemes = await this.hourSchemeModel.find().exec();
-
-    for (const hourScheme of hourSchemes) {
-      await hourScheme.populate('worker');
-    }
+    const hourSchemes = await this.hourSchemeModel
+      .find()
+      .populate('worker')
+      .exec();
 
     return hourSchemes;
   }
@@ -34,13 +33,14 @@ export class HourSchemeService {
   async getOne(id: Id): Promise<IHourScheme> {
     this.logger.log(`getOne(${id})`);
 
-    const hourScheme = await this.hourSchemeModel.findById(id).exec();
+    const hourScheme = await this.hourSchemeModel
+      .findById(id)
+      .populate('worker')
+      .exec();
 
     if (!hourScheme) {
       throw new NotFoundException(`Hour scheme with id ${id} not found`);
     }
-
-    await hourScheme.populate('worker');
 
     return hourScheme;
   }
