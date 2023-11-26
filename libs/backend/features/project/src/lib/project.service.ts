@@ -1,9 +1,13 @@
-import { Injectable, Logger, NotFoundException } from "@nestjs/common";
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { Project } from "./schemas/project.schema";
-import { ICreateProject, IProject, IUpdateProject, Id } from "@hour-master/shared/api";
-
+import { Project } from './schemas/project.schema';
+import {
+  ICreateProject,
+  IProject,
+  IUpdateProject,
+  Id,
+} from '@hour-master/shared/api';
 
 @Injectable()
 export class ProjectService {
@@ -64,9 +68,7 @@ export class ProjectService {
   async delete(id: Id): Promise<boolean> {
     this.logger.log(`delete(${id})`);
 
-    const deletedProject = await this.projectModel
-      .findByIdAndDelete(id)
-      .exec();
+    const deletedProject = await this.projectModel.findByIdAndDelete(id).exec();
 
     if (!deletedProject) {
       throw new NotFoundException(`Hour scheme with id ${id} not found`);
@@ -75,4 +77,3 @@ export class ProjectService {
     return true;
   }
 }
-

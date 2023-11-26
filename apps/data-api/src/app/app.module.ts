@@ -22,7 +22,7 @@ import { MongooseModule } from '@nestjs/mongoose';
     HourSchemeModule,
     UserModule,
     AuthModule,
-    ProjectModule
+    ProjectModule,
   ],
   controllers: [],
   providers: [],

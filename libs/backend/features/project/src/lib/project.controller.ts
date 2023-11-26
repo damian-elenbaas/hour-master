@@ -14,7 +14,6 @@ import { Roles } from '@hour-master/backend/decorators';
 
 @Controller('project')
 export class ProjectController {
-
   constructor(private readonly projectService: ProjectService) {}
 
   @Get('')

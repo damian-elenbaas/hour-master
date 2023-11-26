@@ -1,18 +1,13 @@
 import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {
-  IHourScheme,
-  IMachine,
-  IProject,
-  Id,
-  UserRole,
-} from '@hour-master/shared/api';
+import { IHourScheme, IMachine, IProject, Id } from '@hour-master/shared/api';
 import { Modal } from 'flowbite';
 import { HourSchemeService } from '../hour-scheme.service';
 import { Subscription, of, switchMap } from 'rxjs';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { AuthService } from '@hour-master/frontend/auth';
+import { ProjectService } from '@hour-master/frontend/features/project';
 
 @Component({
   selector: 'hour-master-hour-scheme-edit',
@@ -33,31 +28,12 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
     rows: this.fb.array([]),
   });
   subscriptionDetails!: Subscription;
-  subscriptionAuth!: Subscription;
+  subscriptionProjects!: Subscription;
   addRowModal!: Modal;
   loaded = false;
 
-  // TODO: Get projects and machines from API
-  projects: IProject[] = [
-    {
-      _id: 'project-1',
-      name: 'Project 1',
-      location: {
-        _id: 'location-1',
-        address: 'Address 1',
-        city: 'City 1',
-        postalCode: 'Postal Code 1',
-      },
-      admin: {
-        _id: 'admin-1',
-        username: 'admin1',
-        firstname: 'Admin 1',
-        lastname: 'Admin 1',
-        email: 'test@test.nl',
-        role: UserRole.OFFICE,
-      },
-    },
-  ].sort((a, b) => a.name.localeCompare(b.name));
+  projects!: IProject[];
+
   // TODO: Get projects and machines from API
   machines: IMachine[] = [
     {
@@ -77,6 +53,7 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private hourSchemeService: HourSchemeService,
     private authService: AuthService,
+    private projectService: ProjectService,
     private route: ActivatedRoute,
     private router: Router
   ) {}
@@ -87,18 +64,21 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
     if ($modalElement === null) throw new Error('Modal element not found');
     this.addRowModal = new Modal($modalElement);
 
-    this.subscriptionAuth = this.authService
+    this.subscriptionDetails = this.authService
       .getUserTokenFromLocalStorage()
-      .subscribe((token) => {
-        if (!token) {
-          this.router.navigate(['/auth/login']);
-        }
-      });
-
-    this.subscriptionDetails = this.route.paramMap
       .pipe(
-        switchMap((params: ParamMap) => {
-          if (!params.get('id')) {
+        switchMap((token) => {
+          if (!token) {
+            this.router.navigate(['/auth/login']);
+            return of(null);
+          } else {
+            return this.route.paramMap;
+          }
+        })
+      )
+      .pipe(
+        switchMap((params: ParamMap | null) => {
+          if (!params || !params.get('id')) {
             return of(null);
           } else {
             this.hourSchemeId = params.get('id') as Id;
@@ -123,7 +103,10 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
             scheme.rows?.forEach((row) => {
               this.rows.push(
                 this.fb.group({
-                  project: this.fb.control(row.project._id, Validators.required),
+                  project: this.fb.control(
+                    row.project._id,
+                    Validators.required
+                  ),
                   hours: this.fb.control(row.hours, [
                     Validators.required,
                     Validators.min(0),
@@ -147,11 +130,10 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
         },
       });
 
-    return;
+    // TODO: Get projects from API
   }
 
   ngOnDestroy(): void {
-    this.subscriptionAuth.unsubscribe();
     this.subscriptionDetails.unsubscribe();
   }
 
