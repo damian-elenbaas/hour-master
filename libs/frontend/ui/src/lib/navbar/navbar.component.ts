@@ -8,6 +8,8 @@ import { AuthService } from '@hour-master/frontend/auth';
   styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent {
+  user$ = this.authService.currentUser$;
+
   constructor(
     public readonly authService: AuthService,
     public readonly router: Router

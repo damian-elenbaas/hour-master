@@ -24,7 +24,7 @@ export class UserListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscriptionList = this.authService
-      .getUserTokenFromLocalStorage()
+      .currentUserToken$
       .pipe(
         switchMap((token) => {
           if (!token) {

@@ -19,7 +19,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.sub = this.authService
-      .getUserTokenFromLocalStorage()
+      .currentUserToken$
       .subscribe((token: Token | null) => {
         if (!token) {
           this.router.navigate(['/auth/login']);

@@ -5,7 +5,7 @@ import {
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '@hour-master/shared/environments';
-import { Observable, catchError, map, of, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, map, of, throwError } from 'rxjs';
 import { IUser, Token } from '@hour-master/shared/api';
 
 /**
@@ -29,7 +29,22 @@ export class AuthService {
     'Content-Type': 'application/json',
   });
 
-  constructor(private readonly http: HttpClient) {}
+  currentUserToken$ = new BehaviorSubject<Token | null>(null);
+  currentUser$ = new BehaviorSubject<IUser | null>(null);
+
+  constructor(private readonly http: HttpClient) {
+    this.getUserTokenFromLocalStorage().subscribe((token) => {
+      if (token) {
+        this.currentUserToken$.next(token);
+      }
+    });
+
+    this.getUserFromLocalStorage().subscribe((user) => {
+      if (user) {
+        this.currentUser$.next(user);
+      }
+    });
+  }
 
   public login(username: string, password: string): Observable<Token> {
     console.log(`login at ${this.endpoint}/login`);
@@ -44,6 +59,8 @@ export class AuthService {
         map((response: any) => {
           const token = response.results.access_token;
           const user = response.results.user;
+          this.currentUserToken$.next(token);
+          this.currentUser$.next(user);
           this.saveUserTokenToLocalStorage(token);
           this.saveUserToLocalStorage(user);
           return token;
@@ -55,6 +72,8 @@ export class AuthService {
   }
 
   public logout(): void {
+    this.currentUserToken$.next(null);
+    this.currentUser$.next(null);
     localStorage.removeItem(this.CURRENT_USER_TOKEN);
     localStorage.removeItem(this.CURRENT_USER);
   }

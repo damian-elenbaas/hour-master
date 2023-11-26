@@ -33,7 +33,7 @@ export class HourSchemeDetailsComponent implements OnInit, OnDestroy {
     this.popUpModal = new Modal(modalElement);
 
     this.subscriptionDetails = this.authService
-      .getUserTokenFromLocalStorage()
+      .currentUserToken$
       .pipe(
         switchMap((token) => {
           if (!token) {

@@ -5,7 +5,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { UiModule } from '@hour-master/ui';
 import { AuthModule } from '@hour-master/frontend/auth';
-import { LoginComponent } from './login/login.component';
 import { ReactiveFormsModule } from '@angular/forms';
 
 const routes: Routes = [
@@ -18,12 +17,7 @@ const routes: Routes = [
     path: 'about',
     pathMatch: 'full',
     component: AboutComponent,
-  },
-  {
-    path: 'auth/login',
-    pathMatch: 'full',
-    component: LoginComponent,
-  },
+  }
 ];
 
 @NgModule({
@@ -35,7 +29,7 @@ const routes: Routes = [
     ReactiveFormsModule,
     UiModule,
   ],
-  declarations: [HomeComponent, AboutComponent, LoginComponent],
-  exports: [AboutComponent, HomeComponent, LoginComponent],
+  declarations: [HomeComponent, AboutComponent],
+  exports: [AboutComponent, HomeComponent],
 })
 export class CommonFrontendModule {}

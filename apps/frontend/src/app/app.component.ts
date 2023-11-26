@@ -39,7 +39,7 @@ export class AppComponent implements OnInit {
       .pipe(
         switchMap((event) => {
           if (event instanceof NavigationStart) {
-            return this.authService.getUserTokenFromLocalStorage();
+            return this.authService.currentUserToken$;
           }
           return of(null);
         })

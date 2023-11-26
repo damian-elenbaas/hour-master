@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { Token } from '@hour-master/shared/api';
 import { Router } from '@angular/router';
-import { AuthService } from '@hour-master/frontend/auth';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'hour-master-login',

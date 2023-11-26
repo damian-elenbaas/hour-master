@@ -56,7 +56,7 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
     this.addRowModal = new Modal($modalElement);
 
     this.subscriptionDetails = this.authService
-      .getUserTokenFromLocalStorage()
+      .currentUserToken$
       .pipe(
         switchMap((token) => {
           if (!token) {
@@ -128,7 +128,7 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
       });
 
     this.subscriptionProjects = this.authService
-      .getUserTokenFromLocalStorage()
+      .currentUserToken$
       .pipe(
         switchMap((token) => {
           if (!token) {
@@ -157,7 +157,7 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
       });
 
     this.subscriptionMachine = this.authService
-      .getUserTokenFromLocalStorage()
+      .currentUserToken$
       .pipe(
         switchMap((token) => {
           if (!token) {
