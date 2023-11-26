@@ -21,18 +21,13 @@ import {
 export const appRoutes: Route[] = [
   {
     path: '',
-    children: [
-      {
-        path: '',
-        pathMatch: 'full',
-        component: HomeComponent,
-      },
-      {
-        path: 'about',
-        pathMatch: 'full',
-        component: AboutComponent,
-      },
-    ],
+    pathMatch: 'full',
+    component: HomeComponent,
+  },
+  {
+    path: 'about',
+    pathMatch: 'full',
+    component: AboutComponent,
   },
   {
     path: 'auth',
