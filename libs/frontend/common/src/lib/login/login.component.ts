@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { Token } from '@hour-master/shared/api';
 import { Router } from '@angular/router';
-import { AuthService } from '../auth.service';
+import { AuthService } from '@hour-master/frontend/auth';
 
 @Component({
   selector: 'hour-master-login',
@@ -12,8 +12,9 @@ import { AuthService } from '../auth.service';
 })
 export class LoginComponent implements OnInit, OnDestroy {
   loginForm!: FormGroup;
-
   sub!: Subscription;
+
+  loaded = true;
 
   constructor(
     private readonly authService: AuthService,
@@ -45,11 +46,15 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     const { username, password } = this.loginForm.value;
 
-    this.authService.login(username, password).subscribe({
+    this.loaded = false;
+    this.authService.login(username, password)
+      .subscribe({
       next: (token) => {
+        this.loaded = true;
         this.router.navigate(['/']);
       },
       error: (error) => {
+        this.loaded = true;
         console.error(error);
       },
     });

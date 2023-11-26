@@ -6,6 +6,7 @@ import { HomeComponent } from './home/home.component';
 import { UiModule } from '@hour-master/ui';
 import { AuthModule } from '@hour-master/frontend/auth';
 import { ReactiveFormsModule } from '@angular/forms';
+import { LoginComponent } from './login/login.component';
 
 const routes: Routes = [
   {
@@ -29,7 +30,7 @@ const routes: Routes = [
     ReactiveFormsModule,
     UiModule,
   ],
-  declarations: [HomeComponent, AboutComponent],
-  exports: [AboutComponent, HomeComponent],
+  declarations: [HomeComponent, AboutComponent, LoginComponent],
+  exports: [AboutComponent, HomeComponent, LoginComponent],
 })
 export class CommonFrontendModule {}

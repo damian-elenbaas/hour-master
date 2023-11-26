@@ -2,8 +2,8 @@ import { Route } from '@angular/router';
 import {
   AboutComponent,
   HomeComponent,
+  LoginComponent
 } from '@hour-master/frontend/common';
-import { LoginComponent } from '@hour-master/frontend/auth';
 import {
   HourSchemeDetailsComponent,
   HourSchemeEditComponent,
