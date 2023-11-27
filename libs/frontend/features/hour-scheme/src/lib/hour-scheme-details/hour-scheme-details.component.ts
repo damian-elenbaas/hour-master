@@ -39,7 +39,8 @@ export class HourSchemeDetailsComponent implements OnInit, OnDestroy {
       .pipe(
         switchMap((token) => {
           if (!token) {
-            this.router.navigate(['/login']);
+            this.alertService.danger('Je bent niet ingelogd!');
+            this.router.navigate(['/auth/login']);
             return of(null);
           }
           this.token = token;

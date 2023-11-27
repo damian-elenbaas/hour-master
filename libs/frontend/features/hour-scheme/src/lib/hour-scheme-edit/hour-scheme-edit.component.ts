@@ -128,7 +128,7 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
           }
           this.loaded = true;
         },
-        error: (error) => {
+        error: () => {
           this.alertService.danger('Urenschema niet gevonden!');
           this.router.navigate(['/hour-scheme']);
         },
@@ -139,6 +139,7 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
       .pipe(
         switchMap((token) => {
           if (!token) {
+            this.alertService.info('Je bent niet ingelogd!');
             this.router.navigate(['/auth/login']);
             return of(null);
           } else {
@@ -168,6 +169,7 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
       .pipe(
         switchMap((token) => {
           if (!token) {
+            this.alertService.info('Je bent niet ingelogd!');
             this.router.navigate(['/auth/login']);
             return of(null);
           } else {
@@ -300,15 +302,16 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
       .pipe(
         switchMap((user) => {
           if (!user) {
+            this.alertService.danger('Je bent niet ingelogd!');
             this.router.navigate(['/auth/login']);
             return of(null);
           } else {
             const newHourScheme = {
               date: date,
               rows: formData.rows.map((row: any) => ({
-                project: this.projects.find((p) => p._id === row.project),
+                project: this.findProject(row.project),
                 hours: row.hours,
-                machine: this.machines.find((m) => m._id === row.machine),
+                machine: this.findMachine(row.machine),
                 description: row.description,
               })),
               worker: user,
@@ -328,9 +331,11 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
         next: (hourScheme: IHourScheme | null) => {
           if (hourScheme === null) return;
 
+          this.alertService.success('Urenschema aangemaakt!');
           this.location.back();
         },
         error: (err: any) => {
+          this.alertService.danger('Er is iets misgegaan!');
           console.error(err);
         },
       });
@@ -355,15 +360,14 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
               _id: this.hourSchemeId,
               date: date,
               rows: formData.rows.map((row: any) => ({
-                project: this.projects.find((p) => p._id === row.project),
+                project: this.findProject(row.project),
                 hours: row.hours,
-                machine: this.machines.find((m) => m._id === row.machine),
+                machine: this.findMachine(row.machine),
                 description: row.description,
               })),
               worker: this.worker,
             } as IHourScheme;
 
-            console.log(updatedHourScheme);
             return this.hourSchemeService.update(updatedHourScheme, {
               headers: {
                 'Content-Type': 'application/json',
@@ -377,9 +381,11 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
         next: (hourScheme: IHourScheme | null) => {
           if (hourScheme === null) return;
 
+          this.alertService.success('Urenschema aangepast!');
           this.location.back();
         },
         error: (err: any) => {
+          this.alertService.danger('Er is iets misgegaan!');
           console.error(err);
         },
       });

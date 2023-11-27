@@ -50,7 +50,7 @@ export class UserListComponent implements OnInit, OnDestroy {
             this.loading = false;
           }
         },
-        error: (err) => {
+        error: () => {
           this.alertService.danger("Je hebt geen toegang tot deze pagina!");
           this.router.navigate(['']);
         }

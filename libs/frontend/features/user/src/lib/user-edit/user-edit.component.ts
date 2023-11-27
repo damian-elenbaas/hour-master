@@ -108,7 +108,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
           }
           this.loaded = true;
         },
-        error: (err) => {
+        error: () => {
           this.alertService.danger('Je hebt geen toegang tot deze pagina!');
           this.location.back();
         },
