@@ -9,6 +9,7 @@ import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { AuthService } from '@hour-master/frontend/auth';
 import { ProjectService } from '@hour-master/frontend/features/project';
 import { MachineService } from '@hour-master/frontend/features/machine';
+import { AlertService } from '@hour-master/frontend/common';
 
 @Component({
   selector: 'hour-master-hour-scheme-edit',
@@ -44,6 +45,7 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private hourSchemeService: HourSchemeService,
     private authService: AuthService,
+    private alertService: AlertService,
     private projectService: ProjectService,
     private machineService: MachineService,
     private route: ActivatedRoute,
@@ -61,6 +63,7 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
       .pipe(
         switchMap((token) => {
           if (!token) {
+            this.alertService.info('Je bent niet ingelogd!');
             this.router.navigate(['/auth/login']);
             return of(null);
           } else {
@@ -120,13 +123,14 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
 
             this.worker = scheme.worker;
           } else if (!scheme && this.hourSchemeId) {
+            this.alertService.danger('Urenschema niet gevonden!');
             this.location.back();
           }
           this.loaded = true;
         },
         error: (error) => {
-          console.error(error);
-          this.location.back();
+          this.alertService.danger('Urenschema niet gevonden!');
+          this.router.navigate(['/hour-scheme']);
         },
       });
 

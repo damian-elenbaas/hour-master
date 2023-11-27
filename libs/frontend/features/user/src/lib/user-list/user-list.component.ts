@@ -4,6 +4,7 @@ import { Subscription, of, switchMap } from 'rxjs';
 import { UserService } from '../user.service';
 import { Router } from '@angular/router';
 import { AuthService } from '@hour-master/frontend/auth';
+import { AlertService } from '@hour-master/frontend/common';
 
 @Component({
   selector: 'hour-master-user-list',
@@ -19,8 +20,9 @@ export class UserListComponent implements OnInit, OnDestroy {
   constructor(
     private readonly router: Router,
     private readonly authService: AuthService,
-    private userService: UserService
-  ) {}
+    private userService: UserService,
+    private readonly alertService: AlertService
+  ) { }
 
   ngOnInit(): void {
     this.subscriptionList = this.authService
@@ -28,6 +30,7 @@ export class UserListComponent implements OnInit, OnDestroy {
       .pipe(
         switchMap((token) => {
           if (!token) {
+            this.alertService.danger("Je bent niet ingelogd!");
             this.router.navigate(['/auth/login']);
             return of(null);
           } else {
@@ -40,10 +43,16 @@ export class UserListComponent implements OnInit, OnDestroy {
           }
         })
       )
-      .subscribe((results) => {
-        if (results) {
-          this.users = results;
-          this.loading = false;
+      .subscribe({
+        next: (results) => {
+          if (results) {
+            this.users = results;
+            this.loading = false;
+          }
+        },
+        error: (err) => {
+          this.alertService.danger("Je hebt geen toegang tot deze pagina!");
+          this.router.navigate(['']);
         }
       });
   }

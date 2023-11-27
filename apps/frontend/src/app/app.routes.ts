@@ -15,7 +15,7 @@ import {
   UserListComponent,
 } from '@hour-master/frontend/features/user';
 
-// Lazy loading is not working as expected because of the following:
+// BUG: Lazy loading is not working as expected because of the following:
 // https://angular.io/guide/providers#limiting-provider-scope-by-lazy-loading-modules
 
 export const appRoutes: Route[] = [
@@ -73,7 +73,7 @@ export const appRoutes: Route[] = [
         component: UserListComponent,
       },
       {
-        path: 'edit',
+        path: 'new',
         pathMatch: 'full',
         component: UserEditComponent,
       },

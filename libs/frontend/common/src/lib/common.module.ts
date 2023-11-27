@@ -7,6 +7,8 @@ import { UiModule } from '@hour-master/ui';
 import { AuthModule } from '@hour-master/frontend/auth';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './login/login.component';
+import { AlertComponent } from './alert/alert.component';
+import { AlertService } from './alert/alert.service';
 
 const routes: Routes = [
   {
@@ -18,7 +20,7 @@ const routes: Routes = [
     path: 'about',
     pathMatch: 'full',
     component: AboutComponent,
-  }
+  },
 ];
 
 @NgModule({
@@ -30,7 +32,8 @@ const routes: Routes = [
     ReactiveFormsModule,
     UiModule,
   ],
-  declarations: [HomeComponent, AboutComponent, LoginComponent],
-  exports: [AboutComponent, HomeComponent, LoginComponent],
+  declarations: [HomeComponent, AboutComponent, LoginComponent, AlertComponent],
+  exports: [AboutComponent, HomeComponent, LoginComponent, AlertComponent],
+  providers: [AlertService]
 })
 export class CommonFrontendModule {}

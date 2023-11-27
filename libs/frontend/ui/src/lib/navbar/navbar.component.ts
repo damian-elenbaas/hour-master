@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '@hour-master/frontend/auth';
+import { UserRole } from '@hour-master/shared/api';
 
 @Component({
   selector: 'hour-master-navbar',
@@ -9,6 +10,7 @@ import { AuthService } from '@hour-master/frontend/auth';
 })
 export class NavbarComponent {
   user$ = this.authService.currentUser$;
+  roles = UserRole;
 
   constructor(
     public readonly authService: AuthService,

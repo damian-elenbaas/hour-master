@@ -52,7 +52,7 @@
           </hour-master-navbar-item>
         </li>
         <li
-          *ngIf="user$.value !== null"
+          *ngIf="user$.value !== null && user$.value.role === roles.ADMIN"
         >
           <hour-master-navbar-item [link]="'/user'">
             Gebruikers

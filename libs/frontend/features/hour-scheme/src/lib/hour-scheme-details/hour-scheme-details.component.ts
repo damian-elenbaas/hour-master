@@ -6,6 +6,7 @@ import { Subscription, of, switchMap } from 'rxjs';
 import { Location } from '@angular/common';
 import { Modal } from 'flowbite';
 import { AuthService } from '@hour-master/frontend/auth';
+import { AlertService } from '@hour-master/frontend/common';
 
 @Component({
   selector: 'hour-master-hour-scheme-details',
@@ -24,9 +25,10 @@ export class HourSchemeDetailsComponent implements OnInit, OnDestroy {
     private readonly route: ActivatedRoute,
     private readonly hourSchemeService: HourSchemeService,
     private readonly authService: AuthService,
+    private readonly alertService: AlertService,
     private readonly router: Router,
     public location: Location
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const modalElement = document.getElementById('popup-modal') as HTMLElement;
@@ -59,19 +61,26 @@ export class HourSchemeDetailsComponent implements OnInit, OnDestroy {
           }
         })
       )
-      .subscribe((hourScheme) => {
-        console.log('hourScheme', hourScheme);
+      .subscribe({
+        next: (hourScheme) => {
+          console.log('hourScheme', hourScheme);
 
-        if (!hourScheme) {
-          this.router.navigate(['/hour-schemes']);
-          return;
+          if (!hourScheme) {
+            this.alertService.danger('Urenschema niet gevonden!');
+            this.router.navigate(['/hour-scheme']);
+            return;
+          }
+
+          this.hourScheme = hourScheme;
+          this.totalHours =
+            hourScheme?.rows?.reduce((acc, row) => {
+              return acc + row.hours;
+            }, 0) || 0;
+        },
+        error: () => {
+          this.alertService.danger('Urenschema niet gevonden!');
+          this.router.navigate(['/hour-scheme']);
         }
-
-        this.hourScheme = hourScheme;
-        this.totalHours =
-          hourScheme?.rows?.reduce((acc, row) => {
-            return acc + row.hours;
-          }, 0) || 0;
       });
   }
 

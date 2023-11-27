@@ -6,7 +6,8 @@ import {
 import { Injectable } from '@angular/core';
 import { environment } from '@hour-master/shared/environments';
 import { BehaviorSubject, Observable, catchError, map, of, throwError } from 'rxjs';
-import { IUser, Token } from '@hour-master/shared/api';
+import { IUser, Id, Token, UserRole } from '@hour-master/shared/api';
+import { AlertService } from '@hour-master/frontend/common';
 
 /**
  * See https://angular.io/guide/http#requesting-data-from-a-server
@@ -32,7 +33,10 @@ export class AuthService {
   currentUserToken$ = new BehaviorSubject<Token | null>(null);
   currentUser$ = new BehaviorSubject<IUser | null>(null);
 
-  constructor(private readonly http: HttpClient) {
+  constructor(
+    private readonly http: HttpClient,
+    private readonly alertService: AlertService
+  ) {
     this.getUserTokenFromLocalStorage().subscribe((token) => {
       if (token) {
         this.currentUserToken$.next(token);
@@ -63,9 +67,11 @@ export class AuthService {
           this.currentUser$.next(user);
           this.saveUserTokenToLocalStorage(token);
           this.saveUserToLocalStorage(user);
+          this.alertService.success(`Welkom ${user.firstname}!`);
           return token;
         }),
         catchError((error: any) => {
+          this.alertService.danger(`Gebruikersnaam of wachtwoord is incorrect!`);
           return this.handleError(error);
         })
       );
@@ -76,6 +82,7 @@ export class AuthService {
     this.currentUser$.next(null);
     localStorage.removeItem(this.CURRENT_USER_TOKEN);
     localStorage.removeItem(this.CURRENT_USER);
+    this.alertService.success('Je bent uitgelogd!');
   }
 
   getUserTokenFromLocalStorage(): Observable<Token | null> {
@@ -102,6 +109,39 @@ export class AuthService {
 
   private saveUserToLocalStorage(user: IUser): void {
     localStorage.setItem(this.CURRENT_USER, JSON.stringify(user));
+  }
+
+  userMayAccessUsers(): Observable<boolean> {
+    return this.currentUser$.pipe(
+      map((user) => {
+        if (user) {
+          return user.role === UserRole.ADMIN;
+        }
+
+        return false;
+      })
+    );
+  }
+
+  userMayEditUser(itemUserId: Id): Observable<boolean> {
+    return this.currentUser$.pipe(
+      map((user) => {
+        if (user) {
+          return user.role === UserRole.ADMIN && user._id !== itemUserId;
+        }
+
+        return false;
+      })
+    );
+  }
+
+  userMayEditHourSchemes(): boolean {
+    const user = this.currentUser$.getValue();
+    if (user) {
+      return user.role === UserRole.ADMIN || user.role === UserRole.ROADWORKER;
+    }
+
+    return false;
   }
 
   /**

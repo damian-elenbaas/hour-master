@@ -33,29 +33,33 @@ export class HourSchemeService {
   async getOne(id: Id): Promise<IHourScheme> {
     this.logger.log(`getOne(${id})`);
 
-    const hourScheme = await this.hourSchemeModel
-      .findById(id)
-      .populate('worker')
-      .populate({
-        path: 'rows',
-        populate: [
-          {
-            path: 'project',
-            model: 'Project',
-          },
-          {
-            path: 'machine',
-            model: 'Machine',
-          }
-        ]
-      })
-      .exec();
+    try {
+      const hourScheme = await this.hourSchemeModel
+        .findById(id)
+        .populate('worker')
+        .populate({
+          path: 'rows',
+          populate: [
+            {
+              path: 'project',
+              model: 'Project',
+            },
+            {
+              path: 'machine',
+              model: 'Machine',
+            }
+          ]
+        })
+        .exec();
 
-    if (!hourScheme) {
+      if (!hourScheme) {
+        throw new NotFoundException(`Hour scheme with id ${id} not found`);
+      }
+
+      return hourScheme;
+    } catch (error) {
       throw new NotFoundException(`Hour scheme with id ${id} not found`);
     }
-
-    return hourScheme;
   }
 
   async create(hourScheme: ICreateHourScheme): Promise<IHourScheme> {
