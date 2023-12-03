@@ -14,6 +14,11 @@ import {
   UserEditComponent,
   UserListComponent,
 } from '@hour-master/frontend/features/user';
+import {
+  ProjectDetailsComponent,
+  ProjectEditComponent,
+  ProjectListComponent
+} from '@hour-master/frontend/features/project';
 
 // BUG: Lazy loading is not working as expected because of the following:
 // https://angular.io/guide/providers#limiting-provider-scope-by-lazy-loading-modules
@@ -89,4 +94,29 @@ export const appRoutes: Route[] = [
       },
     ],
   },
+  {
+    path: 'project',
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        component: ProjectListComponent
+      },
+      {
+        path: 'new',
+        pathMatch: 'full',
+        component: ProjectEditComponent
+      },
+      {
+        path: ':id',
+        pathMatch: 'full',
+        component: ProjectDetailsComponent
+      },
+      {
+        path: ':id/edit',
+        pathMatch: 'full',
+        component: ProjectEditComponent
+      }
+    ]
+  }
 ];
