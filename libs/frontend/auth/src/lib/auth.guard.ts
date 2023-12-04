@@ -5,13 +5,16 @@ import { UserRole } from "@hour-master/shared/api";
 
 export const authGuard = (roles?: UserRole[]) => {
   return () => {
+    console.log('authGuard');
     const authService = inject(AuthService);
     const router = inject(Router);
-    const currentToken = authService.currentUserToken$.value;
-    const currentUser = authService.currentUser$.value;
+
+    // No use of pre-stored user, because auth guard lives in own scope
+    // and does not have the same auth service instance as the app component
+    const currentUser = authService.getUserFromLocalStorageSync();
     const currentRole = currentUser?.role || null;
 
-    if (currentToken === null) {
+    if (currentUser === null) {
       return router.navigate(['/auth/login']);
     }
 

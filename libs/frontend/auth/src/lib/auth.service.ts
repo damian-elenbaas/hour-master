@@ -103,6 +103,15 @@ export class AuthService {
     }
   }
 
+  getUserFromLocalStorageSync(): IUser | null {
+    const localUser = localStorage.getItem(this.CURRENT_USER);
+    if (localUser) {
+      return JSON.parse(localUser);
+    } else {
+      return null;
+    }
+  }
+
   private saveUserTokenToLocalStorage(user: Token): void {
     localStorage.setItem(this.CURRENT_USER_TOKEN, JSON.stringify(user));
   }
