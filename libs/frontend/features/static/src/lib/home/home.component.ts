@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AlertService } from '../alert/alert.service';
 import { AuthService } from '@hour-master/frontend/auth';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { UserRole } from '@hour-master/shared/api';
+import { AlertService } from '@hour-master/frontend/common';
 
 @Component({
   selector: 'hour-master-home',
