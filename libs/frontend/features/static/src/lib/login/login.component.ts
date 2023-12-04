@@ -4,7 +4,6 @@ import { Subscription } from 'rxjs';
 import { Token } from '@hour-master/shared/api';
 import { Router } from '@angular/router';
 import { AuthService } from '@hour-master/frontend/auth';
-import { AlertService } from '@hour-master/frontend/common';
 
 @Component({
   selector: 'hour-master-login',
@@ -19,7 +18,6 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly authService: AuthService,
-    private readonly alertService: AlertService,
     private readonly router: Router,
     private readonly fb: FormBuilder
   ) { }
@@ -34,7 +32,6 @@ export class LoginComponent implements OnInit, OnDestroy {
       .getUserTokenFromLocalStorage()
       .subscribe((token: Token | null) => {
         if (token) {
-          this.alertService.info('Je bent al ingelogd!');
           this.router.navigate(['/']);
         }
       });

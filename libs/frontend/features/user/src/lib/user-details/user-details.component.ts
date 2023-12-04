@@ -39,7 +39,6 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
       .pipe(
         switchMap((token) => {
           if (!token) {
-            this.alertService.danger('Je bent niet ingelogd!');
             this.router.navigate(['/auth/login']);
             return of(null);
           } else {
@@ -73,16 +72,16 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
         next: (user: IUser | null) => {
           if (!user) {
             this.alertService.danger('Gebruiker niet gevonden!');
-            this.location.back();
+            this.router.navigate(['/user']);
           } else {
             this.user$ = of(user);
             this.loaded = true;
           }
         },
         error: (error) => {
-          this.alertService.danger('Je hebt geen toegang tot deze pagina!');
           console.error(error);
-          this.location.back();
+          this.alertService.danger('Gebruiker niet gevonden!');
+          this.router.navigate(['/user']);
         },
       });
   }

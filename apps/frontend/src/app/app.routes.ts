@@ -20,17 +20,12 @@ import {
   ProjectListComponent
 } from '@hour-master/frontend/features/project';
 import { authGuard } from '@hour-master/frontend/auth';
+import { UserRole } from '@hour-master/shared/api';
 
 // BUG: Lazy loading is not working as expected because of the following:
 // https://angular.io/guide/providers#limiting-provider-scope-by-lazy-loading-modules
 
 export const appRoutes: Route[] = [
-  {
-    path: '',
-    pathMatch: 'full',
-    component: HomeComponent,
-    canActivate: [authGuard]
-  },
   {
     path: 'about',
     pathMatch: 'full',
@@ -45,6 +40,12 @@ export const appRoutes: Route[] = [
         component: LoginComponent,
       },
     ],
+  },
+  {
+    path: '',
+    pathMatch: 'full',
+    component: HomeComponent,
+    canActivate: [authGuard()]
   },
   {
     path: 'hour-scheme',
@@ -70,6 +71,7 @@ export const appRoutes: Route[] = [
         component: HourSchemeEditComponent,
       },
     ],
+    canActivate: [authGuard()]
   },
   {
     path: 'user',
@@ -95,6 +97,7 @@ export const appRoutes: Route[] = [
         component: UserEditComponent,
       },
     ],
+    canActivate: [authGuard([UserRole.ADMIN])]
   },
   {
     path: 'project',
@@ -119,6 +122,7 @@ export const appRoutes: Route[] = [
         pathMatch: 'full',
         component: ProjectEditComponent
       }
-    ]
+    ],
+    canActivate: [authGuard([UserRole.ADMIN, UserRole.OFFICE])]
   }
 ];

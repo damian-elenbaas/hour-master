@@ -63,7 +63,6 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
       .pipe(
         switchMap((token) => {
           if (!token) {
-            this.alertService.info('Je bent niet ingelogd!');
             this.router.navigate(['/auth/login']);
             return of(null);
           } else {
@@ -302,7 +301,6 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
       .pipe(
         switchMap((user) => {
           if (!user) {
-            this.alertService.danger('Je bent niet ingelogd!');
             this.router.navigate(['/auth/login']);
             return of(null);
           } else {

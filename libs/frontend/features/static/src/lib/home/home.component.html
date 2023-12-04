@@ -9,12 +9,15 @@
       (user$.value.role === roles.ADMIN ||
       user$.value.role === roles.OFFICE)
     "
-    link="/user">
+    link="/project">
     <i class="fa-solid fa-map text-7xl"></i>
     Projecten
   </hour-master-dashboard-button>
   <hour-master-dashboard-button
-    *ngIf="user$.value !== null && user$.value.role === roles.ADMIN"
+    *ngIf="
+      user$.value !== null &&
+      user$.value.role === roles.ADMIN
+    "
     link="/user">
     <i class="fa-solid fa-users text-7xl"></i>
     Gebruikers

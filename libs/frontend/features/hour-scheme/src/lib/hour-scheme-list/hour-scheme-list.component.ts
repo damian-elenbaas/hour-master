@@ -4,7 +4,6 @@ import { Subscription, of, switchMap } from 'rxjs';
 import { HourSchemeService } from '../hour-scheme.service';
 import { Router } from '@angular/router';
 import { AuthService } from '@hour-master/frontend/auth';
-import { AlertService } from '@hour-master/frontend/common';
 
 @Component({
   selector: 'hour-master-hour-scheme-list',
@@ -21,7 +20,6 @@ export class HourSchemeListComponent implements OnInit, OnDestroy {
   constructor(
     private readonly router: Router,
     private readonly authService: AuthService,
-    private readonly alertService: AlertService,
     private hourSchemeService: HourSchemeService
   ) { }
 
@@ -31,7 +29,6 @@ export class HourSchemeListComponent implements OnInit, OnDestroy {
       .pipe(
         switchMap((token: Token | null) => {
           if (!token) {
-            this.alertService.danger('Je bent niet ingelogd!');
             this.router.navigate(['/auth/login']);
             return of(null);
           } else {
@@ -51,9 +48,8 @@ export class HourSchemeListComponent implements OnInit, OnDestroy {
           }
           this.loading = false;
         },
-        error: () => {
-          this.alertService.danger('Je hebt geen toegang tot deze pagina!');
-          this.router.navigate(['']);
+        error: (error) => {
+          console.error(error);
         }
       });
   }

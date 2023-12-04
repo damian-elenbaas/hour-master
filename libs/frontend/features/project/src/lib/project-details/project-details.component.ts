@@ -34,7 +34,6 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
             this.token = token;
             return this.route.paramMap;
           } else {
-            this.alertService.danger('Je bent niet ingelogd!');
             this.router.navigate(['/auth/login']);
             return of(null);
           }
@@ -60,7 +59,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
           this.project = project;
         } else {
           this.alertService.danger('Project niet gevonden!');
-          this.router.navigate(['/projects']);
+          this.router.navigate(['/project']);
         }
       });
   }

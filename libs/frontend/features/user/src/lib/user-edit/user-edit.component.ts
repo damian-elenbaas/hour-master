@@ -66,7 +66,6 @@ export class UserEditComponent implements OnInit, OnDestroy {
       .pipe(
         switchMap((token) => {
           if (!token) {
-            this.alertService.danger('Je bent niet ingelogd!');
             this.router.navigate(['/auth/login']);
             return of(null);
           } else {
@@ -108,9 +107,8 @@ export class UserEditComponent implements OnInit, OnDestroy {
           }
           this.loaded = true;
         },
-        error: () => {
-          this.alertService.danger('Je hebt geen toegang tot deze pagina!');
-          this.location.back();
+        error: (error) => {
+          console.error(error);
         },
       });
   }
@@ -185,7 +183,6 @@ export class UserEditComponent implements OnInit, OnDestroy {
           }
         },
         error: (error) => {
-          // TODO: show error
           console.error(error);
         },
       });

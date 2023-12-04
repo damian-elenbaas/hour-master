@@ -1,3 +1,4 @@
+import { HttpClientModule } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { NavigationStart, Router, RouterModule } from '@angular/router';
 import { AuthModule, AuthService } from '@hour-master/frontend/auth';
@@ -13,6 +14,7 @@ import { of, switchMap } from 'rxjs';
 @Component({
   standalone: true,
   imports: [
+    HttpClientModule,
     CommonFrontendModule,
     UserModule,
     HourSchemeModule,
@@ -30,7 +32,9 @@ export class AppComponent implements OnInit {
   constructor(
     private readonly router: Router,
     private readonly authService: AuthService
-  ) {}
+  ) {
+    console.log('AppComponent');
+  }
 
   ngOnInit(): void {
     initFlowbite();
