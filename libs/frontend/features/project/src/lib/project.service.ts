@@ -103,7 +103,7 @@ export class ProjectService {
    * Handle errors.
    */
   public handleError(error: HttpErrorResponse): Observable<any> {
-    console.log('handleError in HourSchemeService', error);
+    console.log(`handleError in ${ProjectService.name}`, error);
 
     return throwError(() => new Error(error.message));
   }

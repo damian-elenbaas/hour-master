@@ -6,10 +6,12 @@ import { ProjectEditComponent } from './project-edit/project-edit.component';
 import { ProjectService } from './project.service';
 import { RouterModule } from '@angular/router';
 import { UiModule } from '@hour-master/ui';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     RouterModule,
     UiModule
   ],

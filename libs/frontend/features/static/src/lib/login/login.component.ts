@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs';
 import { Token } from '@hour-master/shared/api';
 import { Router } from '@angular/router';
 import { AuthService } from '@hour-master/frontend/auth';
-import { AlertService } from '../alert/alert.service';
+import { AlertService } from '@hour-master/frontend/common';
 
 @Component({
   selector: 'hour-master-login',

@@ -45,6 +45,9 @@
       "@hour-master/frontend/features/project": [
         "libs/frontend/features/project/src/index.ts"
       ],
+      "@hour-master/frontend/features/static": [
+        "libs/frontend/features/static/src/index.ts"
+      ],
       "@hour-master/frontend/features/user": [
         "libs/frontend/features/user/src/index.ts"
       ],
