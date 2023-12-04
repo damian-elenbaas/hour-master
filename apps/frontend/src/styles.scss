@@ -13,7 +13,10 @@
 
   h1,
   h2,
-  h3 {
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply text-center py-4;
     font-family: 'Montserrat', sans-serif;
   }
@@ -31,8 +34,15 @@
   }
 
   h4 {
-    @apply text-xl font-bold text-center py-4;
-    font-family: 'Montserrat', sans-serif;
+    @apply text-xl;
+  }
+
+  h5 {
+    @apply text-lg;
+  }
+
+  h6 {
+    @apply text-base;
   }
 
   p {

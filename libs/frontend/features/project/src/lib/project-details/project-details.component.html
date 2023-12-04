@@ -4,7 +4,9 @@
     Terug
   </button>
   <div *ngIf="project; else loading">
-    <h3>
+    <h3>{{ project.name }}</h3>
+    <h4>{{ project.location.address }}, {{ project.location.city }}</h4>
+    <h6>
       Project van
       <a
         class="underline decoration-accent hover:text-accent"
@@ -13,7 +15,7 @@
         {{ project.admin.firstname }}
         {{ project.admin.lastname }}
       </a>
-    </h3>
+    </h6>
     <div class="relative overflow-x-auto">
       <table class="w-full text-sm text-left rtl:text-right">
         <thead class="text-xs uppercase bg-primary text-white">

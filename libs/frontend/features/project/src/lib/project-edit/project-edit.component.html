@@ -1,1 +1,105 @@
-<p>project-edit works!</p>
+<div class="relative">
+  <div class="mx-auto w-fit">
+    <h2>
+      <span *ngIf="!projectId">Nieuw project</span>
+      <span *ngIf="projectId">Project bewerken</span>
+    </h2>
+    <form *ngIf="loaded; else loading" [formGroup]="projectForm" (submit)="onSubmit()">
+      <div class="mb-6">
+        <label for="name" [ngClass]="{
+            error:
+              projectForm.controls['name'].invalid &&
+              projectForm.controls['name'].touched
+          }">
+          Naam
+        </label>
+        <input type="text" id="name" [ngClass]="{
+            error:
+              projectForm.controls['name'].invalid &&
+              projectForm.controls['name'].touched
+          }" formControlName="name" required />
+        <p *ngIf="
+            projectForm.controls['name'].invalid &&
+            projectForm.controls['name'].touched
+          " class="mt-2 text-sm text-red-600 dark:text-red-500">
+          Projectnaam is verplicht!
+        </p>
+      </div>
+      <div class="mb-6" [formGroup]="projectForm.controls.location">
+        <label class="text-lg">Locatie</label>
+        <div>
+          <label for="address" [ngClass]="{
+            error:
+            projectForm.controls.location.controls.address.invalid &&
+            projectForm.controls.location.controls.address.touched
+            }">
+            Adres
+          </label>
+          <input type="text" id="address" [ngClass]="{
+            error:
+            projectForm.controls.location.controls.address.invalid &&
+            projectForm.controls.location.controls.address.touched
+            }" formControlName="address" required />
+          <p *ngIf="
+            projectForm.controls.location.controls.address.invalid &&
+            projectForm.controls.location.controls.address.touched
+            " class="mt-2 text-sm text-red-600 dark:text-red-500">
+            Adres is verplicht!
+          </p>
+        </div>
+        <div class="mt-2">
+          <label for="city" [ngClass]="{
+            error:
+            projectForm.controls.location.controls.city.invalid &&
+            projectForm.controls.location.controls.city.touched
+            }">
+            Stad
+          </label>
+          <input type="text" id="city" [ngClass]="{
+            error:
+            projectForm.controls.location.controls.city.invalid &&
+            projectForm.controls.location.controls.city.touched
+            }" formControlName="city" required />
+          <p *ngIf="
+            projectForm.controls.location.controls.city.invalid &&
+            projectForm.controls.location.controls.city.touched
+            " class="mt-2 text-sm text-red-600 dark:text-red-500">
+            Stad is verplicht!
+          </p>
+        </div>
+        <div class="mt-2">
+          <label for="postal" [ngClass]="{
+            error:
+            projectForm.controls.location.controls.postalCode.invalid &&
+            projectForm.controls.location.controls.postalCode.touched
+            }">
+            Postcode
+          </label>
+          <input type="text" id="postal" [ngClass]="{
+            error:
+            projectForm.controls.location.controls.postalCode.invalid &&
+            projectForm.controls.location.controls.postalCode.touched
+            }" formControlName="postalCode" required />
+          <p *ngIf="
+            projectForm.controls.location.controls.postalCode.invalid &&
+            projectForm.controls.location.controls.postalCode.touched
+            " class="mt-2 text-sm text-red-600 dark:text-red-500">
+            Postcode is verplicht!
+          </p>
+        </div>
+      </div>
+      <div>
+        <button type="button" class="bg-secondary px-4 py-2 rounded-md text-white mr-2" (click)="onCancel()">
+          Annuleren
+        </button>
+        <button type="submit" class="bg-accent px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+          [disabled]="projectForm.invalid">
+          Opslaan
+        </button>
+      </div>
+    </form>
+    <ng-template #loading>
+      <hour-master-loader></hour-master-loader>
+    </ng-template>
+  </div>
+</div>
