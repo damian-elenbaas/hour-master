@@ -2,7 +2,7 @@ import { inject } from "@angular/core";
 import { Router } from "@angular/router";
 import { AuthService } from "./auth.service";
 
-// BUG: NullInjectorError: No provider for HTTP Client? Cirular dependency with AuthService?
+// BUG: NullInjectorError: No provider for HTTP Client
 export const authGuard = () => {
   const authService = inject(AuthService);
   const router = inject(Router);

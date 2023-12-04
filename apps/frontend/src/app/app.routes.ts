@@ -19,6 +19,7 @@ import {
   ProjectEditComponent,
   ProjectListComponent
 } from '@hour-master/frontend/features/project';
+import { authGuard } from '@hour-master/frontend/auth';
 
 // BUG: Lazy loading is not working as expected because of the following:
 // https://angular.io/guide/providers#limiting-provider-scope-by-lazy-loading-modules
@@ -28,6 +29,7 @@ export const appRoutes: Route[] = [
     path: '',
     pathMatch: 'full',
     component: HomeComponent,
+    canActivate: [authGuard]
   },
   {
     path: 'about',
