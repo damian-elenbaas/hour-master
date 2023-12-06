@@ -29,13 +29,17 @@ export class MachineService {
   async getOne(id: Id): Promise<IMachine> {
     this.logger.log(`getOne(${id})`);
 
-    const machine = await this.machineModel.findById(id).exec();
+    try {
+      const machine = await this.machineModel.findById(id).exec();
 
-    if (!machine) {
+      if (!machine) {
+        throw new NotFoundException(`Machine with id ${id} not found`);
+      }
+
+      return machine;
+    } catch (error) {
       throw new NotFoundException(`Machine with id ${id} not found`);
     }
-
-    return machine;
   }
 
   async create(project: ICreateMachine): Promise<IMachine> {

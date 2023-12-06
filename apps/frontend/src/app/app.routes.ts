@@ -46,7 +46,7 @@ export const appRoutes: Route[] = [
     path: '',
     pathMatch: 'full',
     component: HomeComponent,
-    canActivate: [authGuard()]
+    canMatch: [authGuard()]
   },
   {
     path: 'hour-scheme',
@@ -72,7 +72,7 @@ export const appRoutes: Route[] = [
         component: HourSchemeEditComponent,
       },
     ],
-    canActivate: [authGuard()]
+    canMatch: [authGuard()]
   },
   {
     path: 'user',
@@ -98,7 +98,7 @@ export const appRoutes: Route[] = [
         component: UserEditComponent,
       },
     ],
-    canActivate: [authGuard([UserRole.ADMIN])]
+    canMatch: [authGuard([UserRole.ADMIN])]
   },
   {
     path: 'project',
@@ -124,7 +124,7 @@ export const appRoutes: Route[] = [
         component: ProjectEditComponent
       }
     ],
-    canActivate: [authGuard([UserRole.ADMIN, UserRole.OFFICE])]
+    canMatch: [authGuard([UserRole.ADMIN, UserRole.OFFICE])]
   },
   {
     path: 'machine',
@@ -150,6 +150,6 @@ export const appRoutes: Route[] = [
         component: MachineEditComponent,
       },
     ],
-    canActivate: [authGuard([UserRole.ADMIN, UserRole.OFFICE])]
+    canMatch: [authGuard([UserRole.ADMIN, UserRole.OFFICE])]
   }
 ];

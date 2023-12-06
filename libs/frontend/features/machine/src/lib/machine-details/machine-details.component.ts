@@ -5,6 +5,7 @@ import { Subscription, of, switchMap } from 'rxjs';
 import { MachineService } from '../machine.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { AlertService } from '@hour-master/frontend/common';
 
 @Component({
   selector: 'hour-master-machine-details',
@@ -24,6 +25,7 @@ export class MachineDetailsComponent implements OnInit, OnDestroy {
     private readonly route: ActivatedRoute,
     private readonly authService: AuthService,
     private readonly machineService: MachineService,
+    private readonly alertService: AlertService,
     private readonly router: Router
   ) { }
 
@@ -67,6 +69,8 @@ export class MachineDetailsComponent implements OnInit, OnDestroy {
           }
         },
         error: err => {
+          this.location.back();
+          this.alertService.danger('Machine niet gevonden');
           console.error(err);
         }
       })
