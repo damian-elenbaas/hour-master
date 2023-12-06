@@ -1,6 +1,6 @@
 import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { IProject } from '@hour-master/shared/api';
+import { IHourSchemeRow, IProject } from '@hour-master/shared/api';
 import { ProjectService } from '../project.service';
 import { AuthService } from '@hour-master/frontend/auth';
 import { AlertService } from '@hour-master/frontend/common';
@@ -15,6 +15,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class ProjectDetailsComponent implements OnInit, OnDestroy {
   sub!: Subscription;
   project!: IProject;
+  hourRows: IHourSchemeRow[] = [];
   totalHours = 0;
   token!: string;
 

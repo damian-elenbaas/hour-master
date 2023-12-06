@@ -27,6 +27,11 @@
         </thead>
         <tbody>
           <!-- TODO: Get all hourscheme rows related to project  -->
+          <tr *ngIf="hourRows.length == 0">
+            <td colspan="3" class="px-6 py-4 text-center italic">
+              Geen uren gevonden
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>

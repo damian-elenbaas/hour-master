@@ -113,7 +113,7 @@ export class DataSeederService {
 
       for(let i = 0; i <= 5; i++) {
         const machine = new this.machineModel({
-          typeNumber: faker.vehicle.vehicle(),
+          typeNumber: faker.phone.imei(),
           name: faker.vehicle.model(),
         });
 

@@ -21,6 +21,7 @@ import {
 } from '@hour-master/frontend/features/project';
 import { authGuard } from '@hour-master/frontend/auth';
 import { UserRole } from '@hour-master/shared/api';
+import { MachineDetailsComponent, MachineEditComponent, MachineListComponent } from '@hour-master/frontend/features/machine';
 
 // BUG: Lazy loading is not working as expected because of the following:
 // https://angular.io/guide/providers#limiting-provider-scope-by-lazy-loading-modules
@@ -122,6 +123,32 @@ export const appRoutes: Route[] = [
         pathMatch: 'full',
         component: ProjectEditComponent
       }
+    ],
+    canActivate: [authGuard([UserRole.ADMIN, UserRole.OFFICE])]
+  },
+  {
+    path: 'machine',
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        component: MachineListComponent,
+      },
+      {
+        path: 'new',
+        pathMatch: 'full',
+        component: MachineEditComponent,
+      },
+      {
+        path: ':id',
+        pathMatch: 'full',
+        component: MachineDetailsComponent,
+      },
+      {
+        path: ':id/edit',
+        pathMatch: 'full',
+        component: MachineEditComponent,
+      },
     ],
     canActivate: [authGuard([UserRole.ADMIN, UserRole.OFFICE])]
   }

@@ -3,22 +3,26 @@
     <i class="fa-regular fa-clock text-7xl"></i>
     Urenschema's
   </hour-master-dashboard-button>
-  <hour-master-dashboard-button
-    *ngIf="
+  <hour-master-dashboard-button *ngIf="
       user$.value !== null &&
       (user$.value.role === roles.ADMIN ||
       user$.value.role === roles.OFFICE)
-    "
-    link="/project">
+    " link="/project">
     <i class="fa-solid fa-map text-7xl"></i>
     Projecten
   </hour-master-dashboard-button>
-  <hour-master-dashboard-button
-    *ngIf="
+  <hour-master-dashboard-button *ngIf="
+      user$.value !== null &&
+      (user$.value.role === roles.ADMIN ||
+      user$.value.role === roles.OFFICE)
+    " link="/machine">
+    <i class="fa-solid fa-screwdriver-wrench text-7xl"></i>
+    Machines
+  </hour-master-dashboard-button>
+  <hour-master-dashboard-button *ngIf="
       user$.value !== null &&
       user$.value.role === roles.ADMIN
-    "
-    link="/user">
+    " link="/user">
     <i class="fa-solid fa-users text-7xl"></i>
     Gebruikers
   </hour-master-dashboard-button>
