@@ -18,7 +18,9 @@ import { MachineModule } from '@hour-master/backend/features/machine';
       useFactory: (configService: ConfigService) => ({
         uri:
           configService.get<string>('MONGO_URI') ||
-          'mongodb://127.0.0.1:27017/hour-master',
+          // 'mongodb://127.0.0.1:27017/hour-master', // single instance
+          // 'mongodb://127.0.0.1:55600/hour-master?replicaSet=rs1', // replica set
+          'mongodb://127.0.0.1:55600,127.0.0.1:55601,127.0.0.1:55602/hour-master', // replica set
       }),
     }),
     AuthModule,

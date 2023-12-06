@@ -2,7 +2,7 @@ import * as bcrypt from 'bcrypt';
 import { ICreateUser, IUpdateUser, IUser, Id } from '@hour-master/shared/api';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 
-import { InjectConnection, InjectModel } from '@nestjs/mongoose';
+import { InjectConnection, InjectModel, Prop } from '@nestjs/mongoose';
 import { User } from './schemas/user.schema';
 import { Model } from 'mongoose';
 import { RecommendationsService } from '@hour-master/backend/recommendations';
@@ -58,22 +58,33 @@ export class UserService {
   async create(user: ICreateUser): Promise<IUser | null> {
     this.logger.log(`creating user`);
 
-    const hashedPassword = await this.generateHashedPassword(
-      user.password as string
-    );
-    user.password = hashedPassword;
+    return transaction<IUser | null>(this.connection, async (session) => {
+      const hashedPassword = await this.generateHashedPassword(
+        user.password as string
+      );
+      user.password = hashedPassword;
 
-    const newUser = new this.userModel(user);
-    const createdUser = await newUser.save();
+      const newUser = new this.userModel(user);
+      const createdUser = await newUser.save({ session: session });
 
-    const n4jResult = await this.recommendationsService.createOrUpdateUser(createdUser);
+      const n4jResult = await this.recommendationsService.createOrUpdateUser(createdUser);
 
-    if (!n4jResult) {
-      await this.userModel.findByIdAndDelete(createdUser._id).exec();
-      return null;
-    }
+      if (!n4jResult) {
+        await session.abortTransaction();
+        return null;
+      } else {
+        await session.commitTransaction();
+        return createdUser;
+      }
+    });
 
-    return createdUser;
+
+    // if (!n4jResult) {
+    //   await this.userModel.findByIdAndDelete(createdUser._id).exec();
+    //   return null;
+    // }
+    //
+    // return createdUser;
   }
 
   async update(id: Id, user: IUpdateUser): Promise<boolean> {
