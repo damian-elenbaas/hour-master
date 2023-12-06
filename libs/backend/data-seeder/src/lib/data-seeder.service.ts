@@ -52,8 +52,8 @@ export class DataSeederService {
       const adminMongo = new this.userModel(admin);
       this.logger.log(`Saving to mongo...`);
       await adminMongo.save();
-      // this.logger.log(`Saving to neo4j...`);
-      // await this.rcmdService.createOrUpdateUser(adminMongo);
+      this.logger.log(`Saving to neo4j...`);
+      await this.rcmdService.createOrUpdateUser(adminMongo);
 
       // create 2 office workers
       for (let i = 0; i < 2; i++) {
@@ -70,8 +70,8 @@ export class DataSeederService {
         const userMongo = new this.userModel(user);
         this.logger.log(`Saving to mongo...`);
         await userMongo.save();
-        // this.logger.log(`Saving to neo4j...`);
-        // await this.rcmdService.createOrUpdateUser(userMongo);
+        this.logger.log(`Saving to neo4j...`);
+        await this.rcmdService.createOrUpdateUser(userMongo);
       }
 
       // create 3 roadworkers
@@ -89,8 +89,8 @@ export class DataSeederService {
         const userMongo = new this.userModel(user);
         this.logger.log(`Saving to mongo...`);
         await userMongo.save();
-        // this.logger.log(`Saving to neo4j...`);
-        // await this.rcmdService.createOrUpdateUser(userMongo);
+        this.logger.log(`Saving to neo4j...`);
+        await this.rcmdService.createOrUpdateUser(userMongo);
       }
 
       users = await this.userModel.find().exec();

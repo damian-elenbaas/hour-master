@@ -17,7 +17,7 @@ export class UserService {
     @InjectModel(User.name) private readonly userModel: Model<User>,
     @InjectConnection() private connection: Connection,
     private readonly recommendationsService: RecommendationsService
-  ) {}
+  ) { }
 
   async getAll(): Promise<IUser[]> {
     this.logger.log(`getAll()`);
@@ -56,75 +56,57 @@ export class UserService {
   }
 
   async create(user: ICreateUser): Promise<IUser | null> {
-    return transaction(this.connection, async (session) => {
-      this.logger.log(`Creating new user: ${JSON.stringify(user)}`);
+    this.logger.log(`creating user`);
 
-      const hashedPassword = await this.generateHashedPassword(
-        user.password as string
-      );
-      user.password = hashedPassword;
+    const hashedPassword = await this.generateHashedPassword(
+      user.password as string
+    );
+    user.password = hashedPassword;
 
-      const newUser = new this.userModel(user);
-      const createdUser = await newUser.save({ session });
+    const newUser = new this.userModel(user);
+    const createdUser = await newUser.save();
 
-      const result = await this.recommendationsService.createOrUpdateUser(createdUser);
+    const n4jResult = await this.recommendationsService.createOrUpdateUser(createdUser);
 
-      if (!result) {
-        await session.abortTransaction();
-      } else {
-        await session.commitTransaction();
-      }
+    if (!n4jResult) {
+      await this.userModel.findByIdAndDelete(createdUser._id).exec();
+      return null;
+    }
 
-      return createdUser;
-    });
+    return createdUser;
   }
 
   async update(id: Id, user: IUpdateUser): Promise<boolean> {
-    return transaction(this.connection, async (session) => {
-      this.logger.log(`update(${id})`);
+    this.logger.log(`update(${id})`);
 
-      const updatedUser = await this.userModel
-        .findByIdAndUpdate(id, user)
-        .session(session)
-        .exec();
+    const updatedUser = await this.userModel
+      .findByIdAndUpdate(id, user)
+      .exec();
 
-      if (!updatedUser) {
-        throw new NotFoundException(`User with id ${id} not found`);
-      }
+    if (!updatedUser) {
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
 
-      const result = await this.recommendationsService.createOrUpdateUser(updatedUser);
-
-      if (!result) {
-        await session.abortTransaction();
-        return false;
-      }
-
-      await session.commitTransaction();
-      return true;
-    });
-
+    return true;
   }
 
   async delete(id: Id): Promise<boolean> {
-    return transaction(this.connection, async (session) => {
-      this.logger.log(`delete(${id})`);
+    this.logger.log(`delete(${id})`);
 
-      const deletedUser = await this.userModel.findByIdAndDelete(id).exec();
+    const deletedUser = await this.userModel.findByIdAndDelete(id).exec();
 
-      if (!deletedUser) {
-        throw new NotFoundException(`User with id ${id} not found`);
-      }
+    if (!deletedUser) {
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
 
-      const result = await this.recommendationsService.deleteUser(id);
+    const n4jResult = await this.recommendationsService.deleteUser(id);
 
-      if (!result) {
-        await session.abortTransaction();
-        return false;
-      }
+    if (!n4jResult) {
+      await this.userModel.create(deletedUser);
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
 
-      await session.commitTransaction();
-      return true;
-    });
+    return true;
   }
 
   async generateHashedPassword(password: string): Promise<string> {

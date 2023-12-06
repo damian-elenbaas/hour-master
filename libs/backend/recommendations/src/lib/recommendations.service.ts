@@ -11,23 +11,39 @@ export class RecommendationsService {
   ) { }
 
   async createOrUpdateUser(newUser: IUser) {
-    this.logger.log(`Creating new user: ${JSON.stringify(newUser)}`);
+    this.logger.log(`Creating user`);
 
     const result = await this.neo4jService.write(`
-      MERGE (u:User {mongoId: $id})
-      SET u += $props
+      MERGE (u:User {
+        mongoId: $id
+      })
+      on create set
+        u.username = $username,
+        u.firstname = $firstname,
+        u.lastname = $lastname,
+        u.email = $email,
+        u.role = $role
+      on match set
+        u.username = $username,
+        u.firstname = $firstname,
+        u.lastname = $lastname,
+        u.email = $email,
+        u.role = $role
+      return u
     `, {
-      id: newUser._id,
-      props: newUser
+      id: newUser._id.toString(),
+      username: newUser.username.toString(),
+      firstname: newUser.firstname.toString(),
+      lastname: newUser.lastname.toString(),
+      email: newUser.email.toString(),
+      role: newUser.role.toString(),
     });
-
-    this.logger.log(`Result of creating new user: ${JSON.stringify(result)}`);
 
     return result;
   }
 
   async deleteUser(id: Id) {
-    this.logger.log(`Deleting user: ${id}`);
+    this.logger.log(`Deleting user`);
 
     const result = await this.neo4jService.write(`
       MATCH (u:User {mongoId: $id})
@@ -35,8 +51,6 @@ export class RecommendationsService {
     `, {
       id
     });
-
-    this.logger.log(`Deleted user: ${JSON.stringify(result)}`);
 
     return result;
   }
