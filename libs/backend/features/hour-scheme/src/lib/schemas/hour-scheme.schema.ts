@@ -8,7 +8,11 @@ import { IsMongoId } from 'class-validator';
 
 export type HourSchemeDocument = HydratedDocument<HourScheme>;
 
-@Schema()
+@Schema({
+  toJSON: {
+    virtuals: true
+  }
+})
 export class HourScheme implements IHourScheme {
   @IsMongoId()
   _id!: string;
@@ -21,6 +25,13 @@ export class HourScheme implements IHourScheme {
 
   @Prop({ type: [HourSchemeRow] })
   rows?: HourSchemeRow[] | undefined;
+
+  totalHours?: number;
 }
 
-export const HourSchemeSchema = SchemaFactory.createForClass(HourScheme);
+const s = SchemaFactory.createForClass(HourScheme);
+s.virtual('totalHours').get(function (this: HourScheme) {
+  return this.rows?.reduce((acc, curr) => acc + curr.hours, 0) ?? 0;
+});
+
+export const HourSchemeSchema = s;

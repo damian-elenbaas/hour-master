@@ -267,4 +267,17 @@ export class RecommendationsService {
 
     return machines;
   }
+
+  async getMostWorkedOnProject() {
+    this.logger.log(`Getting most worked on project`);
+
+    const result = await this.neo4jService.read(`
+      MATCH ((p:Project)<-[r:ON_PROJECT]-(hs:HourScheme))
+      RETURN p, sum(r.hours) AS totalHours
+      ORDER BY totalHours DESC
+      LIMIT 1
+    `);
+
+    return result.records[0].get('p').properties as IProject;
+  }
 }

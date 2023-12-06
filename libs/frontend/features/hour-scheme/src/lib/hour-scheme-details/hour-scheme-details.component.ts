@@ -19,7 +19,6 @@ export class HourSchemeDetailsComponent implements OnInit, OnDestroy {
   subscriptionDetails!: Subscription;
   popUpModal!: Modal;
   token!: string;
-  totalHours = 0;
 
   constructor(
     private readonly route: ActivatedRoute,
@@ -72,10 +71,6 @@ export class HourSchemeDetailsComponent implements OnInit, OnDestroy {
           }
 
           this.hourScheme = hourScheme;
-          this.totalHours =
-            hourScheme?.rows?.reduce((acc, row) => {
-              return acc + row.hours;
-            }, 0) || 0;
         },
         error: () => {
           this.alertService.danger('Urenschema niet gevonden!');

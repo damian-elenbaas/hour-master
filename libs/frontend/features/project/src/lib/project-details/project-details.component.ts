@@ -13,7 +13,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./project-details.component.scss'],
 })
 export class ProjectDetailsComponent implements OnInit, OnDestroy {
-  sub!: Subscription;
+  detailSub!: Subscription;
   project!: IProject;
   hourRows: IHourSchemeRow[] = [];
   totalHours = 0;
@@ -28,7 +28,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     private readonly projectService: ProjectService) { }
 
   ngOnInit(): void {
-    this.sub = this.authService.currentUserToken$
+    this.detailSub = this.authService.currentUserToken$
       .pipe(
         switchMap((token) => {
           if (token) {
@@ -66,6 +66,6 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.sub?.unsubscribe();
+    this.detailSub?.unsubscribe();
   }
 }

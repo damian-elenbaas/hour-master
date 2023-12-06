@@ -25,15 +25,21 @@ export class ProjectController {
     return await this.projectService.getAll();
   }
 
-  @Get(':id')
-  async getOne(@Param('id') id: Id): Promise<IProject> {
-    return await this.projectService.getOne(id);
-  }
-
   @Post('')
   @Roles([UserRole.ADMIN, UserRole.OFFICE])
   async create(@Body() body: CreateProjectDto): Promise<IProject> {
     return await this.projectService.create(body);
+  }
+
+  @Get('most-worked-on')
+  @Public()
+  async getMostWorkedOn() {
+    return await this.recommendationsService.getMostWorkedOnProject();
+  }
+
+  @Get(':id')
+  async getOne(@Param('id') id: Id): Promise<IProject> {
+    return await this.projectService.getOne(id);
   }
 
   @Put(':id')
@@ -52,24 +58,20 @@ export class ProjectController {
   }
 
   @Get(':id/workers')
-  // @Roles([UserRole.ADMIN, UserRole.OFFICE])
-  @Public()
+  @Roles([UserRole.ADMIN, UserRole.OFFICE])
   async getWorkers(@Param('id') id: Id) {
     return await this.recommendationsService.getAllWorkersFromProject(id);
   }
 
   @Get(':id/total-hours')
-  // @Roles([UserRole.ADMIN, UserRole.OFFICE])
-  @Public()
+  @Roles([UserRole.ADMIN, UserRole.OFFICE])
   async getTotalHours(@Param('id') id: Id) {
     return await this.recommendationsService.getTotalHoursOnProject(id);
   }
 
   @Get(':id/machines')
-  // @Roles([UserRole.ADMIN, UserRole.OFFICE])
-  @Public()
+  @Roles([UserRole.ADMIN, UserRole.OFFICE])
   async getAllMachines(@Param('id') id: Id) {
     return await this.recommendationsService.getAllUsedMachinesFromProject(id);
   }
-
 }

@@ -46,7 +46,7 @@
       </table>
     </div>
     <div class="text-center italic mt-5">
-      Totaal aantal uren: {{ totalHours }}
+      Totaal aantal uren: {{ hourScheme.totalHours || 0 }}
     </div>
     <div class="flex flex-col md:flex-row gap-2 mt-5">
       <button routerLink="edit" class="bg-accent px-4 py-2 rounded-md">

@@ -2,7 +2,7 @@ import { Observable, throwError } from 'rxjs';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { map, catchError, tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { ApiResponse, IProject, Id } from '@hour-master/shared/api';
+import { ApiResponse, IProject, IUser, Id } from '@hour-master/shared/api';
 import { environment } from '@hour-master/shared/environments';
 
 /**
@@ -94,6 +94,23 @@ export class ProjectService {
       })
       .pipe(
         map((response: any) => response.results as boolean),
+        tap(console.log),
+        catchError(this.handleError)
+      );
+  }
+
+  public getAllWorkersFromProject(id: Id, options?: any): Observable<IUser[] | null> {
+    console.log(`getAllWorkersFromProject ${this.endpoint}/${id}/workers`);
+
+    return this.http
+      .get<ApiResponse<IUser[]>>(
+        `${this.endpoint}/${id}/workers`, {
+        ...options,
+        ...httpOptions,
+      }
+      )
+      .pipe(
+        map((response: any) => response.results as IUser[]),
         tap(console.log),
         catchError(this.handleError)
       );

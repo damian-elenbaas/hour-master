@@ -7,6 +7,7 @@ export interface IHourScheme {
   date: Date;
   worker: IUser;
   rows?: IHourSchemeRow[];
+  totalHours?: number;
 }
 
 export type ICreateHourScheme = Pick<IHourScheme, 'date' | 'worker' | 'rows'>;
