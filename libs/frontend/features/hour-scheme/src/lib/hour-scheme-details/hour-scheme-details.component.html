@@ -28,15 +28,25 @@
         <tbody>
           <tr class="border-b" *ngFor="let row of hourScheme.rows">
             <td class="px-6 py-4">
-              <!-- TODO: Link to project  -->
-              {{ row.project.name }}
+              <a
+                routerLink="/project/{{ row.project._id }}"
+                class="underline decoration-accent hover:text-accent"
+              >
+                {{ row.project.name }}
+              </a>
             </td>
             <td class="px-6 py-4">
               {{ row.hours }}
             </td>
             <td class="px-6 py-4">
-              <!-- TODO: Link to machine -->
-              {{ row.machine?.name || 'Geen machine gebruikt' }}
+              <a
+                *ngIf="row.machine; "
+                class="underline decoration-accent hover:text-accent"
+                routerLink="/machine/{{ row.machine._id }}"
+              >
+                {{ row.machine.name }}
+              </a>
+              <span *ngIf="!row.machine">Geen machine gebruikt</span>
             </td>
             <td class="px-6 py-4">
               {{ row.description }}
