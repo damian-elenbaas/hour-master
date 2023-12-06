@@ -6,6 +6,7 @@ import {
   ICreateProject,
   IProject,
   IUpdateProject,
+  IUser,
   Id,
 } from '@hour-master/shared/api';
 import { RecommendationsService } from '@hour-master/backend/recommendations';

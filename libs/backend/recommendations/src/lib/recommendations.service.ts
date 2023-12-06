@@ -15,21 +15,21 @@ export class RecommendationsService {
 
     const result = await this.neo4jService.write(`
       MERGE (u:User {
-        mongoId: $id
+        _id: $id
       })
-      on create set
+      ON CREATE SET
         u.username = $username,
         u.firstname = $firstname,
         u.lastname = $lastname,
         u.email = $email,
         u.role = $role
-      on match set
+      ON MATCH SET
         u.username = $username,
         u.firstname = $firstname,
         u.lastname = $lastname,
         u.email = $email,
         u.role = $role
-      return u
+      RETURN u
     `, {
       id: user._id.toString(),
       username: user.username.toString(),
@@ -46,7 +46,7 @@ export class RecommendationsService {
     this.logger.log(`Deleting user`);
 
     const result = await this.neo4jService.write(`
-      MATCH (u:User {mongoId: $id})
+      MATCH (u:User {_id: $id})
       DETACH DELETE u
     `, {
       id
@@ -60,19 +60,19 @@ export class RecommendationsService {
 
     const resultProject = await this.neo4jService.write(`
       MERGE (p:Project {
-        mongoId: $id
+        _id: $id
       })
-      on create set
+      ON CREATE SET
         p.name = $name,
         p.address = $address,
         p.city = $city,
         p.postalCode = $postalCode
-      on match set
+      ON MATCH SET
         p.name = $name,
         p.address = $address,
         p.city = $city,
         p.postalCode = $postalCode
-      return p
+      RETURN p
     `, {
       id: project._id.toString(),
       name: project.name.toString(),
@@ -86,8 +86,8 @@ export class RecommendationsService {
     }
 
     const resultRelation = await this.neo4jService.write(`
-      MATCH (p:Project {mongoId: $id})
-      MATCH (u:User {mongoId: $userId})
+      MATCH (p:Project {_id: $id})
+      MATCH (u:User {_id: $userId})
       MERGE (u)-[:CONTROLS_PROJECT]->(p)
     `, {
       id: project._id.toString(),
@@ -105,7 +105,7 @@ export class RecommendationsService {
     this.logger.log(`Deleting project`);
 
     const result = await this.neo4jService.write(`
-      MATCH (p:Project {mongoId: $id})
+      MATCH (p:Project {_id: $id})
       DETACH DELETE p
     `, {
       id
@@ -119,15 +119,15 @@ export class RecommendationsService {
 
     const result = await this.neo4jService.write(`
       MERGE (m:Machine {
-        mongoId: $id
+        _id: $id
       })
-      on create set
+      ON CREATE SET
         m.typeNumber = $typeNumber,
         m.name = $name
-      on match set
+      ON MATCH SET
         m.typeNumber = $typeNumber,
         m.name = $name
-      return m
+      RETURN m
     `, {
       id: machine._id.toString(),
       typeNumber: machine.typeNumber.toString(),
@@ -141,7 +141,7 @@ export class RecommendationsService {
     this.logger.log(`Deleting machine`);
 
     const result = await this.neo4jService.write(`
-      MATCH (m:Machine {mongoId: $id})
+      MATCH (m:Machine {_id: $id})
       DETACH DELETE m
     `, {
       id
@@ -155,13 +155,13 @@ export class RecommendationsService {
 
     const resultHS = await this.neo4jService.write(`
       MERGE (hs:HourScheme {
-        mongoId: $id
+        _id: $id
       })
-      on create set
+      ON CREATE SET
         hs.date = $date
-      on match set
+      ON MATCH SET
         hs.date = $date
-      return hs
+      RETURN hs
     `, {
       id: hourScheme._id.toString(),
       date: hourScheme.date.toString(),
@@ -169,10 +169,10 @@ export class RecommendationsService {
 
     hourScheme.rows?.forEach(async (row) => {
       await this.neo4jService.write(`
-        MATCH (hs:HourScheme {mongoId: $id})
-        MATCH (p:Project {mongoId: $projectId})
+        MATCH (hs:HourScheme {_id: $id})
+        MATCH (p:Project {_id: $projectId})
         MERGE (hs)-[:ON_PROJECT {hours: $hours}]->(p)
-        return hs
+        RETURN hs
       `, {
         id: hourScheme._id.toString(),
         projectId: row.project._id.toString(),
@@ -181,10 +181,10 @@ export class RecommendationsService {
 
       if (row.machine) {
         await this.neo4jService.write(`
-        MATCH (hs:HourScheme {mongoId: $id})
-        MATCH (m:Machine {mongoId: $machineId})
+        MATCH (hs:HourScheme {_id: $id})
+        MATCH (m:Machine {_id: $machineId})
         MERGE (hs)-[:USED_MACHINE {hours: $hours}]->(m)
-        return hs
+        RETURN hs
       `, {
           id: hourScheme._id.toString(),
           machineId: row.machine._id.toString(),
@@ -194,10 +194,10 @@ export class RecommendationsService {
     });
 
     await this.neo4jService.write(`
-      MATCH (hs:HourScheme {mongoId: $id})
-      MATCH (u:User {mongoId: $userId})
+      MATCH (hs:HourScheme {_id: $id})
+      MATCH (u:User {_id: $userId})
       MERGE (u)-[:WORKED_ON]->(hs)
-      return hs
+      RETURN hs
     `, {
       id: hourScheme._id.toString(),
       userId: hourScheme.worker._id.toString(),
@@ -210,12 +210,61 @@ export class RecommendationsService {
     this.logger.log(`Deleting hour scheme`);
 
     const result = await this.neo4jService.write(`
-      MATCH (hs:HourScheme {mongoId: $id})
+      MATCH (hs:HourScheme {_id: $id})
       DETACH DELETE hs
     `, {
       id
     });
 
     return result;
+  }
+
+  async getAllWorkersFromProject(projectId: Id) {
+    this.logger.log(`Getting all workers from project`);
+
+    const result = await this.neo4jService.read(`
+      MATCH ((p:Project {_id: $id})<-[:ON_PROJECT]-(hs:HourScheme)<-[:WORKED_ON]-(u:User))
+      RETURN u
+    `, {
+      id: projectId
+    });
+
+    const workers: IUser[] = [];
+    result.records.forEach((record) => {
+      workers.push(record.get('u').properties as IUser);
+    });
+
+    return workers;
+  }
+
+  async getTotalHoursOnProject(projectId: Id) {
+    this.logger.log(`Getting total hours on project`);
+
+    const result = await this.neo4jService.read(`
+      MATCH ((p:Project {_id: $id})<-[r:ON_PROJECT]-(hs:HourScheme))
+      RETURN sum(r.hours) AS totalHours
+    `, {
+      id: projectId
+    });
+
+    return result.records[0].get('totalHours');
+  }
+
+  async getAllUsedMachinesFromProject(projectId: Id) {
+    this.logger.log(`Getting all used machines from project`);
+
+    const result = await this.neo4jService.read(`
+      MATCH ((p:Project {_id: $id})<-[:ON_PROJECT]-(hs:HourScheme)-[:USED_MACHINE]->(m:Machine))
+      RETURN DISTINCT m
+    `, {
+      id: projectId
+    });
+
+    const machines: IMachine[] = [];
+    result.records.forEach((record) => {
+      machines.push(record.get('m').properties as IMachine);
+    });
+
+    return machines;
   }
 }

@@ -10,11 +10,15 @@ import {
 import { IProject, Id, UserRole } from '@hour-master/shared/api';
 import { CreateProjectDto, UpdateProjectDto } from './dto/project.dto';
 import { ProjectService } from './project.service';
-import { Roles } from '@hour-master/backend/decorators';
+import { Public, Roles } from '@hour-master/backend/decorators';
+import { RecommendationsService } from '@hour-master/backend/recommendations';
 
 @Controller('project')
 export class ProjectController {
-  constructor(private readonly projectService: ProjectService) {}
+  constructor(
+    private readonly projectService: ProjectService,
+    private readonly recommendationsService: RecommendationsService
+  ) {}
 
   @Get('')
   async getAll(): Promise<IProject[]> {
@@ -46,4 +50,26 @@ export class ProjectController {
   async delete(@Param('id') id: Id): Promise<boolean> {
     return await this.projectService.delete(id);
   }
+
+  @Get(':id/workers')
+  // @Roles([UserRole.ADMIN, UserRole.OFFICE])
+  @Public()
+  async getWorkers(@Param('id') id: Id) {
+    return await this.recommendationsService.getAllWorkersFromProject(id);
+  }
+
+  @Get(':id/total-hours')
+  // @Roles([UserRole.ADMIN, UserRole.OFFICE])
+  @Public()
+  async getTotalHours(@Param('id') id: Id) {
+    return await this.recommendationsService.getTotalHoursOnProject(id);
+  }
+
+  @Get(':id/machines')
+  // @Roles([UserRole.ADMIN, UserRole.OFFICE])
+  @Public()
+  async getAllMachines(@Param('id') id: Id) {
+    return await this.recommendationsService.getAllUsedMachinesFromProject(id);
+  }
+
 }
