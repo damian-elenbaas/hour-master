@@ -8,6 +8,7 @@ import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Machine } from './schemas/machine.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { RecommendationsService } from '@hour-master/backend/recommendations';
 
 @Injectable()
 export class MachineService {
@@ -15,7 +16,8 @@ export class MachineService {
 
   constructor(
     @InjectModel(Machine.name)
-    private readonly machineModel: Model<Machine>
+    private readonly machineModel: Model<Machine>,
+    private readonly recommendationsService: RecommendationsService
   ) {}
 
   async getAll(): Promise<IMachine[]> {
@@ -42,21 +44,38 @@ export class MachineService {
     }
   }
 
-  async create(project: ICreateMachine): Promise<IMachine> {
+  async create(machine: ICreateMachine): Promise<IMachine> {
     this.logger.log(`create`);
-    const createdMachine = await this.machineModel.create(project);
+    const createdMachine = await this.machineModel.create(machine);
+    const neo4jResult = this.recommendationsService.createOrUpdateMachine(
+      createdMachine
+    );
+
+    if (!neo4jResult) {
+      await this.machineModel.findByIdAndDelete(createdMachine._id).exec();
+      throw new Error('Could not create machine');
+    }
+
     return createdMachine;
   }
 
-  async update(id: Id, project: IUpdateMachine): Promise<boolean> {
+  async update(id: Id, machine: IUpdateMachine): Promise<boolean> {
     this.logger.log(`update(${id})`);
 
     const updatedMachine = await this.machineModel
-      .findByIdAndUpdate(id, project)
+      .findByIdAndUpdate(id, machine)
       .exec();
 
     if (!updatedMachine) {
       throw new NotFoundException(`Machine with id ${id} not found`);
+    }
+
+    const neo4jResult = this.recommendationsService.createOrUpdateMachine(
+      updatedMachine
+    );
+
+    if (!neo4jResult) {
+      throw new Error('Could not update machine');
     }
 
     return true;
@@ -69,6 +88,13 @@ export class MachineService {
 
     if (!deletedMachine) {
       throw new NotFoundException(`Machine with id ${id} not found`);
+    }
+
+    const neo4jResult = this.recommendationsService.deleteMachine(id);
+
+    if (!neo4jResult) {
+      await this.machineModel.create(deletedMachine);
+      throw new Error('Could not delete machine');
     }
 
     return true;

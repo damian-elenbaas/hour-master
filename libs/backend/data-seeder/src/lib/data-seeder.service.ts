@@ -5,7 +5,7 @@ import { User } from '@hour-master/backend/user';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { IUser, UserRole } from '@hour-master/shared/api';
+import { IHourScheme, IHourSchemeRow, IMachine, IProject, IUser, UserRole } from '@hour-master/shared/api';
 import { Machine } from '@hour-master/backend/features/machine';
 import { faker } from '@faker-js/faker';
 import { RecommendationsService } from '@hour-master/backend/recommendations';
@@ -85,11 +85,8 @@ export class DataSeederService {
           role: UserRole.ROADWORKER,
         } as IUser;
 
-        this.logger.log(`Creating roadworker user...`);
         const userMongo = new this.userModel(user);
-        this.logger.log(`Saving to mongo...`);
         await userMongo.save();
-        this.logger.log(`Saving to neo4j...`);
         await this.rcmdService.createOrUpdateUser(userMongo);
       }
 
@@ -105,19 +102,20 @@ export class DataSeederService {
       for (let i = 0; i <= 5; i++) {
         const user = users[Math.floor(Math.random() * 2) + 1];
 
-        const project = new this.projectModel({
+        const project = {
           name: faker.company.name(),
-          description: faker.lorem.sentence(),
-          admin: user._id,
+          admin: user as IUser,
           location: {
             address: faker.location.streetAddress(),
             city: faker.location.city(),
-            country: faker.location.country(),
-            postalCode: faker.location.zipCode()
+            postalCode: faker.location.zipCode(),
           }
-        });
+        } as IProject;
 
-        await project.save();
+        const projectMongo = new this.projectModel(project);
+        await projectMongo.save();
+
+        await this.rcmdService.createOrUpdateProject(projectMongo);
       }
 
       projects = await this.projectModel.find().exec();
@@ -130,12 +128,14 @@ export class DataSeederService {
       this.machineModel.deleteMany({}).exec();
 
       for (let i = 0; i <= 5; i++) {
-        const machine = new this.machineModel({
+        const machine = {
           typeNumber: faker.phone.imei(),
           name: faker.vehicle.model(),
-        });
+        } as IMachine;
 
-        await machine.save();
+        const machineMongo = new this.machineModel(machine);
+        await machineMongo.save();
+        await this.rcmdService.createOrUpdateMachine(machineMongo);
       }
 
       machines = await this.machineModel.find().exec();
@@ -150,28 +150,32 @@ export class DataSeederService {
       for (let i = 0; i <= 5; i++) {
         const roadworker = users[Math.floor(Math.random() * 3) + 3];
 
-        const rows = [];
+        const rows: IHourSchemeRow[] = [];
         for (let j = 0; j < 5; j++) {
           const project = projects[Math.floor(Math.random() * 4)];
           const machine = machines[Math.floor(Math.random() * 4)];
-          rows.push({
-            project: project._id,
-            machine: machine._id,
+
+          const row = {
+            project: project as IProject,
+            machine: machine as IMachine,
             hours: faker.number.int({
               min: 1,
-              max: 8
+              max: 8,
             }),
             description: faker.lorem.sentence()
-          })
+          } as IHourSchemeRow;
+          rows.push(row);
         }
 
-        const hourScheme = new this.hourSchemeModel({
-          worker: roadworker._id,
+        const hourScheme = {
+          worker: roadworker as IUser,
           date: faker.date.recent(),
           rows: rows
-        });
+        } as IHourScheme;
 
-        await hourScheme.save();
+        const hourSchemeMongo = new this.hourSchemeModel(hourScheme);
+        await hourSchemeMongo.save();
+        await this.rcmdService.createOrUpdateHourScheme(hourSchemeMongo);
       }
     }
   }

@@ -9,6 +9,7 @@ import {
 import { HourScheme } from './schemas/hour-scheme.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
+import { RecommendationsService } from '@hour-master/backend/recommendations';
 
 @Injectable()
 export class HourSchemeService {
@@ -16,7 +17,8 @@ export class HourSchemeService {
 
   constructor(
     @InjectModel(HourScheme.name)
-    private readonly hourSchemeModel: Model<HourScheme>
+    private readonly hourSchemeModel: Model<HourScheme>,
+    private readonly recommendationsService: RecommendationsService
   ) { }
 
   async getAll(): Promise<IHourScheme[]> {
@@ -63,9 +65,18 @@ export class HourSchemeService {
   }
 
   async create(hourScheme: ICreateHourScheme): Promise<IHourScheme> {
-    this.logger.log(`create`);
+    this.logger.log(`create hour scheme`);
     const createdHourScheme = await this.hourSchemeModel.create(hourScheme);
-    this.logger.log(`createdHourScheme: ${createdHourScheme}`);
+
+    const n4jResult = this.recommendationsService.createOrUpdateHourScheme(
+      createdHourScheme
+    );
+
+    if(!n4jResult) {
+      await this.hourSchemeModel.findByIdAndDelete(createdHourScheme._id).exec();
+      throw new Error('Could not create hour scheme');
+    }
+
     return createdHourScheme;
   }
 
@@ -80,6 +91,14 @@ export class HourSchemeService {
       throw new NotFoundException(`Hour scheme with id ${id} not found`);
     }
 
+    const n4jResult = this.recommendationsService.createOrUpdateHourScheme(
+      updatedHourScheme
+    );
+
+    if(!n4jResult) {
+      throw new Error('Could not update hour scheme');
+    }
+
     return true;
   }
 
@@ -92,6 +111,12 @@ export class HourSchemeService {
 
     if (!deletedHourScheme) {
       throw new NotFoundException(`Hour scheme with id ${id} not found`);
+    }
+
+    const n4jResult = this.recommendationsService.deleteHourScheme(id);
+
+    if(!n4jResult) {
+      throw new Error('Could not delete hour scheme');
     }
 
     return true;

@@ -87,6 +87,12 @@ export class UserService {
       throw new NotFoundException(`User with id ${id} not found`);
     }
 
+    const n4jResult = await this.recommendationsService.createOrUpdateUser(updatedUser);
+
+    if (!n4jResult) {
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
+
     return true;
   }
 
@@ -102,7 +108,6 @@ export class UserService {
     const n4jResult = await this.recommendationsService.deleteUser(id);
 
     if (!n4jResult) {
-      await this.userModel.create(deletedUser);
       throw new NotFoundException(`User with id ${id} not found`);
     }
 

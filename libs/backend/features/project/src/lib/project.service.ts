@@ -8,6 +8,7 @@ import {
   IUpdateProject,
   Id,
 } from '@hour-master/shared/api';
+import { RecommendationsService } from '@hour-master/backend/recommendations';
 
 @Injectable()
 export class ProjectService {
@@ -15,7 +16,8 @@ export class ProjectService {
 
   constructor(
     @InjectModel(Project.name)
-    private readonly projectModel: Model<Project>
+    private readonly projectModel: Model<Project>,
+    private readonly recommendationsService: RecommendationsService
   ) {}
 
   async getAll(): Promise<IProject[]> {
@@ -42,8 +44,20 @@ export class ProjectService {
 
   async create(project: ICreateProject): Promise<IProject> {
     this.logger.log(`create`);
+
     const createdProject = await this.projectModel.create(project);
-    this.logger.log(`createdProject: ${createdProject}`);
+
+    if(!createdProject) {
+      throw new Error('Could not create project');
+    }
+
+    const n4jResult = this.recommendationsService.createOrUpdateProject(createdProject);
+
+    if(!n4jResult) {
+      await this.projectModel.findByIdAndDelete(createdProject._id).exec();
+      throw new Error('Could not create project');
+    }
+
     return createdProject;
   }
 
@@ -58,6 +72,12 @@ export class ProjectService {
       throw new NotFoundException(`Project with id ${id} not found`);
     }
 
+    const n4jResult = this.recommendationsService.createOrUpdateProject(updatedProject);
+
+    if(!n4jResult) {
+      throw new Error('Could not update project');
+    }
+
     return true;
   }
 
@@ -69,6 +89,8 @@ export class ProjectService {
     if (!deletedProject) {
       throw new NotFoundException(`Project with id ${id} not found`);
     }
+
+    this.recommendationsService.deleteProject(id);
 
     return true;
   }
