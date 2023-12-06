@@ -1,6 +1,6 @@
 import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { IHourSchemeRow, IProject } from '@hour-master/shared/api';
+import { IMachine, IProject, IUser } from '@hour-master/shared/api';
 import { ProjectService } from '../project.service';
 import { AuthService } from '@hour-master/frontend/auth';
 import { AlertService } from '@hour-master/frontend/common';
@@ -14,9 +14,15 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class ProjectDetailsComponent implements OnInit, OnDestroy {
   detailSub!: Subscription;
+  workersSub!: Subscription;
+  machinesSub!: Subscription;
+  totalHoursSub!: Subscription;
+
   project!: IProject;
-  hourRows: IHourSchemeRow[] = [];
+  workers: IUser[] = [];
+  machines: IMachine[] = [];
   totalHours = 0;
+
   token!: string;
 
   constructor(
@@ -63,9 +69,111 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
           this.router.navigate(['/project']);
         }
       });
+
+    this.workersSub = this.authService.currentUserToken$
+      .pipe(
+        switchMap((token) => {
+          if (token) {
+            this.token = token;
+            return this.route.paramMap;
+          } else {
+            this.router.navigate(['/auth/login']);
+            return of(null);
+          }
+        })
+      )
+      .pipe(
+        switchMap((params) => {
+          if (params) {
+            const id = params.get('id') as string;
+            return this.projectService.getAllWorkersFromProject(id, {
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + this.token,
+              },
+            });
+          } else {
+            return of(null);
+          }
+        })
+      )
+      .subscribe((workers) => {
+        if (workers) {
+          this.workers = workers;
+        }
+      });
+
+    this.machinesSub = this.authService.currentUserToken$
+      .pipe(
+        switchMap((token) => {
+          if (token) {
+            this.token = token;
+            return this.route.paramMap;
+          } else {
+            this.router.navigate(['/auth/login']);
+            return of(null);
+          }
+        })
+      )
+      .pipe(
+        switchMap((params) => {
+          if (params) {
+            const id = params.get('id') as string;
+            return this.projectService.getAllMachinesFromProject(id, {
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + this.token,
+              },
+            });
+          } else {
+            return of(null);
+          }
+        })
+      )
+      .subscribe((machines) => {
+        if (machines) {
+          this.machines = machines;
+        }
+      });
+
+    this.totalHoursSub = this.authService.currentUserToken$
+      .pipe(
+        switchMap((token) => {
+          if (token) {
+            this.token = token;
+            return this.route.paramMap;
+          } else {
+            this.router.navigate(['/auth/login']);
+            return of(null);
+          }
+        })
+      )
+      .pipe(
+        switchMap((params) => {
+          if (params) {
+            const id = params.get('id') as string;
+            return this.projectService.getTotalHoursFromProject(id, {
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + this.token,
+              },
+            });
+          } else {
+            return of(null);
+          }
+        })
+      )
+      .subscribe((hours) => {
+        if (hours) {
+          this.totalHours = hours;
+        }
+      });
   }
 
   ngOnDestroy(): void {
     this.detailSub?.unsubscribe();
+    this.workersSub?.unsubscribe();
+    this.machinesSub?.unsubscribe();
+    this.totalHoursSub?.unsubscribe();
   }
 }

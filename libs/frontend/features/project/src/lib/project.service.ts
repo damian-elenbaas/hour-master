@@ -2,7 +2,7 @@ import { Observable, throwError } from 'rxjs';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { map, catchError, tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { ApiResponse, IProject, IUser, Id } from '@hour-master/shared/api';
+import { ApiResponse, IMachine, IProject, IUser, Id } from '@hour-master/shared/api';
 import { environment } from '@hour-master/shared/environments';
 
 /**
@@ -111,6 +111,40 @@ export class ProjectService {
       )
       .pipe(
         map((response: any) => response.results as IUser[]),
+        tap(console.log),
+        catchError(this.handleError)
+      );
+  }
+
+  public getAllMachinesFromProject(id: Id, options?: any): Observable<IMachine[] | null> {
+    console.log(`getAllMachinesFromProject ${this.endpoint}/${id}/machines`);
+
+    return this.http
+      .get<ApiResponse<IUser[]>>(
+        `${this.endpoint}/${id}/machines`, {
+        ...options,
+        ...httpOptions,
+      }
+      )
+      .pipe(
+        map((response: any) => response.results as IMachine[]),
+        tap(console.log),
+        catchError(this.handleError)
+      );
+  }
+
+  public getTotalHoursFromProject(id: Id, options?: any): Observable<number | null> {
+    console.log(`getTotalHoursFromProject ${this.endpoint}/${id}/total-hours`);
+
+    return this.http
+      .get<ApiResponse<number>>(
+        `${this.endpoint}/${id}/total-hours`, {
+        ...options,
+        ...httpOptions,
+      }
+      )
+      .pipe(
+        map((response: any) => response.results as number),
         tap(console.log),
         catchError(this.handleError)
       );

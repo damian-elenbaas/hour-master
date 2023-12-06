@@ -5,8 +5,8 @@
   </button>
   <div *ngIf="project; else loading">
     <h3>{{ project.name }}</h3>
-    <h4>{{ project.location.address }}, {{ project.location.city }}</h4>
-    <h6>
+    <h4 class="pb-0">{{ project.location.address }}, {{ project.location.city }}</h4>
+    <h4 class="pt-0">
       Project van
       <a
         class="underline decoration-accent hover:text-accent"
@@ -15,28 +15,44 @@
         {{ project.admin.firstname }}
         {{ project.admin.lastname }}
       </a>
-    </h6>
-    <div class="relative overflow-x-auto">
-      <table class="w-full text-sm text-left rtl:text-right">
-        <thead class="text-xs uppercase bg-primary text-white">
-          <tr>
-            <th scope="col" class="px-6 py-3">Uren</th>
-            <th scope="col" class="px-6 py-3">Machine</th>
-            <th scope="col" class="px-6 py-3">Omschrijving</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- TODO: Get all hourscheme rows related to project  -->
-          <tr *ngIf="hourRows.length == 0">
-            <td colspan="3" class="px-6 py-4 text-center italic">
-              Geen uren gevonden
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    </h4>
+    <h4>Statistieken</h4>
+    <div class="flex flex-row gap-4">
+      <section class="w-fit">
+        <h5 class="text-white bg-primary w-full p-2 rounded-md mx-auto">
+          Werknemers
+        </h5>
+        <ul class="ml-4 flex flex-col gap-2 mt-2">
+          <li *ngFor="let worker of workers">
+            <a
+              class="hover:text-accent"
+              routerLink="/user/{{ worker._id }}"
+            >
+              {{ worker.firstname }}
+              {{ worker.lastname }}
+            </a>
+          </li>
+        </ul>
+      </section>
+      <section class="w-fit">
+        <h5 class="text-white bg-primary w-full p-2 rounded-md mx-auto">
+          Machines
+        </h5>
+        <ul class="ml-4 flex flex-col gap-2 mt-2">
+          <li *ngFor="let machine of machines">
+            <a
+              class="hover:text-accent"
+              routerLink="/machine/{{ machine._id }}"
+            >
+              {{ machine.name }}
+              ({{ machine.typeNumber }})
+            </a>
+          </li>
+        </ul>
+      </section>
     </div>
     <div class="text-center italic mt-5">
-      Totaal aantal uren: {{ totalHours || 0 }}
+      Totaal aantal uren aan gewerkt: {{ totalHours || 0 }}
     </div>
     <div class="flex flex-col md:flex-row gap-2 mt-5">
       <button routerLink="edit" class="bg-accent px-4 py-2 rounded-md">

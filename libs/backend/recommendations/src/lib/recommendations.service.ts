@@ -164,31 +164,33 @@ export class RecommendationsService {
       RETURN hs
     `, {
       id: hourScheme._id.toString(),
-      date: hourScheme.date.toString(),
+      date: hourScheme.date.toISOString(),
     });
 
     hourScheme.rows?.forEach(async (row) => {
       await this.neo4jService.write(`
         MATCH (hs:HourScheme {_id: $id})
         MATCH (p:Project {_id: $projectId})
-        MERGE (hs)-[:ON_PROJECT {hours: $hours}]->(p)
+        MERGE (hs)-[:ON_PROJECT {hours: $hours, description: $description}]->(p)
         RETURN hs
       `, {
         id: hourScheme._id.toString(),
         projectId: row.project._id.toString(),
         hours: row.hours,
+        description: row.description,
       });
 
       if (row.machine) {
         await this.neo4jService.write(`
         MATCH (hs:HourScheme {_id: $id})
         MATCH (m:Machine {_id: $machineId})
-        MERGE (hs)-[:USED_MACHINE {hours: $hours}]->(m)
+        MERGE (hs)-[:USED_MACHINE {hours: $hours, description: $description}]->(m)
         RETURN hs
       `, {
           id: hourScheme._id.toString(),
           machineId: row.machine._id.toString(),
           hours: row.hours,
+          description: row.description,
         });
       }
     });
@@ -224,7 +226,7 @@ export class RecommendationsService {
 
     const result = await this.neo4jService.read(`
       MATCH ((p:Project {_id: $id})<-[:ON_PROJECT]-(hs:HourScheme)<-[:WORKED_ON]-(u:User))
-      RETURN u
+      RETURN DISTINCT u
     `, {
       id: projectId
     });
