@@ -19,12 +19,12 @@ export class UserListComponent implements OnInit, OnDestroy {
   constructor(
     private readonly router: Router,
     private readonly authService: AuthService,
-    private userService: UserService
-  ) {}
+    private userService: UserService,
+  ) { }
 
   ngOnInit(): void {
     this.subscriptionList = this.authService
-      .getUserTokenFromLocalStorage()
+      .currentUserToken$
       .pipe(
         switchMap((token) => {
           if (!token) {
@@ -40,10 +40,15 @@ export class UserListComponent implements OnInit, OnDestroy {
           }
         })
       )
-      .subscribe((results) => {
-        if (results) {
-          this.users = results;
-          this.loading = false;
+      .subscribe({
+        next: (results) => {
+          if (results) {
+            this.users = results;
+            this.loading = false;
+          }
+        },
+        error: (error) => {
+          console.error(error);
         }
       });
   }

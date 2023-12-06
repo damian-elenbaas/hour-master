@@ -13,7 +13,7 @@ export class RecommendationsService {
   async createOrUpdateUser(newUser: IUser) {
     this.logger.log(`Creating new user: ${JSON.stringify(newUser)}`);
 
-    const result = this.neo4jService.write(`
+    const result = await this.neo4jService.write(`
       MERGE (u:User {mongoId: $id})
       SET u += $props
     `, {
@@ -21,7 +21,7 @@ export class RecommendationsService {
       props: newUser
     });
 
-    this.logger.log(`Created new user: ${JSON.stringify(result)}`);
+    this.logger.log(`Result of creating new user: ${JSON.stringify(result)}`);
 
     return result;
   }
@@ -29,7 +29,7 @@ export class RecommendationsService {
   async deleteUser(id: Id) {
     this.logger.log(`Deleting user: ${id}`);
 
-    const result = this.neo4jService.write(`
+    const result = await this.neo4jService.write(`
       MATCH (u:User {mongoId: $id})
       DETACH DELETE u
     `, {

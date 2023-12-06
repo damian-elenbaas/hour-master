@@ -3,7 +3,7 @@ import { IMachine } from './machine.interface';
 import { IProject } from './project.interface';
 
 export interface IHourSchemeRow {
-  id: Id;
+  _id: Id;
   project: IProject;
   hours: number;
   description: string;
@@ -15,5 +15,5 @@ export type ICreateHourSchemeRow = Pick<
   'project' | 'hours' | 'description' | 'machine'
 >;
 
-export type IUpdateHourSchemeRow = Partial<Omit<IHourSchemeRow, 'id'>>;
+export type IUpdateHourSchemeRow = Partial<Omit<IHourSchemeRow, '_id'>>;
 export type IUpsertHourSchemeRow = IHourSchemeRow;

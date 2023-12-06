@@ -11,6 +11,6 @@ export interface IHourScheme {
 
 export type ICreateHourScheme = Pick<IHourScheme, 'date' | 'worker' | 'rows'>;
 
-export type IUpdateHourScheme = Partial<Omit<IHourScheme, 'id'>>;
+export type IUpdateHourScheme = Partial<Omit<IHourScheme, '_id'>>;
 export type IUpsertHourScheme = IHourScheme;
 export type IAddHourSchemeRow = IHourSchemeRow;

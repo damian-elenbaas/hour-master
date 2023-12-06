@@ -23,7 +23,7 @@ export class CreateLocationDto implements ICreateLocation {
 export class UpsertLocationDto implements IUpsertLocation {
   @IsNotEmpty()
   @IsString()
-  id!: Id;
+  _id!: Id;
 
   @IsNotEmpty()
   @IsString()

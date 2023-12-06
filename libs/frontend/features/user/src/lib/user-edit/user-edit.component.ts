@@ -20,6 +20,7 @@ import { Subscription, of, switchMap } from 'rxjs';
 import { UserService } from '../user.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { AuthService } from '@hour-master/frontend/auth';
+import { AlertService } from '@hour-master/frontend/common';
 
 @Component({
   selector: 'hour-master-user-edit',
@@ -42,6 +43,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private userService: UserService,
     private authService: AuthService,
+    private alertService: AlertService,
     private fb: FormBuilder
   ) {
     this.userForm = this.fb.group(
@@ -60,11 +62,11 @@ export class UserEditComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscriptionDetails = this.authService
-      .getUserTokenFromLocalStorage()
+      .currentUserToken$
       .pipe(
         switchMap((token) => {
           if (!token) {
-            this.router.navigate(['/login']);
+            this.router.navigate(['/auth/login']);
             return of(null);
           } else {
             this.currentUserToken = token;
@@ -100,13 +102,13 @@ export class UserEditComponent implements OnInit, OnDestroy {
               role: [user.role, Validators.required],
             });
           } else if (!user && this.userId) {
+            this.alertService.danger('Gebruiker niet gevonden!');
             this.location.back();
           }
           this.loaded = true;
         },
         error: (error) => {
           console.error(error);
-          this.location.back();
         },
       });
   }
@@ -144,6 +146,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (success) => {
           if (success) {
+            this.alertService.success('Gebruiker succesvol bijgewerkt!');
             this.location.back();
           }
         },
@@ -175,11 +178,11 @@ export class UserEditComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (user) => {
           if (user) {
+            this.alertService.success('Gebruiker succesvol aangemaakt!');
             this.location.back();
           }
         },
         error: (error) => {
-          // TODO: show error
           console.error(error);
         },
       });

@@ -1,1 +1,41 @@
-<p>project-list works!</p>
+<div>
+  <div class="flex justify-between items-center">
+    <h2 class="text-xl font-semibold">Projecten</h2>
+    <a routerLink="new" class="bg-accent px-4 py-2 rounded-md"
+      >Nieuw project</a
+    >
+  </div>
+  <div class="relative overflow-x-auto">
+    <table class="w-full text-sm text-left rtl:text-right">
+      <thead class="text-xs uppercase bg-primary text-white">
+        <tr>
+          <th scope="col" class="px-6 py-3">ID</th>
+          <th scope="col" class="px-6 py-3">Omschrijving</th>
+          <th scope="col" class="px-6 py-3">Beheerder</th>
+        </tr>
+      </thead>
+      <tbody>
+        <a
+          class="table-row border-b hover:bg-gray-200"
+          *ngFor="let project of projects"
+          routerLink="{{ project._id }}"
+        >
+          <td class="px-6 py-4">
+            {{ project._id }}
+          </td>
+          <td class="px-6 py-4">
+            {{ project.name }}
+          </td>
+          <td class="px-6 py-4">
+            {{ project.admin.firstname }} {{ project.admin.lastname }}
+          </td>
+        </a>
+        <tr *ngIf="loading">
+          <td colspan="4" class="px-6 py-4">
+            <hour-master-loader></hour-master-loader>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

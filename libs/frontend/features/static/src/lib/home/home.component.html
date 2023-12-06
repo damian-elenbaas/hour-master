@@ -1,0 +1,33 @@
+<div class="container py-5 mx-auto flex flex-wrap gap-4 justify-center">
+  <hour-master-dashboard-button link="/hour-scheme">
+    <i class="fa-regular fa-clock text-7xl"></i>
+    Urenschema's
+  </hour-master-dashboard-button>
+  <hour-master-dashboard-button *ngIf="
+      user$.value !== null &&
+      (user$.value.role === roles.ADMIN ||
+      user$.value.role === roles.OFFICE)
+    " link="/project">
+    <i class="fa-solid fa-map text-7xl"></i>
+    Projecten
+  </hour-master-dashboard-button>
+  <hour-master-dashboard-button *ngIf="
+      user$.value !== null &&
+      (user$.value.role === roles.ADMIN ||
+      user$.value.role === roles.OFFICE)
+    " link="/machine">
+    <i class="fa-solid fa-screwdriver-wrench text-7xl"></i>
+    Machines
+  </hour-master-dashboard-button>
+  <hour-master-dashboard-button *ngIf="
+      user$.value !== null &&
+      user$.value.role === roles.ADMIN
+    " link="/user">
+    <i class="fa-solid fa-users text-7xl"></i>
+    Gebruikers
+  </hour-master-dashboard-button>
+  <hour-master-dashboard-button link="/about">
+    <i class="fa-solid fa-circle-info text-7xl"></i>
+    About
+  </hour-master-dashboard-button>
+</div>

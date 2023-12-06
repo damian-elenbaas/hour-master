@@ -38,21 +38,43 @@
         class="flex flex-col font-medium p-4 md:p-0 mt-4 rounded-lg bg-primary md:flex-row md:space-x-8 md:mt-0 md:border-0"
       >
         <li
-          *ngIf="(authService.getUserTokenFromLocalStorage() | async) !== null"
+          *ngIf="user$.value !== null"
         >
           <hour-master-navbar-item [link]="''" [activeOptions]="{ exact: true }"
             >Home</hour-master-navbar-item
           >
         </li>
         <li
-          *ngIf="(authService.getUserTokenFromLocalStorage() | async) !== null"
+          *ngIf="user$.value !== null"
         >
           <hour-master-navbar-item [link]="'/hour-scheme'">
             Urenschema's
           </hour-master-navbar-item>
         </li>
         <li
-          *ngIf="(authService.getUserTokenFromLocalStorage() | async) !== null"
+          *ngIf="
+            user$.value !== null &&
+            (user$.value.role === roles.ADMIN ||
+            user$.value.role === roles.OFFICE)
+          "
+        >
+          <hour-master-navbar-item [link]="'/project'">
+            Projecten
+          </hour-master-navbar-item>
+        </li>
+        <li
+          *ngIf="
+            user$.value !== null &&
+            (user$.value.role === roles.ADMIN ||
+            user$.value.role === roles.OFFICE)
+          "
+        >
+          <hour-master-navbar-item [link]="'/machine'">
+            Machines
+          </hour-master-navbar-item>
+        </li>
+        <li
+          *ngIf="user$.value !== null && user$.value.role === roles.ADMIN"
         >
           <hour-master-navbar-item [link]="'/user'">
             Gebruikers
@@ -64,7 +86,7 @@
           >
         </li>
         <li
-          *ngIf="(authService.getUserTokenFromLocalStorage() | async) !== null"
+          *ngIf="user$.value !== null"
         >
           <button
             class="block text-white py-2 pl-3 pr-4 rounded md:border-0 md:hover:text-secondary md:p-0"
@@ -74,7 +96,7 @@
           </button>
         </li>
         <li
-          *ngIf="(authService.getUserTokenFromLocalStorage() | async) == null"
+          *ngIf="user$.value == null"
         >
           <hour-master-navbar-item [link]="'/auth/login'"
             >Inloggen</hour-master-navbar-item

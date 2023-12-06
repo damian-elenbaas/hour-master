@@ -16,6 +16,9 @@
     "baseUrl": ".",
     "paths": {
       "@hour-master/backend/auth": ["libs/backend/auth/src/index.ts"],
+      "@hour-master/backend/data-seeder": [
+        "libs/backend/data-seeder/src/index.ts"
+      ],
       "@hour-master/backend/decorators": [
         "libs/backend/decorators/src/index.ts"
       ],
@@ -26,6 +29,12 @@
       "@hour-master/backend/helpers": ["libs/backend/helpers/src/index.ts"],
       "@hour-master/backend/recommendations": [
         "libs/backend/recommendations/src/index.ts"
+      ],
+      "@hour-master/backend/features/machine": [
+        "libs/backend/features/machine/src/index.ts"
+      ],
+      "@hour-master/backend/features/project": [
+        "libs/backend/features/project/src/index.ts"
       ],
       "@hour-master/backend/user": ["libs/backend/user/src/index.ts"],
       "@hour-master/environments": ["libs/shared/environments/src/index.ts"],
@@ -39,6 +48,9 @@
       ],
       "@hour-master/frontend/features/project": [
         "libs/frontend/features/project/src/index.ts"
+      ],
+      "@hour-master/frontend/features/static": [
+        "libs/frontend/features/static/src/index.ts"
       ],
       "@hour-master/frontend/features/user": [
         "libs/frontend/features/user/src/index.ts"

@@ -6,6 +6,7 @@ import { UserService } from '../user.service';
 import { Location } from '@angular/common';
 import { Modal } from 'flowbite';
 import { AuthService } from '@hour-master/frontend/auth';
+import { AlertService } from '@hour-master/frontend/common';
 
 @Component({
   selector: 'hour-master-user-details',
@@ -24,16 +25,17 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private userService: UserService,
     private authService: AuthService,
+    private alertService: AlertService,
     private router: Router,
     public location: Location
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const modalElement = document.getElementById('popup-modal') as HTMLElement;
     this.popUpModal = new Modal(modalElement);
 
     this.subscriptionDetails = this.authService
-      .getUserTokenFromLocalStorage()
+      .currentUserToken$
       .pipe(
         switchMap((token) => {
           if (!token) {
@@ -69,7 +71,8 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (user: IUser | null) => {
           if (!user) {
-            this.location.back();
+            this.alertService.danger('Gebruiker niet gevonden!');
+            this.router.navigate(['/user']);
           } else {
             this.user$ = of(user);
             this.loaded = true;
@@ -77,7 +80,8 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           console.error(error);
-          this.location.back();
+          this.alertService.danger('Gebruiker niet gevonden!');
+          this.router.navigate(['/user']);
         },
       });
   }
@@ -98,8 +102,14 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
               Authorization: `Bearer ${this.token}`,
             },
           })
-          .subscribe(() => {
-            this.location.back();
+          .subscribe({
+            next: () => {
+              this.alertService.success(`Gebruiker ${user.username} is verwijderd!`);
+              this.location.back();
+            },
+            error: () => {
+              this.alertService.danger('Je hebt geen rechten om deze gebruiker te verwijderen!');
+            },
           });
       }
     });

@@ -1,1 +1,62 @@
-<p>machine-edit works!</p>
+<div class="relative">
+  <div class="mx-auto w-fit">
+    <h2>
+      <span *ngIf="!machineId">Nieuw machine</span>
+      <span *ngIf="machineId">Machine bewerken</span>
+    </h2>
+    <form *ngIf="loaded; else loading" [formGroup]="machineForm" (submit)="onSubmit()">
+      <div class="mb-6">
+        <label for="name" [ngClass]="{
+            error:
+              machineForm.controls['name'].invalid &&
+              machineForm.controls['name'].touched
+          }">
+          Naam
+        </label>
+        <input type="text" id="name" [ngClass]="{
+            error:
+              machineForm.controls['name'].invalid &&
+              machineForm.controls['name'].touched
+          }" formControlName="name" required />
+        <p *ngIf="
+            machineForm.controls['name'].invalid &&
+            machineForm.controls['name'].touched
+          " class="mt-2 text-sm text-red-600 dark:text-red-500">
+          Machinenaam is verplicht!
+        </p>
+      </div>
+      <div class="mb-6">
+        <label for="typeNumber" [ngClass]="{
+            error:
+              machineForm.controls['typeNumber'].invalid &&
+              machineForm.controls['typeNumber'].touched
+          }">
+          Typenummer
+        </label>
+        <input type="text" id="typeNumber" [ngClass]="{
+            error:
+              machineForm.controls['typeNumber'].invalid &&
+              machineForm.controls['typeNumber'].touched
+          }" formControlName="typeNumber" required />
+        <p *ngIf="
+            machineForm.controls['typeNumber'].invalid &&
+            machineForm.controls['typeNumber'].touched
+          " class="mt-2 text-sm text-red-600 dark:text-red-500">
+          Typenummer is verplicht!
+        </p>
+      </div>
+      <div>
+        <button type="button" class="bg-secondary px-4 py-2 rounded-md text-white mr-2" (click)="onCancel()">
+          Annuleren
+        </button>
+        <button type="submit" class="bg-accent px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+          [disabled]="machineForm.invalid">
+          Opslaan
+        </button>
+      </div>
+    </form>
+    <ng-template #loading>
+      <hour-master-loader></hour-master-loader>
+    </ng-template>
+  </div>
+</div>

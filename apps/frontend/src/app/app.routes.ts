@@ -1,9 +1,9 @@
 import { Route } from '@angular/router';
 import {
-  AboutComponent,
   HomeComponent,
-  LoginComponent,
-} from '@hour-master/frontend/common';
+  AboutComponent,
+  LoginComponent
+} from '@hour-master/frontend/features/static';
 import {
   HourSchemeDetailsComponent,
   HourSchemeEditComponent,
@@ -14,25 +14,23 @@ import {
   UserEditComponent,
   UserListComponent,
 } from '@hour-master/frontend/features/user';
+import {
+  ProjectDetailsComponent,
+  ProjectEditComponent,
+  ProjectListComponent
+} from '@hour-master/frontend/features/project';
+import { authGuard } from '@hour-master/frontend/auth';
+import { UserRole } from '@hour-master/shared/api';
+import { MachineDetailsComponent, MachineEditComponent, MachineListComponent } from '@hour-master/frontend/features/machine';
 
-// Lazy loading is not working as expected because of the following:
+// BUG: Lazy loading is not working as expected because of the following:
 // https://angular.io/guide/providers#limiting-provider-scope-by-lazy-loading-modules
 
 export const appRoutes: Route[] = [
   {
-    path: '',
-    children: [
-      {
-        path: '',
-        pathMatch: 'full',
-        component: HomeComponent,
-      },
-      {
-        path: 'about',
-        pathMatch: 'full',
-        component: AboutComponent,
-      },
-    ],
+    path: 'about',
+    pathMatch: 'full',
+    component: AboutComponent,
   },
   {
     path: 'auth',
@@ -45,6 +43,12 @@ export const appRoutes: Route[] = [
     ],
   },
   {
+    path: '',
+    pathMatch: 'full',
+    component: HomeComponent,
+    canMatch: [authGuard()]
+  },
+  {
     path: 'hour-scheme',
     children: [
       {
@@ -53,7 +57,7 @@ export const appRoutes: Route[] = [
         component: HourSchemeListComponent,
       },
       {
-        path: 'edit',
+        path: 'new',
         pathMatch: 'full',
         component: HourSchemeEditComponent,
       },
@@ -68,6 +72,7 @@ export const appRoutes: Route[] = [
         component: HourSchemeEditComponent,
       },
     ],
+    canMatch: [authGuard()]
   },
   {
     path: 'user',
@@ -78,7 +83,7 @@ export const appRoutes: Route[] = [
         component: UserListComponent,
       },
       {
-        path: 'edit',
+        path: 'new',
         pathMatch: 'full',
         component: UserEditComponent,
       },
@@ -93,5 +98,58 @@ export const appRoutes: Route[] = [
         component: UserEditComponent,
       },
     ],
+    canMatch: [authGuard([UserRole.ADMIN])]
   },
+  {
+    path: 'project',
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        component: ProjectListComponent
+      },
+      {
+        path: 'new',
+        pathMatch: 'full',
+        component: ProjectEditComponent
+      },
+      {
+        path: ':id',
+        pathMatch: 'full',
+        component: ProjectDetailsComponent
+      },
+      {
+        path: ':id/edit',
+        pathMatch: 'full',
+        component: ProjectEditComponent
+      }
+    ],
+    canMatch: [authGuard([UserRole.ADMIN, UserRole.OFFICE])]
+  },
+  {
+    path: 'machine',
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        component: MachineListComponent,
+      },
+      {
+        path: 'new',
+        pathMatch: 'full',
+        component: MachineEditComponent,
+      },
+      {
+        path: ':id',
+        pathMatch: 'full',
+        component: MachineDetailsComponent,
+      },
+      {
+        path: ':id/edit',
+        pathMatch: 'full',
+        component: MachineEditComponent,
+      },
+    ],
+    canMatch: [authGuard([UserRole.ADMIN, UserRole.OFFICE])]
+  }
 ];

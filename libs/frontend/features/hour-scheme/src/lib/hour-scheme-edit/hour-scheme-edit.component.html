@@ -125,7 +125,8 @@
           <div>
             <label for="project">Project</label>
             <select id="project" formControlName="project">
-              <option *ngFor="let project of projects" [value]="project.id">
+              <option value="" disabled selected>Selecteer een project</option>
+              <option *ngFor="let project of projects" [value]="project._id">
                 {{ project.name }}
               </option>
             </select>
@@ -143,7 +144,8 @@
           <div>
             <label for="machine">Machine</label>
             <select id="machine" formControlName="machine">
-              <option *ngFor="let machine of machines" [value]="machine.id">
+              <option value="" selected>Geen</option>
+              <option *ngFor="let machine of machines" [value]="machine._id">
                 {{ machine.name }}
               </option>
             </select>

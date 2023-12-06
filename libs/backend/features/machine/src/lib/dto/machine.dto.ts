@@ -20,7 +20,7 @@ export class CreateMachineDto implements ICreateMachine {
 export class UpsertMachineDto implements IUpsertMachine {
   @IsString()
   @IsNotEmpty()
-  id!: Id;
+  _id!: Id;
 
   @IsString()
   @IsNotEmpty()

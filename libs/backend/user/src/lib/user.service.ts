@@ -1,11 +1,5 @@
 import * as bcrypt from 'bcrypt';
-import {
-  ICreateUser,
-  IUpdateUser,
-  IUser,
-  Id,
-  UserRole,
-} from '@hour-master/shared/api';
+import { ICreateUser, IUpdateUser, IUser, Id } from '@hour-master/shared/api';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
@@ -23,26 +17,7 @@ export class UserService {
     @InjectModel(User.name) private readonly userModel: Model<User>,
     @InjectConnection() private connection: Connection,
     private readonly recommendationsService: RecommendationsService
-  ) {
-    this.seedData();
-  }
-
-  async seedData(): Promise<void> {
-    this.logger.log(`seedData()`);
-
-    const users = await this.userModel.find().exec();
-
-    if (users.length > 0) return;
-
-    await this.userModel.create({
-      username: 'admin',
-      password: await this.generateHashedPassword('admin'),
-      firstname: 'Admin',
-      lastname: 'Admin',
-      email: 'admin@admin.com',
-      role: UserRole.ADMIN,
-    });
-  }
+  ) {}
 
   async getAll(): Promise<IUser[]> {
     this.logger.log(`getAll()`);

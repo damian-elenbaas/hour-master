@@ -27,7 +27,7 @@ export class CreateHourSchemeRowDto implements ICreateHourSchemeRow {
 
 export class UpsertHourSchemeRowDto implements IUpsertHourSchemeRow {
   @IsNotEmpty()
-  id!: Id;
+  _id!: Id;
 
   @IsNotEmpty()
   project!: IProject;

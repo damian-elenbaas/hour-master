@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { IHourScheme, Token } from '@hour-master/shared/api';
+import { IHourScheme, Token, UserRole } from '@hour-master/shared/api';
 import { Subscription, of, switchMap } from 'rxjs';
 import { HourSchemeService } from '../hour-scheme.service';
 import { Router } from '@angular/router';
@@ -11,6 +11,8 @@ import { AuthService } from '@hour-master/frontend/auth';
   styleUrls: ['./hour-scheme-list.component.scss'],
 })
 export class HourSchemeListComponent implements OnInit, OnDestroy {
+  currentUser$ = this.authService.currentUser$;
+  roles = UserRole;
   hourSchemes!: IHourScheme[];
   subscriptionList!: Subscription;
   loading = true;
@@ -19,11 +21,11 @@ export class HourSchemeListComponent implements OnInit, OnDestroy {
     private readonly router: Router,
     private readonly authService: AuthService,
     private hourSchemeService: HourSchemeService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.subscriptionList = this.authService
-      .getUserTokenFromLocalStorage()
+      .currentUserToken$
       .pipe(
         switchMap((token: Token | null) => {
           if (!token) {
@@ -39,11 +41,16 @@ export class HourSchemeListComponent implements OnInit, OnDestroy {
           }
         })
       )
-      .subscribe((results) => {
-        if (results) {
-          this.hourSchemes = results;
+      .subscribe({
+        next: (results) => {
+          if (results) {
+            this.hourSchemes = results;
+          }
+          this.loading = false;
+        },
+        error: (error) => {
+          console.error(error);
         }
-        this.loading = false;
       });
   }
 

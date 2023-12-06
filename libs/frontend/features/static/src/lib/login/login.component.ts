@@ -12,14 +12,15 @@ import { AuthService } from '@hour-master/frontend/auth';
 })
 export class LoginComponent implements OnInit, OnDestroy {
   loginForm!: FormGroup;
-
   sub!: Subscription;
+
+  loaded = true;
 
   constructor(
     private readonly authService: AuthService,
     private readonly router: Router,
     private readonly fb: FormBuilder
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
@@ -45,13 +46,16 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     const { username, password } = this.loginForm.value;
 
-    this.authService.login(username, password).subscribe({
-      next: (token) => {
-        this.router.navigate(['/']);
-      },
-      error: (error) => {
-        console.error(error);
-      },
-    });
+    this.loaded = false;
+    this.authService.login(username, password)
+      .subscribe({
+        next: () => {
+          this.loaded = true;
+          this.router.navigate(['/']);
+        },
+        error: () => {
+          this.loaded = true;
+        },
+      });
   }
 }

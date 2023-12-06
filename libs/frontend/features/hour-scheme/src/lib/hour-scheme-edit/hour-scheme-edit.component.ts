@@ -1,18 +1,15 @@
 import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {
-  IHourScheme,
-  IMachine,
-  IProject,
-  Id,
-  UserRole,
-} from '@hour-master/shared/api';
+import { IHourScheme, IMachine, IProject, IUser, Id } from '@hour-master/shared/api';
 import { Modal } from 'flowbite';
 import { HourSchemeService } from '../hour-scheme.service';
 import { Subscription, of, switchMap } from 'rxjs';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { AuthService } from '@hour-master/frontend/auth';
+import { ProjectService } from '@hour-master/frontend/features/project';
+import { MachineService } from '@hour-master/frontend/features/machine';
+import { AlertService } from '@hour-master/frontend/common';
 
 @Component({
   selector: 'hour-master-hour-scheme-edit',
@@ -32,51 +29,25 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
     date: this.fb.control(this.getCurrentDate(), Validators.required),
     rows: this.fb.array([]),
   });
-  subscriptionDetails!: Subscription;
-  subscriptionAuth!: Subscription;
+  worker!: IUser;
   addRowModal!: Modal;
+  token!: string;
   loaded = false;
 
-  // TODO: Get projects and machines from API
-  projects: IProject[] = [
-    {
-      id: 'project-1',
-      name: 'Project 1',
-      location: {
-        id: 'location-1',
-        address: 'Address 1',
-        city: 'City 1',
-        postalCode: 'Postal Code 1',
-      },
-      admin: {
-        _id: 'admin-1',
-        username: 'admin1',
-        firstname: 'Admin 1',
-        lastname: 'Admin 1',
-        email: 'test@test.nl',
-        role: UserRole.OFFICE,
-      },
-    },
-  ].sort((a, b) => a.name.localeCompare(b.name));
-  // TODO: Get projects and machines from API
-  machines: IMachine[] = [
-    {
-      id: 'machine-1',
-      typeNumber: 'KTER-12-GBF',
-      name: 'Kubota 4t',
-    },
-    {
-      id: 'machine-2',
-      typeNumber: 'GAWE-8-WWF',
-      name: 'Alhmann 4t AE',
-    },
-  ].sort((a, b) => a.name.localeCompare(b.name));
+  subscriptionDetails!: Subscription;
+  subscriptionProjects!: Subscription;
+  subscriptionMachine!: Subscription;
+  projects: IProject[] = [];
+  machines: IMachine[] = [];
 
   constructor(
     private location: Location,
     private fb: FormBuilder,
     private hourSchemeService: HourSchemeService,
     private authService: AuthService,
+    private alertService: AlertService,
+    private projectService: ProjectService,
+    private machineService: MachineService,
     private route: ActivatedRoute,
     private router: Router
   ) {}
@@ -87,22 +58,31 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
     if ($modalElement === null) throw new Error('Modal element not found');
     this.addRowModal = new Modal($modalElement);
 
-    this.subscriptionAuth = this.authService
-      .getUserTokenFromLocalStorage()
-      .subscribe((token) => {
-        if (!token) {
-          this.router.navigate(['/auth/login']);
-        }
-      });
-
-    this.subscriptionDetails = this.route.paramMap
+    this.subscriptionDetails = this.authService
+      .currentUserToken$
       .pipe(
-        switchMap((params: ParamMap) => {
-          if (!params.get('id')) {
+        switchMap((token) => {
+          if (!token) {
+            this.router.navigate(['/auth/login']);
+            return of(null);
+          } else {
+            this.token = token;
+            return this.route.paramMap;
+          }
+        })
+      )
+      .pipe(
+        switchMap((params: ParamMap | null) => {
+          if (!params || !params.get('id')) {
             return of(null);
           } else {
             this.hourSchemeId = params.get('id') as Id;
-            return this.hourSchemeService.details(params.get('id') as Id);
+            return this.hourSchemeService.details(params.get('id') as Id, {
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${this.token}`,
+              },
+            });
           }
         })
       )
@@ -112,9 +92,9 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
             this.hsForm.patchValue({
               date: this.convertDate(new Date(scheme.date)),
               rows: scheme.rows?.map((row) => ({
-                project: row.project.id,
+                project: row.project._id,
                 hours: row.hours,
-                machine: row.machine?.id,
+                machine: row.machine?._id,
                 description: row.description,
               })),
             });
@@ -123,12 +103,15 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
             scheme.rows?.forEach((row) => {
               this.rows.push(
                 this.fb.group({
-                  project: this.fb.control(row.project.id, Validators.required),
+                  project: this.fb.control(
+                    row.project._id,
+                    Validators.required
+                  ),
                   hours: this.fb.control(row.hours, [
                     Validators.required,
                     Validators.min(0),
                   ]),
-                  machine: this.fb.control(row.machine?.id),
+                  machine: this.fb.control(row.machine?._id),
                   description: this.fb.control(
                     row.description,
                     Validators.required
@@ -136,22 +119,82 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
                 })
               );
             });
+
+            this.worker = scheme.worker;
           } else if (!scheme && this.hourSchemeId) {
+            this.alertService.danger('Urenschema niet gevonden!');
             this.location.back();
           }
           this.loaded = true;
         },
-        error: (error) => {
-          console.error(error);
-          this.location.back();
+        error: () => {
+          this.alertService.danger('Urenschema niet gevonden!');
+          this.router.navigate(['/hour-scheme']);
         },
       });
 
-    return;
+    this.subscriptionProjects = this.authService
+      .currentUserToken$
+      .pipe(
+        switchMap((token) => {
+          if (!token) {
+            this.alertService.info('Je bent niet ingelogd!');
+            this.router.navigate(['/auth/login']);
+            return of(null);
+          } else {
+            this.token = token;
+            return this.projectService.list({
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${this.token}`,
+              },
+            });
+          }
+        })
+      )
+      .subscribe({
+        next: (projects: IProject[] | null) => {
+          if (!projects) return;
+
+          this.projects = projects;
+        },
+        error: (error) => {
+          console.error(error);
+        },
+      });
+
+    this.subscriptionMachine = this.authService
+      .currentUserToken$
+      .pipe(
+        switchMap((token) => {
+          if (!token) {
+            this.alertService.info('Je bent niet ingelogd!');
+            this.router.navigate(['/auth/login']);
+            return of(null);
+          } else {
+            this.token = token;
+            return this.machineService.list({
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${this.token}`,
+              },
+            });
+          }
+        })
+      )
+      .subscribe({
+        next: (machines: IMachine[] | null) => {
+          if (!machines) return;
+
+          this.machines = machines;
+        },
+        error: (error) => {
+          console.error(error);
+        },
+      });
   }
 
   ngOnDestroy(): void {
-    this.subscriptionAuth.unsubscribe();
     this.subscriptionDetails.unsubscribe();
   }
 
@@ -252,38 +295,48 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
 
     const formData = this.hsForm.value;
     const date = new Date(formData.date);
-    // TODO: Get worker from API
 
-    const newHourScheme = {
-      date: date,
-      rows: formData.rows.map((row: any) => ({
-        project: this.projects.find((p) => p.id === row.project),
-        hours: row.hours,
-        machine: this.machines.find((m) => m.id === row.machine),
-        description: row.description,
-      })),
-      worker: {
-        _id: '655b86d4b6267ea18bb9ddcb',
-        username: 'Magisch',
-        email: 'damian2003@outlook.com',
-        firstname: 'Damian',
-        lastname: 'Elenbaas',
-        role: 'Kantoor',
-      },
-    } as IHourScheme;
+    this.authService
+      .currentUser$
+      .pipe(
+        switchMap((user) => {
+          if (!user) {
+            this.router.navigate(['/auth/login']);
+            return of(null);
+          } else {
+            const newHourScheme = {
+              date: date,
+              rows: formData.rows.map((row: any) => ({
+                project: this.findProject(row.project),
+                hours: row.hours,
+                machine: this.findMachine(row.machine),
+                description: row.description,
+              })),
+              worker: user,
+            } as IHourScheme;
 
-    console.log(newHourScheme);
+            console.log(newHourScheme);
+            return this.hourSchemeService.create(newHourScheme, {
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${this.token}`,
+              },
+            });
+          }
+        })
+      )
+      .subscribe({
+        next: (hourScheme: IHourScheme | null) => {
+          if (hourScheme === null) return;
 
-    this.hourSchemeService.create(newHourScheme).subscribe({
-      next: (hourScheme: IHourScheme | null) => {
-        if (hourScheme === null) return;
-
-        this.location.back();
-      },
-      error: (err: any) => {
-        console.error(err);
-      },
-    });
+          this.alertService.success('Urenschema aangemaakt!');
+          this.location.back();
+        },
+        error: (err: any) => {
+          this.alertService.danger('Er is iets misgegaan!');
+          console.error(err);
+        },
+      });
   }
 
   update(): void {
@@ -292,37 +345,48 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
     const formData = this.hsForm.value;
     const date = new Date(formData.date);
 
-    const updatedHourScheme = {
-      _id: this.hourSchemeId,
-      date: date,
-      rows: formData.rows.map((row: any) => ({
-        project: this.projects.find((p) => p.id === row.project),
-        hours: row.hours,
-        machine: this.machines.find((m) => m.id === row.machine),
-        description: row.description,
-      })),
-      worker: {
-        _id: '655b86d4b6267ea18bb9ddcb',
-        username: 'Magisch',
-        email: 'damian2003@outlook.com',
-        firstname: 'Damian',
-        lastname: 'Elenbaas',
-        role: 'Kantoor',
-      },
-    } as IHourScheme;
+    this.authService
+      .currentUser$
+      .pipe(
+        switchMap((user) => {
+          if (!user) {
+            this.router.navigate(['/auth/login']);
+            return of(null);
+          } else {
+            console.log('User:', user);
+            const updatedHourScheme = {
+              _id: this.hourSchemeId,
+              date: date,
+              rows: formData.rows.map((row: any) => ({
+                project: this.findProject(row.project),
+                hours: row.hours,
+                machine: this.findMachine(row.machine),
+                description: row.description,
+              })),
+              worker: this.worker,
+            } as IHourScheme;
 
-    console.log(updatedHourScheme);
+            return this.hourSchemeService.update(updatedHourScheme, {
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${this.token}`,
+              },
+            });
+          }
+        })
+      )
+      .subscribe({
+        next: (hourScheme: IHourScheme | null) => {
+          if (hourScheme === null) return;
 
-    this.hourSchemeService.update(updatedHourScheme).subscribe({
-      next: (hourScheme: IHourScheme | null) => {
-        if (hourScheme === null) return;
-
-        this.location.back();
-      },
-      error: (err: any) => {
-        console.error(err);
-      },
-    });
+          this.alertService.success('Urenschema aangepast!');
+          this.location.back();
+        },
+        error: (err: any) => {
+          this.alertService.danger('Er is iets misgegaan!');
+          console.error(err);
+        },
+      });
   }
 
   get rows(): FormArray {
@@ -330,10 +394,10 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
   }
 
   findProject(id: Id): IProject | undefined {
-    return this.projects.find((p) => p.id === id);
+    return this.projects.find((p) => p._id === id);
   }
 
   findMachine(id: Id): IMachine | undefined {
-    return this.machines.find((m) => m.id === id);
+    return this.machines.find((m) => m._id === id);
   }
 }

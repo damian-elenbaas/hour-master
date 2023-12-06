@@ -15,7 +15,6 @@ export class CreateProjectDto implements ICreateProject {
   name!: string;
 
   @IsNotEmpty()
-  @IsString()
   location!: ILocation;
 
   @IsNotEmpty()
@@ -25,14 +24,13 @@ export class CreateProjectDto implements ICreateProject {
 export class UpsertProjectDto implements IUpsertProject {
   @IsNotEmpty()
   @IsString()
-  id!: Id;
+  _id!: Id;
 
   @IsNotEmpty()
   @IsString()
   name!: string;
 
   @IsNotEmpty()
-  @IsString()
   location!: ILocation;
 
   @IsNotEmpty()
@@ -45,7 +43,6 @@ export class UpdateProjectDto implements IUpdateProject {
   name!: string;
 
   @IsOptional()
-  @IsString()
   location!: ILocation;
 
   @IsOptional()
