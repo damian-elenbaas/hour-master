@@ -5,7 +5,6 @@ import {
   IHourScheme,
   IMachine,
   IProject,
-  IUpdateHourScheme,
   IUpsertHourScheme,
   IUser,
   Id,
