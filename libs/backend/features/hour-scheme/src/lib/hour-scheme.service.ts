@@ -80,38 +80,18 @@ export class HourSchemeService {
     this.logger.log(`create hour scheme`);
 
     // check if worker exists
-    hourScheme.worker = await this.getExistingWorker(hourScheme.worker._id);
+    await this.getExistingWorker(hourScheme.worker._id);
 
-    // TODO: Make this a separate function
+    // check if project exists
     const projectIds = hourScheme.rows?.map(row => row.project._id);
     if(projectIds) {
-      const projects = await this.getExistingProjects(projectIds);
-      hourScheme.rows = hourScheme.rows?.map(row => {
-        const project = projects.find(project => project._id.toString() === row.project._id);
-        if(!project) {
-          this.logger.log(`Project with id ${row.project._id} not found`);
-          throw new NotFoundException(`Project with id ${row.project._id} not found`);
-        }
-        row.project = project;
-        return row;
-      });
+      await this.getExistingProjects(projectIds);
     }
 
-    // TODO: Make this a separate function
+    // check if machine exists
     const machineIds = hourScheme.rows?.map(row => row.machine?._id);
     if(machineIds) {
-      const machines = await this.getExistingMachines(machineIds as Id[]);
-      hourScheme.rows = hourScheme.rows?.map(row => {
-        if(row.machine) {
-          const machine = machines.find(machine => machine._id.toString() === row.machine?._id);
-          if(!machine) {
-            this.logger.log(`Machine with id ${row.machine?._id} not found`);
-            throw new NotFoundException(`Machine with id ${row.machine?._id} not found`);
-          }
-          row.machine = machine;
-        }
-        return row;
-      });
+      await this.getExistingMachines(machineIds as Id[]);
     }
 
     const newHourSchemeModel = new this.hourSchemeModel(hourScheme);
@@ -131,65 +111,24 @@ export class HourSchemeService {
 
   async upsert(id: Id, hourScheme: IUpsertHourScheme): Promise<boolean> {
     this.logger.log(`update(${id})`);
-    hourScheme._id = new Types.ObjectId(id);
 
     // check if worker exists
-    hourScheme.worker = await this.getExistingWorker(hourScheme.worker._id);
+    await this.getExistingWorker(hourScheme.worker._id);
 
     // check if project exists
     const projectIds = hourScheme.rows?.map(row => row.project._id);
     if(projectIds) {
-      const projects = await this.getExistingProjects(projectIds);
-      hourScheme.rows = hourScheme.rows?.map(row => {
-        const project = projects.find(project => project._id.toString() === row.project._id);
-        if(!project) {
-          this.logger.log(`Project with id ${row.project._id} not found`);
-          throw new NotFoundException(`Project with id ${row.project._id} not found`);
-        }
-        row.project = project;
-        return row;
-      });
+      await this.getExistingProjects(projectIds);
     }
 
     // check if machine exists
     const machineIds = hourScheme.rows?.map(row => row.machine?._id);
     if(machineIds) {
-      const machines = await this.getExistingMachines(machineIds as Id[]);
-      hourScheme.rows = hourScheme.rows?.map(row => {
-        if(row.machine) {
-          const machine = machines.find(machine => machine._id.toString() === row.machine?._id);
-          if(!machine) {
-            this.logger.log(`Machine with id ${row.machine?._id} not found`);
-            throw new NotFoundException(`Machine with id ${row.machine?._id} not found`);
-          }
-          row.machine = machine;
-        }
-        return row;
-      });
-    }
-
-    // HACK: When upserting or updating normally with the full object, the refrences to worker,
-    // project and machine are lost and instead of ids, the full object is saved.
-    // This is a workaround to save the ids instead of the full object.
-    const tempRows = hourScheme.rows?.map(row => {
-      return {
-        _id: row._id,
-        project: row.project._id,
-        hours: row.hours,
-        description: row.description,
-        machine: row.machine?._id,
-      }
-    });
-
-    const tempScheme = {
-      _id: hourScheme._id,
-      date: hourScheme.date,
-      worker: hourScheme.worker._id,
-      rows: tempRows,
+      await this.getExistingMachines(machineIds as Id[]);
     }
 
     const updatedHourScheme = await this.hourSchemeModel
-      .findByIdAndUpdate(id, tempScheme)
+      .findByIdAndUpdate(id, hourScheme, { upsert: true })
       .exec();
 
     if (!updatedHourScheme) {

@@ -1,6 +1,6 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { IHourScheme } from '@hour-master/shared/api';
-import { HydratedDocument, Types } from 'mongoose';
+import { HydratedDocument, SchemaTypes } from 'mongoose';
 import { User } from '@hour-master/backend/user';
 import { IsMongoId } from 'class-validator';
 import { HourSchemeRow } from './hour-scheme-row.schema';
@@ -21,7 +21,7 @@ export class HourScheme implements IHourScheme {
   @Prop({ required: true })
   date!: Date;
 
-  @Prop({ required: true, type: Types.ObjectId, ref: 'User' })
+  @Prop({ required: true, type: SchemaTypes.ObjectId, ref: 'User' })
   worker!: User;
 
   @Prop({ type: [HourSchemeRow] })
