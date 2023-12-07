@@ -10,7 +10,7 @@ import {
   Id,
 } from '@hour-master/shared/api';
 import { HourScheme } from './schemas/hour-scheme.schema';
-import { Model, Types } from 'mongoose';
+import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { RecommendationsService } from '@hour-master/backend/recommendations';
 import { Project } from '@hour-master/backend/features/project';

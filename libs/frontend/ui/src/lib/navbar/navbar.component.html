@@ -96,7 +96,7 @@
           </button>
         </li>
         <li
-          *ngIf="user$.value == null"
+          *ngIf="user$.value === null"
         >
           <hour-master-navbar-item [link]="'/auth/login'"
             >Inloggen</hour-master-navbar-item
