@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
 
 import {
   ICreateHourScheme,
@@ -8,6 +8,7 @@ import {
   IUpsertHourScheme,
   IUser,
   Id,
+  UserRole,
 } from '@hour-master/shared/api';
 import { HourScheme } from './schemas/hour-scheme.schema';
 import { Model } from 'mongoose';
@@ -33,8 +34,22 @@ export class HourSchemeService {
     private readonly recommendationsService: RecommendationsService
   ) { }
 
-  async getAll(): Promise<IHourScheme[]> {
+  async getAll(userId: Id): Promise<IHourScheme[]> {
     this.logger.log(`getAll()`);
+
+    const user = await this.userModel.findById(userId).exec();
+    if (!user) {
+      throw new NotFoundException(`User with id ${userId} not found`);
+    }
+
+    if (user.role === UserRole.ROADWORKER) {
+      const hourSchemes = await this.hourSchemeModel
+        .find({ worker: userId })
+        .populate('worker')
+        .exec();
+
+      return hourSchemes;
+    }
 
     const hourSchemes = await this.hourSchemeModel
       .find()
@@ -84,13 +99,13 @@ export class HourSchemeService {
 
     // check if project exists
     const projectIds = hourScheme.rows?.map(row => row.project._id);
-    if(projectIds) {
+    if (projectIds) {
       await this.getExistingProjects(projectIds);
     }
 
     // check if machine exists
     const machineIds = hourScheme.rows?.map(row => row.machine?._id);
-    if(machineIds) {
+    if (machineIds) {
       await this.getExistingMachines(machineIds as Id[]);
     }
 
@@ -101,7 +116,7 @@ export class HourSchemeService {
       createdHourScheme
     );
 
-    if(!n4jResult) {
+    if (!n4jResult) {
       await this.hourSchemeModel.findByIdAndDelete(createdHourScheme._id).exec();
       throw new Error('Could not create hour scheme');
     }
@@ -109,21 +124,30 @@ export class HourSchemeService {
     return createdHourScheme;
   }
 
-  async upsert(id: Id, hourScheme: IUpsertHourScheme): Promise<boolean> {
+  async upsert(id: Id, hourScheme: IUpsertHourScheme, userId: Id): Promise<boolean> {
     this.logger.log(`update(${id})`);
+
+    const currentHourScheme = await this.hourSchemeModel.findById(id).exec();
+    if (!currentHourScheme) {
+      throw new NotFoundException(`Hour scheme with id ${id} not found`);
+    }
+
+    if (currentHourScheme.worker._id !== userId) {
+      throw new UnauthorizedException("You are not allowed to update this hour scheme");
+    }
 
     // check if worker exists
     await this.getExistingWorker(hourScheme.worker._id);
 
     // check if project exists
     const projectIds = hourScheme.rows?.map(row => row.project._id);
-    if(projectIds) {
+    if (projectIds) {
       await this.getExistingProjects(projectIds);
     }
 
     // check if machine exists
     const machineIds = hourScheme.rows?.map(row => row.machine?._id);
-    if(machineIds) {
+    if (machineIds) {
       await this.getExistingMachines(machineIds as Id[]);
     }
 
@@ -139,27 +163,32 @@ export class HourSchemeService {
       updatedHourScheme
     );
 
-    if(!n4jResult) {
+    if (!n4jResult) {
       throw new Error('Could not update hour scheme');
     }
 
     return true;
   }
 
-  async delete(id: Id): Promise<boolean> {
+  async delete(id: Id, userId: Id): Promise<boolean> {
     this.logger.log(`delete(${id})`);
 
-    const deletedHourScheme = await this.hourSchemeModel
-      .findByIdAndDelete(id)
-      .exec();
-
-    if (!deletedHourScheme) {
+    const hourScheme = await this.hourSchemeModel.findById(id).exec();
+    if(!hourScheme) {
       throw new NotFoundException(`Hour scheme with id ${id} not found`);
     }
 
+    if(hourScheme.worker._id !== userId.toString()) {
+      throw new UnauthorizedException('You are not allowed to delete this hour scheme');
+    }
+
+    await this.hourSchemeModel
+      .findByIdAndDelete(id)
+      .exec();
+
     const n4jResult = this.recommendationsService.deleteHourScheme(id);
 
-    if(!n4jResult) {
+    if (!n4jResult) {
       throw new Error('Could not delete hour scheme');
     }
 

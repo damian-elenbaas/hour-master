@@ -1,7 +1,7 @@
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '@hour-master/backend/user';
-import { ISignInResult } from '@hour-master/shared/api';
+import { IJWTPayload, ISignInResult } from '@hour-master/shared/api';
 
 @Injectable()
 export class AuthService {
@@ -26,7 +26,7 @@ export class AuthService {
     user.password = undefined;
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const payload = { sub: user._id, username: user.username };
+    const payload = { sub: user._id, username: user.username } as IJWTPayload;
     return {
       access_token: await this.jwtService.signAsync(payload),
       user: user,

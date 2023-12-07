@@ -8,3 +8,4 @@ export * from './lib/models/location.interface';
 export * from './lib/models/api-response.interface';
 export * from './lib/models/service-result.interface';
 export * from './lib/models/signin-result.interface';
+export * from './lib/models/jwt-payload.interface';

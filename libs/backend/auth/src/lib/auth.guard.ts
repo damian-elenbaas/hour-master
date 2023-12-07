@@ -10,6 +10,7 @@ import { Reflector } from '@nestjs/core';
 import { jwtConstants } from './jwt.const';
 import { IS_PUBLIC_KEY, Roles } from '@hour-master/backend/decorators';
 import { UserService } from '@hour-master/backend/user';
+import { IJWTPayload } from '@hour-master/shared/api';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -27,7 +28,6 @@ export class AuthGuard implements CanActivate {
     const roles = this.reflector.get(Roles, context.getHandler());
 
     if (isPublic && !roles) {
-      // 💡 See this condition
       return true;
     }
 
@@ -39,16 +39,16 @@ export class AuthGuard implements CanActivate {
     try {
       const payload = await this.jwtService.verifyAsync(token, {
         secret: jwtConstants.secret,
-      });
+      }) as IJWTPayload;
       // 💡 We're assigning the payload to the request object here
       // so that we can access it in our route handlers
-      request['user'] = payload;
+      request.user = payload;
     } catch {
       throw new UnauthorizedException();
     }
 
     const user = await this.userService.findOneByUsername(
-      request['user'].username
+      request.user.username
     );
 
     if (roles && !roles.includes(user.role)) {
