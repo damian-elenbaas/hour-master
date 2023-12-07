@@ -39,19 +39,19 @@ export class HourSchemeService {
       const hourScheme = await this.hourSchemeModel
         .findById(id)
         .populate('worker')
-        .populate({
-          path: 'rows',
-          populate: [
-            {
-              path: 'project',
-              model: 'Project',
-            },
-            {
-              path: 'machine',
-              model: 'Machine',
-            }
-          ]
-        })
+        // .populate({
+        //   path: 'rows',
+        //   populate: [
+        //     // {
+        //     //   path: 'project',
+        //     //   model: 'Project',
+        //     // },
+        //     // {
+        //     //   path: 'machine',
+        //     //   model: 'Machine',
+        //     // }
+        //   ]
+        // })
         .exec();
 
       if (!hourScheme) {

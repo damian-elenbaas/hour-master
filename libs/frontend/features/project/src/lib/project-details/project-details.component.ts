@@ -6,6 +6,7 @@ import { AuthService } from '@hour-master/frontend/auth';
 import { AlertService } from '@hour-master/frontend/common';
 import { Subscription, of, switchMap } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Modal } from 'flowbite';
 
 @Component({
   selector: 'hour-master-project-details',
@@ -24,6 +25,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   totalHours = 0;
 
   token!: string;
+  popUpModal!: Modal;
 
   constructor(
     public readonly location: Location,
@@ -34,6 +36,9 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     private readonly projectService: ProjectService) { }
 
   ngOnInit(): void {
+    const modalElement = document.getElementById('popup-modal') as HTMLElement;
+    this.popUpModal = new Modal(modalElement);
+
     this.detailSub = this.authService.currentUserToken$
       .pipe(
         switchMap((token) => {
@@ -164,7 +169,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe((hours) => {
-        if (hours) {
+        if (hours && typeof hours === 'number') {
           this.totalHours = hours;
         }
       });
@@ -175,5 +180,26 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     this.workersSub?.unsubscribe();
     this.machinesSub?.unsubscribe();
     this.totalHoursSub?.unsubscribe();
+  }
+
+  delete(): void {
+    this.popUpModal.hide();
+    this.projectService
+      .delete(this.project._id, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + this.token,
+        },
+      })
+      .subscribe({
+        next: () => {
+          this.alertService.success('Project verwijderd!');
+          this.router.navigate(['/project']);
+        },
+        error: (error) => {
+          console.error(error);
+          this.alertService.danger('Kan het project niet verwijderen!');
+        },
+      });
   }
 }

@@ -23,4 +23,11 @@ export class Project implements IProject {
   admin!: User;
 }
 
-export const ProjectSchema = SchemaFactory.createForClass(Project);
+const ProjectSchema = SchemaFactory.createForClass(Project);
+ProjectSchema.pre('findOneAndDelete', async function(next) {
+  console.log('pre findOneAndDelete');
+  // TODO: delete related hour schemes
+  next();
+});
+
+export { ProjectSchema };
