@@ -85,8 +85,16 @@ export class HourSchemeDetailsComponent implements OnInit, OnDestroy {
 
   delete(): void {
     this.popUpModal.hide();
-    this.hourSchemeService.delete(this.hourSchemeId as Id).subscribe(() => {
-      this.location.back();
-    });
+    this.hourSchemeService
+      .delete(this.hourSchemeId as Id, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${this.token}`,
+        },
+      })
+      .subscribe(() => {
+        this.alertService.success('Urenschema verwijderd!');
+        this.router.navigate(['/hour-scheme']);
+      });
   }
 }

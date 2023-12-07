@@ -12,6 +12,7 @@ export interface IHourScheme {
 }
 
 export interface IHourSchemeRow {
+  _id: Id;
   project: IProject;
   hours: number;
   description: string;

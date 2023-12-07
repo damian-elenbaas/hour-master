@@ -10,7 +10,7 @@ import {
 import { HourSchemeService } from './hour-scheme.service';
 import { IHourScheme, Id } from '@hour-master/shared/api';
 import { CreateHourSchemeDto } from './dto/create-hour-scheme.dto';
-import { UpdateHourSchemeDto } from './dto/update-hour-scheme.dto';
+import { UpsertHourSchemeDto } from './dto/upsert-hour-scheme.dto';
 
 @Controller('hour-scheme')
 export class HourSchemeController {
@@ -32,11 +32,11 @@ export class HourSchemeController {
   }
 
   @Put(':id')
-  async update(
+  async upsert(
     @Param('id') id: Id,
-    @Body() body: UpdateHourSchemeDto
+    @Body() body: UpsertHourSchemeDto
   ): Promise<boolean> {
-    return await this.hourSchemeService.update(id, body);
+    return await this.hourSchemeService.upsert(id, body);
   }
 
   @Delete(':id')

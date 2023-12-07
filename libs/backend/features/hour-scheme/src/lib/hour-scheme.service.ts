@@ -3,13 +3,20 @@ import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import {
   ICreateHourScheme,
   IHourScheme,
+  IMachine,
+  IProject,
   IUpdateHourScheme,
+  IUpsertHourScheme,
+  IUser,
   Id,
 } from '@hour-master/shared/api';
 import { HourScheme } from './schemas/hour-scheme.schema';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { RecommendationsService } from '@hour-master/backend/recommendations';
+import { Project } from '@hour-master/backend/features/project';
+import { Machine } from '@hour-master/backend/features/machine';
+import { User } from '@hour-master/backend/user';
 
 @Injectable()
 export class HourSchemeService {
@@ -18,6 +25,12 @@ export class HourSchemeService {
   constructor(
     @InjectModel(HourScheme.name)
     private readonly hourSchemeModel: Model<HourScheme>,
+    @InjectModel(Project.name)
+    private readonly projectModel: Model<Project>,
+    @InjectModel(Machine.name)
+    private readonly machineModel: Model<Machine>,
+    @InjectModel(User.name)
+    private readonly userModel: Model<User>,
     private readonly recommendationsService: RecommendationsService
   ) { }
 
@@ -66,7 +79,44 @@ export class HourSchemeService {
 
   async create(hourScheme: ICreateHourScheme): Promise<IHourScheme> {
     this.logger.log(`create hour scheme`);
-    const createdHourScheme = await this.hourSchemeModel.create(hourScheme);
+
+    // check if worker exists
+    hourScheme.worker = await this.getExistingWorker(hourScheme.worker._id);
+
+    // TODO: Make this a separate function
+    const projectIds = hourScheme.rows?.map(row => row.project._id);
+    if(projectIds) {
+      const projects = await this.getExistingProjects(projectIds);
+      hourScheme.rows = hourScheme.rows?.map(row => {
+        const project = projects.find(project => project._id.toString() === row.project._id);
+        if(!project) {
+          this.logger.log(`Project with id ${row.project._id} not found`);
+          throw new NotFoundException(`Project with id ${row.project._id} not found`);
+        }
+        row.project = project;
+        return row;
+      });
+    }
+
+    // TODO: Make this a separate function
+    const machineIds = hourScheme.rows?.map(row => row.machine?._id);
+    if(machineIds) {
+      const machines = await this.getExistingMachines(machineIds as Id[]);
+      hourScheme.rows = hourScheme.rows?.map(row => {
+        if(row.machine) {
+          const machine = machines.find(machine => machine._id.toString() === row.machine?._id);
+          if(!machine) {
+            this.logger.log(`Machine with id ${row.machine?._id} not found`);
+            throw new NotFoundException(`Machine with id ${row.machine?._id} not found`);
+          }
+          row.machine = machine;
+        }
+        return row;
+      });
+    }
+
+    const newHourSchemeModel = new this.hourSchemeModel(hourScheme);
+    const createdHourScheme = await newHourSchemeModel.save();
 
     const n4jResult = this.recommendationsService.createOrUpdateHourScheme(
       createdHourScheme
@@ -80,11 +130,67 @@ export class HourSchemeService {
     return createdHourScheme;
   }
 
-  async update(id: Id, hourScheme: IUpdateHourScheme): Promise<boolean> {
+  async upsert(id: Id, hourScheme: IUpsertHourScheme): Promise<boolean> {
     this.logger.log(`update(${id})`);
+    hourScheme._id = new Types.ObjectId(id);
+
+    // check if worker exists
+    hourScheme.worker = await this.getExistingWorker(hourScheme.worker._id);
+
+    // check if project exists
+    const projectIds = hourScheme.rows?.map(row => row.project._id);
+    if(projectIds) {
+      const projects = await this.getExistingProjects(projectIds);
+      hourScheme.rows = hourScheme.rows?.map(row => {
+        const project = projects.find(project => project._id.toString() === row.project._id);
+        if(!project) {
+          this.logger.log(`Project with id ${row.project._id} not found`);
+          throw new NotFoundException(`Project with id ${row.project._id} not found`);
+        }
+        row.project = project;
+        return row;
+      });
+    }
+
+    // check if machine exists
+    const machineIds = hourScheme.rows?.map(row => row.machine?._id);
+    if(machineIds) {
+      const machines = await this.getExistingMachines(machineIds as Id[]);
+      hourScheme.rows = hourScheme.rows?.map(row => {
+        if(row.machine) {
+          const machine = machines.find(machine => machine._id.toString() === row.machine?._id);
+          if(!machine) {
+            this.logger.log(`Machine with id ${row.machine?._id} not found`);
+            throw new NotFoundException(`Machine with id ${row.machine?._id} not found`);
+          }
+          row.machine = machine;
+        }
+        return row;
+      });
+    }
+
+    // HACK: When upserting or updating normally with the full object, the refrences to worker,
+    // project and machine are lost and instead of ids, the full object is saved.
+    // This is a workaround to save the ids instead of the full object.
+    const tempRows = hourScheme.rows?.map(row => {
+      return {
+        _id: row._id,
+        project: row.project._id,
+        hours: row.hours,
+        description: row.description,
+        machine: row.machine?._id,
+      }
+    });
+
+    const tempScheme = {
+      _id: hourScheme._id,
+      date: hourScheme.date,
+      worker: hourScheme.worker._id,
+      rows: tempRows,
+    }
 
     const updatedHourScheme = await this.hourSchemeModel
-      .findByIdAndUpdate(id, hourScheme)
+      .findByIdAndUpdate(id, tempScheme)
       .exec();
 
     if (!updatedHourScheme) {
@@ -120,5 +226,41 @@ export class HourSchemeService {
     }
 
     return true;
+  }
+
+  private async getExistingWorker(workerId: Id): Promise<IUser> {
+    const existingWorker = await this.userModel.findById(workerId).exec();
+    if (!existingWorker) {
+      throw new NotFoundException(`Worker with id ${workerId} not found`);
+    }
+    return existingWorker;
+  }
+
+  private async getExistingProjects(projectIds: Id[]): Promise<IProject[]> {
+    const existingProjects = await this.projectModel
+      .find({ _id: { $in: projectIds } })
+      .exec();
+
+    if (existingProjects.length !== projectIds.length) {
+      throw new NotFoundException(
+        `Not all projects with ids ${projectIds} were found`
+      );
+    }
+
+    return existingProjects;
+  }
+
+  private async getExistingMachines(machineIds: Id[]): Promise<IMachine[]> {
+    const existingMachines = await this.machineModel
+      .find({ _id: { $in: machineIds } })
+      .exec();
+
+    if (existingMachines.length !== machineIds.length) {
+      throw new NotFoundException(
+        `Not all machines with ids ${machineIds} were found`
+      );
+    }
+
+    return existingMachines;
   }
 }
