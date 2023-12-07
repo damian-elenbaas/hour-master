@@ -1,6 +1,7 @@
-import { IHourSchemeRow } from './hour-scheme-row.interface';
 import { Id } from './id.type';
 import { IUser } from './user.interface';
+import { IMachine } from './machine.interface';
+import { IProject } from './project.interface';
 
 export interface IHourScheme {
   _id: Id;
@@ -8,6 +9,13 @@ export interface IHourScheme {
   worker: IUser;
   rows?: IHourSchemeRow[];
   totalHours?: number;
+}
+
+export interface IHourSchemeRow {
+  project: IProject;
+  hours: number;
+  description: string;
+  machine?: IMachine;
 }
 
 export type ICreateHourScheme = Pick<IHourScheme, 'date' | 'worker' | 'rows'>;

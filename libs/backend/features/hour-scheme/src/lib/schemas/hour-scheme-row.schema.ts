@@ -1,16 +1,15 @@
-import { IHourSchemeRow, IMachine, IProject } from '@hour-master/shared/api';
-import { Prop, SchemaFactory } from '@nestjs/mongoose';
-import { IsMongoId } from 'class-validator';
-import mongoose, { HydratedDocument } from 'mongoose';
+import { Machine } from "@hour-master/backend/features/machine";
+import { Project } from "@hour-master/backend/features/project";
+import { IHourSchemeRow } from "@hour-master/shared/api";
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { HydratedDocument, Types } from "mongoose";
 
 export type HourSchemaRowDocument = HydratedDocument<HourSchemeRow>;
 
+@Schema()
 export class HourSchemeRow implements IHourSchemeRow {
-  @IsMongoId()
-  _id!: string;
-
-  @Prop({ required: true, type: mongoose.SchemaTypes.ObjectId, ref: 'Project' })
-  project!: IProject;
+  @Prop({ required: true, type: Types.ObjectId, ref: 'Project' })
+  project!: Project;
 
   @Prop({ required: true, type: Number })
   hours!: number;
@@ -18,8 +17,8 @@ export class HourSchemeRow implements IHourSchemeRow {
   @Prop({ required: true, type: String })
   description!: string;
 
-  @Prop({ type: mongoose.SchemaTypes.ObjectId, ref: 'Machine' })
-  machine?: IMachine;
+  @Prop({ type: Types.ObjectId, ref: 'Machine' })
+  machine?: Machine | undefined;
 }
 
 export const HourSchemaRowSchema = SchemaFactory.createForClass(HourSchemeRow);

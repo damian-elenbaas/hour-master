@@ -14,7 +14,7 @@ import {
 export class UpsertHourSchemeDto implements IUpsertHourScheme {
   @IsString()
   @IsNotEmpty()
-  id!: Id;
+  _id!: Id;
 
   @IsDateString()
   @IsNotEmpty()
