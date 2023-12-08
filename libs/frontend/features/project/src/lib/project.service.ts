@@ -15,7 +15,8 @@ export const httpOptions = {
 
 @Injectable()
 export class ProjectService {
-  endpoint = `${environment.dataApiUrl}/api/project`;
+  dataEndpoint = `${environment.dataApiUrl}/api/project`;
+  rcmndEndpoint = `${environment.rcmndApiUrl}/api/recommendations/project`;
 
   constructor(private readonly http: HttpClient) {}
 
@@ -25,10 +26,10 @@ export class ProjectService {
    * @options options - optional URL queryparam options
    */
   public list(options?: any): Observable<IProject[] | null> {
-    console.log(`list ${this.endpoint}`);
+    console.log(`list ${this.dataEndpoint}`);
 
     return this.http
-      .get<ApiResponse<IProject[]>>(this.endpoint, {
+      .get<ApiResponse<IProject[]>>(this.dataEndpoint, {
         ...options,
         ...httpOptions,
       })
@@ -40,10 +41,10 @@ export class ProjectService {
   }
 
   public details(id: Id, options?: any): Observable<IProject | null> {
-    console.log(`details ${this.endpoint}/${id}`);
+    console.log(`details ${this.dataEndpoint}/${id}`);
 
     return this.http
-      .get<ApiResponse<IProject>>(`${this.endpoint}/${id}`, {
+      .get<ApiResponse<IProject>>(`${this.dataEndpoint}/${id}`, {
         ...options,
         ...httpOptions,
       })
@@ -55,10 +56,10 @@ export class ProjectService {
   }
 
   public create(scheme: IProject, options?: any): Observable<IProject | null> {
-    console.log(`create ${this.endpoint}`);
+    console.log(`create ${this.dataEndpoint}`);
 
     return this.http
-      .post<ApiResponse<IProject>>(this.endpoint, scheme, {
+      .post<ApiResponse<IProject>>(this.dataEndpoint, scheme, {
         ...options,
         ...httpOptions,
       })
@@ -70,10 +71,10 @@ export class ProjectService {
   }
 
   public update(project: IProject, options?: any): Observable<IProject | null> {
-    console.log(`update ${this.endpoint}/${project._id}`);
+    console.log(`update ${this.dataEndpoint}/${project._id}`);
 
     return this.http
-      .put<ApiResponse<IProject>>(`${this.endpoint}/${project._id}`, project, {
+      .put<ApiResponse<IProject>>(`${this.dataEndpoint}/${project._id}`, project, {
         ...options,
         ...httpOptions,
       })
@@ -85,10 +86,10 @@ export class ProjectService {
   }
 
   public delete(id: Id, options?: any): Observable<boolean | null> {
-    console.log(`delete ${this.endpoint}/${id}`);
+    console.log(`delete ${this.dataEndpoint}/${id}`);
 
     return this.http
-      .delete<ApiResponse<boolean>>(`${this.endpoint}/${id}`, {
+      .delete<ApiResponse<boolean>>(`${this.dataEndpoint}/${id}`, {
         ...options,
         ...httpOptions,
       })
@@ -100,11 +101,11 @@ export class ProjectService {
   }
 
   public getAllWorkersFromProject(id: Id, options?: any): Observable<IUser[] | null> {
-    console.log(`getAllWorkersFromProject ${this.endpoint}/${id}/workers`);
+    console.log(`getAllWorkersFromProject ${this.rcmndEndpoint}/${id}/workers`);
 
     return this.http
       .get<ApiResponse<IUser[]>>(
-        `${this.endpoint}/${id}/workers`, {
+        `${this.rcmndEndpoint}/${id}/workers`, {
         ...options,
         ...httpOptions,
       }
@@ -117,11 +118,11 @@ export class ProjectService {
   }
 
   public getAllMachinesFromProject(id: Id, options?: any): Observable<IMachine[] | null> {
-    console.log(`getAllMachinesFromProject ${this.endpoint}/${id}/machines`);
+    console.log(`getAllMachinesFromProject ${this.rcmndEndpoint}/${id}/machines`);
 
     return this.http
       .get<ApiResponse<IUser[]>>(
-        `${this.endpoint}/${id}/machines`, {
+        `${this.rcmndEndpoint}/${id}/machines`, {
         ...options,
         ...httpOptions,
       }
@@ -134,11 +135,11 @@ export class ProjectService {
   }
 
   public getTotalHoursFromProject(id: Id, options?: any): Observable<number | null> {
-    console.log(`getTotalHoursFromProject ${this.endpoint}/${id}/total-hours`);
+    console.log(`getTotalHoursFromProject ${this.rcmndEndpoint}/${id}/total-hours`);
 
     return this.http
       .get<ApiResponse<number>>(
-        `${this.endpoint}/${id}/total-hours`, {
+        `${this.rcmndEndpoint}/${id}/total-hours`, {
         ...options,
         ...httpOptions,
       }

@@ -28,7 +28,5 @@ import { MachineModule } from '@hour-master/backend/features/machine';
     HourSchemeModule,
     DataSeederModule,
   ],
-  controllers: [],
-  providers: [],
 })
 export class AppModule {}

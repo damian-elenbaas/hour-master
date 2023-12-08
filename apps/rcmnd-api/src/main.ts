@@ -3,16 +3,26 @@
  * This is only a minimal backend to get started.
  */
 
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 
 import { AppModule } from './app/app.module';
+import { ApiResponseInterceptor } from '@hour-master/backend/dto';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const configService = app.get(ConfigService);
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
-  const port = process.env.PORT || 3100;
+
+  const corsOptions = {};
+  app.enableCors(corsOptions);
+
+  app.useGlobalInterceptors(new ApiResponseInterceptor());
+  app.useGlobalPipes(new ValidationPipe());
+
+  const port = configService.get<number>('PORT') || 3100;
   await app.listen(port);
   Logger.log(
     `🚀 Recommendation API is running on: http://localhost:${port}/${globalPrefix}`

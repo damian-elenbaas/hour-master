@@ -22,4 +22,4 @@ import { ConfigService } from '@nestjs/config';
   providers: [RecommendationsService],
   exports: [RecommendationsService],
 })
-export class RecommendationsModule {}
+export class RecommendationsModule { }

@@ -56,22 +56,4 @@ export class ProjectController {
   async delete(@Param('id') id: Id): Promise<boolean> {
     return await this.projectService.delete(id);
   }
-
-  @Get(':id/workers')
-  @Roles([UserRole.ADMIN, UserRole.OFFICE])
-  async getWorkers(@Param('id') id: Id) {
-    return await this.recommendationsService.getAllWorkersFromProject(id);
-  }
-
-  @Get(':id/total-hours')
-  @Roles([UserRole.ADMIN, UserRole.OFFICE])
-  async getTotalHours(@Param('id') id: Id) {
-    return await this.recommendationsService.getTotalHoursOnProject(id);
-  }
-
-  @Get(':id/machines')
-  @Roles([UserRole.ADMIN, UserRole.OFFICE])
-  async getAllMachines(@Param('id') id: Id) {
-    return await this.recommendationsService.getAllUsedMachinesFromProject(id);
-  }
 }
