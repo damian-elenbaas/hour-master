@@ -24,6 +24,10 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   machines: IMachine[] = [];
   totalHours = 0;
 
+  workersLoaded = false;
+  machinesLoaded = false;
+  totalHoursLoaded = false;
+
   token!: string;
   popUpModal!: Modal;
 
@@ -106,6 +110,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
         if (workers) {
           this.workers = workers;
         }
+        this.workersLoaded = true;
       });
 
     this.machinesSub = this.authService.currentUserToken$
@@ -139,6 +144,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
         if (machines) {
           this.machines = machines;
         }
+        this.machinesLoaded = true;
       });
 
     this.totalHoursSub = this.authService.currentUserToken$
@@ -172,6 +178,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
         if (hours && typeof hours === 'number') {
           this.totalHours = hours;
         }
+        this.totalHoursLoaded = true;
       });
   }
 

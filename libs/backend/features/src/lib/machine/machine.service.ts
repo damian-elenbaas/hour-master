@@ -4,11 +4,12 @@ import {
   IUpdateMachine,
   Id,
 } from '@hour-master/shared/api';
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, Logger, NotFoundException, forwardRef } from '@nestjs/common';
 import { Machine } from './schemas/machine.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { RecommendationsService } from '@hour-master/backend/recommendations';
+import { HourSchemeService } from '../hour-scheme/hour-scheme.service';
 
 @Injectable()
 export class MachineService {
@@ -17,7 +18,9 @@ export class MachineService {
   constructor(
     @InjectModel(Machine.name)
     private readonly machineModel: Model<Machine>,
-    private readonly recommendationsService: RecommendationsService
+    private readonly recommendationsService: RecommendationsService,
+    @Inject(forwardRef(() => HourSchemeService))
+    private readonly hourSchemeService: HourSchemeService,
   ) {}
 
   async getAll(): Promise<IMachine[]> {
@@ -42,6 +45,18 @@ export class MachineService {
     } catch (error) {
       throw new NotFoundException(`Machine with id ${id} not found`);
     }
+  }
+
+  async getMany(ids: Id[]): Promise<IMachine[]> {
+    this.logger.log(`getMany(${ids})`);
+
+    const machines = await this.machineModel.find({ _id: { $in: ids } }).exec();
+
+    if (!machines) {
+      throw new NotFoundException(`Machines with ids ${ids} not found`);
+    }
+
+    return machines;
   }
 
   async create(machine: ICreateMachine): Promise<IMachine> {
@@ -90,12 +105,14 @@ export class MachineService {
       throw new NotFoundException(`Machine with id ${id} not found`);
     }
 
-    const neo4jResult = this.recommendationsService.deleteMachine(id);
+    const neo4jResult = await this.recommendationsService.deleteMachine(id);
 
     if (!neo4jResult) {
       await this.machineModel.create(deletedMachine);
       throw new Error('Could not delete machine');
     }
+
+    await this.hourSchemeService.updateRowsByMachineId(id);
 
     return true;
   }

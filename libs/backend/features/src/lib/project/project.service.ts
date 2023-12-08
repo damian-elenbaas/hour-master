@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, Logger, NotFoundException, forwardRef } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Project } from './schemas/project.schema';
@@ -6,10 +6,10 @@ import {
   ICreateProject,
   IProject,
   IUpdateProject,
-  IUser,
   Id,
 } from '@hour-master/shared/api';
 import { RecommendationsService } from '@hour-master/backend/recommendations';
+import { HourSchemeService } from '../hour-scheme/hour-scheme.service';
 
 @Injectable()
 export class ProjectService {
@@ -18,13 +18,18 @@ export class ProjectService {
   constructor(
     @InjectModel(Project.name)
     private readonly projectModel: Model<Project>,
-    private readonly recommendationsService: RecommendationsService
+    private readonly recommendationsService: RecommendationsService,
+    @Inject(forwardRef(() => HourSchemeService))
+    private readonly hourSchemeService: HourSchemeService
   ) {}
 
   async getAll(): Promise<IProject[]> {
     this.logger.log(`getAll()`);
 
-    const projects = await this.projectModel.find().populate('admin').exec();
+    const projects = await this.projectModel
+      .find()
+      .populate('admin')
+      .exec();
 
     return projects;
   }
@@ -41,6 +46,18 @@ export class ProjectService {
     await project.populate('admin');
 
     return project;
+  }
+
+  async getMany(ids: Id[]): Promise<IProject[]> {
+    this.logger.log(`getMany(${ids})`);
+
+    const projects = await this.projectModel.find({ _id: { $in: ids } }).exec();
+
+    if (!projects) {
+      throw new NotFoundException(`Projects with ids ${ids} not found`);
+    }
+
+    return projects;
   }
 
   async create(project: ICreateProject): Promise<IProject> {
@@ -91,7 +108,9 @@ export class ProjectService {
       throw new NotFoundException(`Project with id ${id} not found`);
     }
 
-    this.recommendationsService.deleteProject(id);
+    await this.hourSchemeService.deleteRowsByProjectId(id);
+
+    await this.recommendationsService.deleteProject(id);
 
     return true;
   }

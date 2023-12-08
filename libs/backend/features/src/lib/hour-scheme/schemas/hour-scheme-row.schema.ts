@@ -1,5 +1,5 @@
-import { Machine } from "@hour-master/backend/features/machine";
-import { Project } from "@hour-master/backend/features/project";
+import { Machine } from "../../machine/schemas/machine.schema";
+import { Project } from "../../project/schemas/project.schema";
 import { IHourSchemeRow, Id } from "@hour-master/shared/api";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { IsMongoId } from "class-validator";

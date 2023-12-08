@@ -1,12 +1,9 @@
-import { Injectable, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { Inject, Injectable, Logger, NotFoundException, UnauthorizedException, forwardRef } from '@nestjs/common';
 
 import {
   ICreateHourScheme,
   IHourScheme,
-  IMachine,
-  IProject,
   IUpsertHourScheme,
-  IUser,
   Id,
   UserRole,
 } from '@hour-master/shared/api';
@@ -14,9 +11,9 @@ import { HourScheme } from './schemas/hour-scheme.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { RecommendationsService } from '@hour-master/backend/recommendations';
-import { Project } from '@hour-master/backend/features/project';
-import { Machine } from '@hour-master/backend/features/machine';
-import { User } from '@hour-master/backend/user';
+import { UserService } from '@hour-master/backend/user';
+import { MachineService } from '../machine/machine.service';
+import { ProjectService } from '../project/project.service';
 
 @Injectable()
 export class HourSchemeService {
@@ -25,19 +22,18 @@ export class HourSchemeService {
   constructor(
     @InjectModel(HourScheme.name)
     private readonly hourSchemeModel: Model<HourScheme>,
-    @InjectModel(Project.name)
-    private readonly projectModel: Model<Project>,
-    @InjectModel(Machine.name)
-    private readonly machineModel: Model<Machine>,
-    @InjectModel(User.name)
-    private readonly userModel: Model<User>,
-    private readonly recommendationsService: RecommendationsService
+    private readonly recommendationsService: RecommendationsService,
+    private readonly userService: UserService,
+    @Inject(forwardRef(() => MachineService))
+    private readonly machineService: MachineService,
+    @Inject(forwardRef(() => ProjectService))
+    private readonly projectService: ProjectService,
   ) { }
 
   async getAll(userId: Id): Promise<IHourScheme[]> {
     this.logger.log(`getAll()`);
 
-    const user = await this.userModel.findById(userId).exec();
+    const user = await this.userService.getOne(userId);
     if (!user) {
       throw new NotFoundException(`User with id ${userId} not found`);
     }
@@ -95,18 +91,18 @@ export class HourSchemeService {
     this.logger.log(`create hour scheme`);
 
     // check if worker exists
-    await this.getExistingWorker(hourScheme.worker._id);
+    await this.userService.getOne(hourScheme.worker._id);
 
     // check if project exists
     const projectIds = hourScheme.rows?.map(row => row.project._id);
     if (projectIds) {
-      await this.getExistingProjects(projectIds);
+      await this.projectService.getMany(projectIds);
     }
 
     // check if machine exists
     const machineIds = hourScheme.rows?.map(row => row.machine?._id);
     if (machineIds) {
-      await this.getExistingMachines(machineIds as Id[]);
+      await this.machineService.getMany(machineIds as Id[]);
     }
 
     const newHourSchemeModel = new this.hourSchemeModel(hourScheme);
@@ -137,18 +133,18 @@ export class HourSchemeService {
     }
 
     // check if worker exists
-    await this.getExistingWorker(hourScheme.worker._id);
+    await this.userService.getOne(hourScheme.worker._id);
 
     // check if project exists
     const projectIds = hourScheme.rows?.map(row => row.project._id);
     if (projectIds) {
-      await this.getExistingProjects(projectIds);
+      await this.projectService.getMany(projectIds);
     }
 
     // check if machine exists
     const machineIds = hourScheme.rows?.map(row => row.machine?._id);
     if (machineIds) {
-      await this.getExistingMachines(machineIds as Id[]);
+      await this.machineService.getMany(machineIds as Id[]);
     }
 
     const updatedHourScheme = await this.hourSchemeModel
@@ -178,7 +174,7 @@ export class HourSchemeService {
       throw new NotFoundException(`Hour scheme with id ${id} not found`);
     }
 
-    if(hourScheme.worker._id !== userId.toString()) {
+    if(hourScheme.worker._id.toString() !== userId.toString()) {
       throw new UnauthorizedException('You are not allowed to delete this hour scheme');
     }
 
@@ -186,7 +182,7 @@ export class HourSchemeService {
       .findByIdAndDelete(id)
       .exec();
 
-    const n4jResult = this.recommendationsService.deleteHourScheme(id);
+    const n4jResult = await this.recommendationsService.deleteHourScheme(id);
 
     if (!n4jResult) {
       throw new Error('Could not delete hour scheme');
@@ -195,39 +191,49 @@ export class HourSchemeService {
     return true;
   }
 
-  private async getExistingWorker(workerId: Id): Promise<IUser> {
-    const existingWorker = await this.userModel.findById(workerId).exec();
-    if (!existingWorker) {
-      throw new NotFoundException(`Worker with id ${workerId} not found`);
+  async deleteRowsByProjectId(projectId: Id): Promise<boolean> {
+    this.logger.log(`deleteRowsByProjectId(${projectId})`);
+
+    const hourSchemes = await this.hourSchemeModel.find({
+      'rows.project': projectId
+    }).exec();
+
+    if (!hourSchemes) {
+      return true;
     }
-    return existingWorker;
+
+    // delete rows from hour schemes
+    const hourSchemeIds = hourSchemes.map(hourScheme => hourScheme._id);
+    await this.hourSchemeModel.updateMany({
+      _id: { $in: hourSchemeIds }
+    }, {
+      $pull: { rows: { project: projectId } }
+    }).exec();
+
+    return true;
   }
 
-  private async getExistingProjects(projectIds: Id[]): Promise<IProject[]> {
-    const existingProjects = await this.projectModel
-      .find({ _id: { $in: projectIds } })
-      .exec();
+  async updateRowsByMachineId(machineId: Id): Promise<boolean> {
+    this.logger.log(`deleteRowsByProjectId(${machineId})`);
 
-    if (existingProjects.length !== projectIds.length) {
-      throw new NotFoundException(
-        `Not all projects with ids ${projectIds} were found`
-      );
+    const hourSchemes = await this.hourSchemeModel.find({
+      'rows.machine': machineId
+    }).exec();
+
+    if (!hourSchemes) {
+      return true;
     }
 
-    return existingProjects;
-  }
+    // set machine to null on rows from hour schemes where machine is deleted
+    const hourSchemeIds = hourSchemes.map(hourScheme => hourScheme._id);
+    await this.hourSchemeModel.updateMany({
+      _id: { $in: hourSchemeIds }
+    }, {
+      $set: { 'rows.$[elem].machine': null }
+    }, {
+      arrayFilters: [{ 'elem.machine': machineId }]
+    }).exec();
 
-  private async getExistingMachines(machineIds: Id[]): Promise<IMachine[]> {
-    const existingMachines = await this.machineModel
-      .find({ _id: { $in: machineIds } })
-      .exec();
-
-    if (existingMachines.length !== machineIds.length) {
-      throw new NotFoundException(
-        `Not all machines with ids ${machineIds} were found`
-      );
-    }
-
-    return existingMachines;
+    return true;
   }
 }

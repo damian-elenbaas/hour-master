@@ -1,12 +1,13 @@
 import * as bcrypt from 'bcrypt';
-import { HourScheme } from '@hour-master/backend/features/hour-scheme';
-import { Project } from '@hour-master/backend/features/project';
+import { Model } from 'mongoose';
+
+import { HourScheme } from '@hour-master/backend/features';
+import { Project } from '@hour-master/backend/features';
 import { User } from '@hour-master/backend/user';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
 import { IHourScheme, IHourSchemeRow, IMachine, IProject, IUser, UserRole } from '@hour-master/shared/api';
-import { Machine } from '@hour-master/backend/features/machine';
+import { Machine } from '@hour-master/backend/features';
 import { faker } from '@faker-js/faker';
 import { RecommendationsService } from '@hour-master/backend/recommendations';
 

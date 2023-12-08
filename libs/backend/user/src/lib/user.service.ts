@@ -31,8 +31,6 @@ export class UserService {
     try {
       const user = await this.userModel.findById(id).exec();
 
-      this.logger.log(`user: ${user}`);
-
       if (!user) {
         throw new NotFoundException(`User with id ${id} not found`);
       }
@@ -109,6 +107,18 @@ export class UserService {
 
     if (!n4jResult) {
       throw new NotFoundException(`User with id ${id} not found`);
+    }
+
+    return true;
+  }
+
+  async doesUserExist(id: Id): Promise<boolean> {
+    this.logger.log(`doesUserExist(${id})`);
+
+    const user = await this.userModel.findById(id).exec();
+
+    if (!user) {
+      return false;
     }
 
     return true;

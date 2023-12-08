@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { DataSeederService } from './data-seeder.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { HourSchemeSchema } from '@hour-master/backend/features/hour-scheme';
+import { HourSchemeSchema } from '@hour-master/backend/features';
 import { UserSchema } from '@hour-master/backend/user';
-import { ProjectSchema } from '@hour-master/backend/features/project';
-import { MachineSchema } from '@hour-master/backend/features/machine';
+import { ProjectSchema } from '@hour-master/backend/features';
+import { MachineSchema } from '@hour-master/backend/features';
 import { RecommendationsModule } from '@hour-master/backend/recommendations';
 
 @Module({

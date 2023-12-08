@@ -6,6 +6,7 @@ import { MachineService } from '../machine.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { AlertService } from '@hour-master/frontend/common';
+import { Modal } from 'flowbite';
 
 @Component({
   selector: 'hour-master-machine-details',
@@ -19,6 +20,7 @@ export class MachineDetailsComponent implements OnInit, OnDestroy {
   token!: string;
   loading = false;
   totalHours = 0;
+  popUpModal!: Modal;
 
   constructor(
     public readonly location: Location,
@@ -30,6 +32,9 @@ export class MachineDetailsComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+    const modalElement = document.getElementById('popup-modal') as HTMLElement;
+    this.popUpModal = new Modal(modalElement);
+
     this.sub = this.authService.currentUserToken$
       .pipe(
         switchMap(token => {
@@ -78,5 +83,27 @@ export class MachineDetailsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
+  }
+
+  delete(): void {
+    this.loading = true;
+    this.machineService
+      .delete(this.machine._id, {
+        headers: {
+          Authorization: `Bearer ${this.token}`
+        }
+      })
+      .subscribe({
+        next: () => {
+          this.loading = false;
+          this.alertService.success('Machine verwijderd');
+          this.location.back();
+        },
+        error: err => {
+          this.loading = false;
+          this.alertService.danger('Kan de machine niet verwijderen');
+          console.error(err);
+        }
+      })
   }
 }

@@ -8,10 +8,7 @@
     <h4 class="pb-0">{{ project.location.address }}, {{ project.location.city }}</h4>
     <h4 class="pt-0">
       Project van
-      <a
-        class="underline decoration-accent hover:text-accent"
-        routerLink="/user/{{ project.admin._id }}"
-      >
+      <a class="underline decoration-accent hover:text-accent" routerLink="/user/{{ project.admin._id }}">
         {{ project.admin.firstname }}
         {{ project.admin.lastname }}
       </a>
@@ -19,40 +16,45 @@
     <h4>Statistieken</h4>
     <div class="flex flex-row gap-4">
       <section class="w-fit">
-        <h5 class="text-white bg-primary w-full p-2 rounded-md mx-auto">
+        <h5 class="text-white bg-primary w-full p-2 rounded-md mx-auto mb-2">
           Werknemers
         </h5>
-        <ul class="ml-4 flex flex-col gap-2 mt-2">
+        <ul *ngIf="workersLoaded; else loadingWorkers" class="ml-4 flex flex-col gap-2">
           <li *ngFor="let worker of workers">
-            <a
-              class="hover:text-accent"
-              routerLink="/user/{{ worker._id }}"
-            >
+            <a class="hover:text-accent" routerLink="/user/{{ worker._id }}">
               {{ worker.firstname }}
               {{ worker.lastname }}
             </a>
           </li>
         </ul>
+        <ng-template #loadingWorkers>
+          <hour-master-loader></hour-master-loader>
+        </ng-template>
       </section>
       <section class="w-fit">
-        <h5 class="text-white bg-primary w-full p-2 rounded-md mx-auto">
+        <h5 class="text-white bg-primary w-full p-2 rounded-md mx-auto mb-2">
           Machines
         </h5>
-        <ul class="ml-4 flex flex-col gap-2 mt-2">
+        <ul *ngIf="machinesLoaded; else loadingMachines" class="ml-4 flex flex-col gap-2">
           <li *ngFor="let machine of machines">
-            <a
-              class="hover:text-accent"
-              routerLink="/machine/{{ machine._id }}"
-            >
+            <a class="hover:text-accent" routerLink="/machine/{{ machine._id }}">
               {{ machine.name }}
               ({{ machine.typeNumber }})
             </a>
           </li>
         </ul>
+        <ng-template #loadingMachines>
+          <hour-master-loader></hour-master-loader>
+        </ng-template>
       </section>
     </div>
-    <div class="text-center italic mt-5">
-      Totaal aantal uren aan gewerkt: {{ totalHours }}
+    <div class="mt-5 flex justify-center">
+      <span *ngIf="totalHoursLoaded; else loadingHours" class="text-center italic">
+        Totaal aantal uren aan gewerkt: {{ totalHours }}
+      </span>
+      <ng-template #loadingHours>
+        <hour-master-loader></hour-master-loader>
+      </ng-template>
     </div>
     <div class="flex flex-col md:flex-row gap-2 mt-5">
       <button routerLink="edit" class="bg-accent px-4 py-2 rounded-md">
@@ -68,66 +70,33 @@
   </ng-template>
 </div>
 
-<div
-  id="popup-modal"
-  tabindex="-1"
-  class="hidden bg-gray-200/80 overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
->
+<div id="popup-modal" tabindex="-1"
+  class="hidden bg-gray-200/80 overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
   <div class="relative p-4 w-full max-w-md max-h-full">
     <div class="relative bg-white rounded-lg shadow">
-      <button
-        type="button"
-        class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
-        data-modal-hide="popup-modal"
-      >
-        <svg
-          class="w-3 h-3"
-          aria-hidden="true"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 14 14"
-        >
-          <path
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-          />
+      <button type="button" (click)="popUpModal.hide()"
+        class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center">
+        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
         </svg>
         <span class="sr-only">Close modal</span>
       </button>
       <div class="p-4 md:p-5 text-center">
-        <svg
-          class="mx-auto mb-4 text-gray-400 w-12 h-12"
-          aria-hidden="true"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 20 20"
-        >
-          <path
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-          />
+        <svg class="mx-auto mb-4 text-gray-400 w-12 h-12" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+          fill="none" viewBox="0 0 20 20">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
         </svg>
         <h3 class="mb-5 text-lg font-normal text-gray-500">
-          Weet je zeker dat je project wilt verwijderen?
+          Weet je zeker dat je dit project wilt verwijderen?
         </h3>
-        <button
-          (click)="delete()"
-          type="button"
-          class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center me-2"
-        >
+        <button (click)="delete()" type="button"
+          class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center me-2">
           Ja, verwijderen
         </button>
-        <button
-          (click)="popUpModal.hide()"
-          type="button"
-          class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10"
-        >
+        <button (click)="popUpModal.hide()" type="button"
+          class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10">
           Nee, Annuleren
         </button>
       </div>
