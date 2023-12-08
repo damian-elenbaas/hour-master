@@ -221,6 +221,20 @@ export class RecommendationsService {
     return result;
   }
 
+  async deleteHourSchemes(ids: Id[]) {
+    this.logger.log(`Deleting hour schemes`);
+
+    const result = await this.neo4jService.write(`
+      MATCH (hs:HourScheme)
+      WHERE hs._id IN $ids
+      DETACH DELETE hs
+    `, {
+      ids
+    });
+
+    return result;
+  }
+
   async getAllWorkersFromProject(projectId: Id) {
     this.logger.log(`Getting all workers from project`);
 

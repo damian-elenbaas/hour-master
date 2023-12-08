@@ -215,6 +215,11 @@ export class HourSchemeService {
       rows: { $size: 0 }
     }).exec();
 
+    // // delete hour schemes from recommendations
+    // const deletedHourSchemeIds = deletedHourSchemes.map(hourScheme => hourScheme._id);
+    // await this.recommendationsService.deleteHourSchemes(deletedHourSchemeIds);
+
+
     return true;
   }
 
