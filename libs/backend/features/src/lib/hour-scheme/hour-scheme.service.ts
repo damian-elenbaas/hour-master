@@ -210,6 +210,11 @@ export class HourSchemeService {
       $pull: { rows: { project: projectId } }
     }).exec();
 
+    // delete hour schemes without rows
+    await this.hourSchemeModel.deleteMany({
+      rows: { $size: 0 }
+    }).exec();
+
     return true;
   }
 
