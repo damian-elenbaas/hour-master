@@ -9,9 +9,10 @@ import {
   Request
 } from '@nestjs/common';
 import { HourSchemeService } from './hour-scheme.service';
-import { IHourScheme, Id, IJWTPayload } from '@hour-master/shared/api';
+import { IHourScheme, Id, IJWTPayload, UserRole } from '@hour-master/shared/api';
 import { CreateHourSchemeDto } from './dto/create-hour-scheme.dto';
 import { UpsertHourSchemeDto } from './dto/upsert-hour-scheme.dto';
+import { Roles } from '@hour-master/backend/decorators';
 
 @Controller('hour-scheme')
 export class HourSchemeController {
@@ -31,11 +32,13 @@ export class HourSchemeController {
   }
 
   @Post('')
+  @Roles([UserRole.ROADWORKER, UserRole.ADMIN])
   async create(@Body() body: CreateHourSchemeDto): Promise<IHourScheme> {
     return await this.hourSchemeService.create(body);
   }
 
   @Put(':id')
+  @Roles([UserRole.ROADWORKER, UserRole.ADMIN])
   async upsert(
     @Param('id') id: Id,
     @Body() body: UpsertHourSchemeDto,
@@ -46,6 +49,7 @@ export class HourSchemeController {
   }
 
   @Delete(':id')
+  @Roles([UserRole.ROADWORKER, UserRole.ADMIN])
   async delete(
     @Param('id') id: Id,
     @Request() req: any

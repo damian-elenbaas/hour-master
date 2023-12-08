@@ -6,9 +6,10 @@ import {
   Param,
   Post,
   Put,
+  Request
 } from '@nestjs/common';
-import { IProject, Id, UserRole } from '@hour-master/shared/api';
-import { CreateProjectDto, UpdateProjectDto } from './dto/project.dto';
+import { IProject, Id, UserRole, IJWTPayload } from '@hour-master/shared/api';
+import { CreateProjectDto, UpsertProjectDto } from './dto/project.dto';
 import { ProjectService } from './project.service';
 import { Public, Roles } from '@hour-master/backend/decorators';
 import { RecommendationsService } from '@hour-master/backend/recommendations';
@@ -46,14 +47,20 @@ export class ProjectController {
   @Roles([UserRole.ADMIN, UserRole.OFFICE])
   async update(
     @Param('id') id: Id,
-    @Body() body: UpdateProjectDto
+    @Body() body: UpsertProjectDto,
+    @Request() req: any
   ): Promise<boolean> {
-    return await this.projectService.update(id, body);
+    const user = req.user as IJWTPayload;
+    return await this.projectService.upsert(id, body, user.sub);
   }
 
   @Delete(':id')
   @Roles([UserRole.ADMIN, UserRole.OFFICE])
-  async delete(@Param('id') id: Id): Promise<boolean> {
-    return await this.projectService.delete(id);
+  async delete(
+    @Param('id') id: Id,
+    @Request() req: any
+  ): Promise<boolean> {
+    const user = req.user as IJWTPayload;
+    return await this.projectService.delete(id, user.sub);
   }
 }

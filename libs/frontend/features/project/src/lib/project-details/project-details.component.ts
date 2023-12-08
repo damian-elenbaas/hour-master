@@ -1,10 +1,10 @@
 import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { IMachine, IProject, IUser } from '@hour-master/shared/api';
+import { IMachine, IProject, IUser, UserRole } from '@hour-master/shared/api';
 import { ProjectService } from '../project.service';
 import { AuthService } from '@hour-master/frontend/auth';
 import { AlertService } from '@hour-master/frontend/common';
-import { Subscription, of, switchMap } from 'rxjs';
+import { Observable, Subscription, of, switchMap } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Modal } from 'flowbite';
 
@@ -29,6 +29,8 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   totalHoursLoaded = false;
 
   token!: string;
+  user$!: Observable<IUser | null>;
+  roles = UserRole;
   popUpModal!: Modal;
 
   constructor(
@@ -180,6 +182,8 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
         }
         this.totalHoursLoaded = true;
       });
+
+    this.user$ = this.authService.currentUser$;
   }
 
   ngOnDestroy(): void {

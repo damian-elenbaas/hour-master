@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { IHourScheme, Id } from '@hour-master/shared/api';
+import { IHourScheme, IUser, Id, UserRole } from '@hour-master/shared/api';
 import { HourSchemeService } from '../hour-scheme.service';
-import { Subscription, of, switchMap } from 'rxjs';
+import { Observable, Subscription, of, switchMap } from 'rxjs';
 import { Location } from '@angular/common';
 import { Modal } from 'flowbite';
 import { AuthService } from '@hour-master/frontend/auth';
@@ -19,6 +19,8 @@ export class HourSchemeDetailsComponent implements OnInit, OnDestroy {
   subscriptionDetails!: Subscription;
   popUpModal!: Modal;
   token!: string;
+  user$!: Observable<IUser | null>;
+  roles = UserRole;
 
   constructor(
     private readonly route: ActivatedRoute,
@@ -77,6 +79,8 @@ export class HourSchemeDetailsComponent implements OnInit, OnDestroy {
           this.router.navigate(['/hour-scheme']);
         }
       });
+
+    this.user$ = this.authService.currentUser$;
   }
 
   ngOnDestroy(): void {

@@ -56,7 +56,13 @@
         <hour-master-loader></hour-master-loader>
       </ng-template>
     </div>
-    <div class="flex flex-col md:flex-row gap-2 mt-5">
+    <div
+      *ngIf="
+        (project &&
+        (user$ | async)?._id === project.admin._id) ||
+        (user$ | async)?.role === roles.ADMIN
+      "
+      class="flex flex-col md:flex-row gap-2 mt-5">
       <button routerLink="edit" class="bg-accent px-4 py-2 rounded-md">
         Project wijzigen
       </button>

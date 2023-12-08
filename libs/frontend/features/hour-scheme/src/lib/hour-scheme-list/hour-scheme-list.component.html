@@ -8,7 +8,6 @@
   <table class="w-full text-sm text-left rtl:text-right">
     <thead class="text-xs uppercase bg-primary text-white">
       <tr>
-        <th scope="col" class="px-6 py-3">ID</th>
         <th scope="col" class="px-6 py-3">Datum</th>
         <th scope="col" class="px-6 py-3">Werknemer</th>
       </tr>
@@ -19,9 +18,6 @@
         *ngFor="let hourScheme of hourSchemes"
         routerLink="{{ hourScheme._id }}"
       >
-        <td class="px-6 py-4">
-          {{ hourScheme._id }}
-        </td>
         <td class="px-6 py-4">
           {{ hourScheme.date | date : 'dd-MM-yyyy' }}
         </td>

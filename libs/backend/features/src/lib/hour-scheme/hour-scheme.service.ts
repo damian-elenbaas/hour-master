@@ -8,7 +8,7 @@ import {
   UserRole,
 } from '@hour-master/shared/api';
 import { HourScheme } from './schemas/hour-scheme.schema';
-import { Model } from 'mongoose';
+import { FilterQuery, Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { RecommendationsService } from '@hour-master/backend/recommendations';
 import { UserService } from '@hour-master/backend/user';
@@ -38,17 +38,15 @@ export class HourSchemeService {
       throw new NotFoundException(`User with id ${userId} not found`);
     }
 
-    if (user.role === UserRole.ROADWORKER) {
-      const hourSchemes = await this.hourSchemeModel
-        .find({ worker: userId })
-        .populate('worker')
-        .exec();
+    const filterQuery: FilterQuery<IHourScheme> = {};
 
-      return hourSchemes;
+    // only allow roadworker to see his own hour schemes
+    if (user.role === UserRole.ROADWORKER) {
+      filterQuery.worker = userId;
     }
 
     const hourSchemes = await this.hourSchemeModel
-      .find()
+      .find(filterQuery)
       .populate('worker')
       .exec();
 
@@ -128,7 +126,12 @@ export class HourSchemeService {
       throw new NotFoundException(`Hour scheme with id ${id} not found`);
     }
 
-    if (currentHourScheme.worker._id !== userId) {
+    const user = await this.userService.getOne(userId);
+
+    if (
+      currentHourScheme.worker._id !== userId &&
+      user.role !== UserRole.ADMIN
+    ) {
       throw new UnauthorizedException("You are not allowed to update this hour scheme");
     }
 
@@ -174,7 +177,12 @@ export class HourSchemeService {
       throw new NotFoundException(`Hour scheme with id ${id} not found`);
     }
 
-    if(hourScheme.worker._id.toString() !== userId.toString()) {
+    const user = await this.userService.getOne(userId);
+
+    if(
+      hourScheme.worker._id.toString() !== userId.toString() &&
+      user.role !== UserRole.ADMIN
+    ) {
       throw new UnauthorizedException('You are not allowed to delete this hour scheme');
     }
 
@@ -214,11 +222,6 @@ export class HourSchemeService {
     await this.hourSchemeModel.deleteMany({
       rows: { $size: 0 }
     }).exec();
-
-    // // delete hour schemes from recommendations
-    // const deletedHourSchemeIds = deletedHourSchemes.map(hourScheme => hourScheme._id);
-    // await this.recommendationsService.deleteHourSchemes(deletedHourSchemeIds);
-
 
     return true;
   }

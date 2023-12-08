@@ -6,10 +6,13 @@ import {
   ICreateProject,
   IProject,
   IUpdateProject,
+  IUpsertProject,
   Id,
+  UserRole,
 } from '@hour-master/shared/api';
 import { RecommendationsService } from '@hour-master/backend/recommendations';
 import { HourSchemeService } from '../hour-scheme/hour-scheme.service';
+import { UserService } from '@hour-master/backend/user';
 
 @Injectable()
 export class ProjectService {
@@ -19,6 +22,7 @@ export class ProjectService {
     @InjectModel(Project.name)
     private readonly projectModel: Model<Project>,
     private readonly recommendationsService: RecommendationsService,
+    private readonly userService: UserService,
     @Inject(forwardRef(() => HourSchemeService))
     private readonly hourSchemeService: HourSchemeService
   ) {}
@@ -79,8 +83,26 @@ export class ProjectService {
     return createdProject;
   }
 
-  async update(id: Id, project: IUpdateProject): Promise<boolean> {
+  async upsert(id: Id, project: IUpsertProject, userId: Id): Promise<boolean> {
     this.logger.log(`update(${id})`);
+
+    const currentProject = await this.projectModel.findById(id).exec();
+
+    if (!currentProject) {
+      throw new NotFoundException(`Project with id ${id} not found`);
+    }
+
+    const user = await this.userService.getOne(userId);
+
+    if (
+      currentProject.admin.toString() !== userId.toString() &&
+      user.role !== UserRole.ADMIN
+    ) {
+      throw new Error('You are not the admin of this project');
+    }
+
+    // check if worker exists
+    await this.userService.getOne(project.admin._id);
 
     const updatedProject = await this.projectModel
       .findByIdAndUpdate(id, project)
@@ -99,8 +121,23 @@ export class ProjectService {
     return true;
   }
 
-  async delete(id: Id): Promise<boolean> {
+  async delete(id: Id, userId: Id): Promise<boolean> {
     this.logger.log(`delete(${id})`);
+
+    const project = await this.projectModel.findById(id).exec();
+
+    if (!project) {
+      throw new NotFoundException(`Project with id ${id} not found`);
+    }
+
+    const user = await this.userService.getOne(userId);
+
+    if (
+      project.admin.toString() !== userId.toString() &&
+      user.role !== UserRole.ADMIN
+    ) {
+      throw new Error('You are not the admin of this project');
+    }
 
     const deletedProject = await this.projectModel.findByIdAndDelete(id).exec();
 
