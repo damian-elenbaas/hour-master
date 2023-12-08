@@ -22,7 +22,13 @@ export class UserService {
   async getAll(): Promise<IUser[]> {
     this.logger.log(`getAll()`);
 
-    return await this.userModel.find().exec();
+    return await this.userModel
+      .find()
+      .sort({
+        firstname: 1,
+        lastname: 1,
+      })
+      .exec();
   }
 
   async getOne(id: Id): Promise<IUser> {
