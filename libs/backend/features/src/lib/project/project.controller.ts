@@ -32,12 +32,6 @@ export class ProjectController {
     return await this.projectService.create(body);
   }
 
-  @Get('most-worked-on')
-  @Public()
-  async getMostWorkedOn() {
-    return await this.recommendationsService.getMostWorkedOnProject();
-  }
-
   @Get(':id')
   async getOne(@Param('id') id: Id): Promise<IProject> {
     return await this.projectService.getOne(id);

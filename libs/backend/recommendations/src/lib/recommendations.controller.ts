@@ -28,4 +28,10 @@ export class RecommendationsController {
   async getAllMachines(@Param('id') id: Id) {
     return await this.recommendationsService.getAllUsedMachinesFromProject(id);
   }
+
+  @Get('project/most-worked-on')
+  @Roles([UserRole.ADMIN, UserRole.OFFICE])
+  async getMostWorkedOn() {
+    return await this.recommendationsService.getMostWorkedOnProject();
+  }
 }
