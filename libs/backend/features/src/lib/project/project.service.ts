@@ -5,7 +5,6 @@ import { Project } from './schemas/project.schema';
 import {
   ICreateProject,
   IProject,
-  IUpdateProject,
   IUpsertProject,
   Id,
   UserRole,

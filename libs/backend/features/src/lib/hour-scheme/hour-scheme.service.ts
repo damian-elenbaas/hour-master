@@ -47,6 +47,7 @@ export class HourSchemeService {
 
     const hourSchemes = await this.hourSchemeModel
       .find(filterQuery)
+      .sort({ date: -1 })
       .populate('worker')
       .exec();
 
