@@ -2,6 +2,14 @@ import { Injectable, Logger } from "@nestjs/common";
 import { Neo4jService } from "nest-neo4j/dist";
 import { IHourScheme, IMachine, IProject, IUser, Id } from '@hour-master/shared/api';
 
+interface CreateHourSchemeCypherParams {
+  id: string,
+  projectId: string,
+  hours: number,
+  description: string,
+  machineId?: string,
+}
+
 @Injectable()
 export class RecommendationsService {
   private readonly logger: Logger = new Logger(RecommendationsService.name);
@@ -179,31 +187,38 @@ export class RecommendationsService {
     });
 
     hourScheme.rows?.forEach(async (row) => {
-      await this.neo4jService.write(`
+      let cypher = `
+        CREATE (work: Work {
+          description: $description,
+          hours: $hours
+        })
+        WITH work
         MATCH (hs:HourScheme {_id: $id})
         MATCH (p:Project {_id: $projectId})
-        MERGE (hs)-[:ON_PROJECT {hours: $hours, description: $description}]->(p)
-        RETURN hs
-      `, {
+        MERGE (hs)-[:HAS_DONE]-(work)-[:ON_PROJECT]->(p)
+      `;
+
+      let params: CreateHourSchemeCypherParams = {
         id: hourScheme._id.toString(),
         projectId: row.project._id.toString(),
         hours: row.hours,
         description: row.description,
-      });
+      }
 
       if (row.machine) {
-        await this.neo4jService.write(`
-        MATCH (hs:HourScheme {_id: $id})
-        MATCH (m:Machine {_id: $machineId})
-        MERGE (hs)-[:USED_MACHINE {hours: $hours, description: $description}]->(m)
-        RETURN hs
-      `, {
-          id: hourScheme._id.toString(),
+        cypher += `
+          WITH work
+          MATCH (m:Machine {_id: $machineId})
+          MERGE (work)-[:WITH_MACHINE]->(m)
+        `;
+
+        params = {
+          ...params,
           machineId: row.machine._id.toString(),
-          hours: row.hours,
-          description: row.description,
-        });
+        }
       }
+
+      await this.neo4jService.write(cypher, params);
     });
 
     await this.neo4jService.write(`
@@ -306,6 +321,19 @@ export class RecommendationsService {
     `);
 
     return result.records[0].get('p').properties as IProject;
+  }
+
+  async getHourSchemeRowsRelatedToProject(projectId: Id) {
+    this.logger.log(`Getting hour scheme rows related to project`);
+
+    const result = await this.neo4jService.read(`
+      MATCH ((:Project {_id: $id})<-[work:ON_PROJECT]-(hs:HourScheme))
+      RETURN hs, work
+    `, {
+      id: projectId
+    });
+
+    return result;
   }
 
   async getTotalHoursOnMachine(machineId: Id) {
