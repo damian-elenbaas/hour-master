@@ -10,6 +10,17 @@ export class RecommendationsService {
     private readonly neo4jService: Neo4jService
   ) { }
 
+  async deleteAndDetachAll() {
+    this.logger.log(`Deleting and detaching all`);
+
+    const result = await this.neo4jService.write(`
+      MATCH (n)
+      DETACH DELETE n
+    `);
+
+    return result;
+  }
+
   async createOrUpdateUser(user: IUser) {
     this.logger.log(`Creating user`);
 
@@ -295,5 +306,65 @@ export class RecommendationsService {
     `);
 
     return result.records[0].get('p').properties as IProject;
+  }
+
+  async getTotalHoursOnMachine(machineId: Id) {
+    this.logger.log(`Getting total hours on machine`);
+
+    const result = await this.neo4jService.read(`
+      MATCH ((m:Machine {_id: $id})<-[r:USED_MACHINE]-(hs:HourScheme))
+      RETURN sum(r.hours) AS totalHours
+    `, {
+      id: machineId
+    });
+
+    return result.records[0].get('totalHours');
+  }
+
+  async getRelatedWorkersFromWorker(userId: Id) {
+    // Get related workers that worked on the same project
+    this.logger.log(`Getting related workers from worker`);
+
+    const result = await this.neo4jService.read(`
+      MATCH (u:User {_id: $id})-[:WORKED_ON]->(hs:HourScheme)
+      -[:ON_PROJECT]->(p:Project)
+      <-[:ON_PROJECT]-(hs2:HourScheme)<-[:WORKED_ON]-(u2:User)
+      RETURN DISTINCT u2
+    `, {
+      id: userId
+    });
+
+    return result.records.map((record) => {
+      return record.get('u2').properties as IUser;
+    });
+  }
+
+  async getNDepthRelatedWorkersFromWorker(userId: Id, depth: number) {
+    // Get related workers that worked on the same project
+    this.logger.log(`Getting ${depth} depth related workers from worker`);
+
+    const result = await this.neo4jService.read(`
+      MATCH (u:User {_id: $id})-[:WORKED_ON]->(hs:HourScheme)
+      -[:ON_PROJECT]->(p:Project)
+      <-[:ON_PROJECT]-(hs2:HourScheme)<-[:WORKED_ON]-(u2:User)
+      RETURN DISTINCT u2
+    `, {
+      id: userId
+    });
+
+    const relatedWorkers: IUser[] = [];
+    result.records.forEach((record) => {
+      relatedWorkers.push(record.get('u2').properties as IUser);
+    });
+
+    if (depth > 1) {
+      relatedWorkers.forEach(async (worker) => {
+        this.logger.log(`Getting depth ${depth - 1} in ${worker.username}`)
+        const relatedWorkers2 = await this.getNDepthRelatedWorkersFromWorker(worker._id, depth - 1);
+        relatedWorkers.push(...relatedWorkers2);
+      })
+    }
+
+    return relatedWorkers;
   }
 }

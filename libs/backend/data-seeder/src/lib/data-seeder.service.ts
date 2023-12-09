@@ -49,10 +49,11 @@ export class DataSeederService {
     }
 
     this.logger.log(`Deleting all data...`);
-    this.userModel.deleteMany({}).exec();
-    this.projectModel.deleteMany({}).exec();
-    this.machineModel.deleteMany({}).exec();
-    this.hourSchemeModel.deleteMany({}).exec();
+    await this.userModel.deleteMany({}).exec();
+    await this.projectModel.deleteMany({}).exec();
+    await this.machineModel.deleteMany({}).exec();
+    await this.hourSchemeModel.deleteMany({}).exec();
+    await this.rcmdService.deleteAndDetachAll();
 
     this.logger.log(`Creating users...`);
     // create admin user

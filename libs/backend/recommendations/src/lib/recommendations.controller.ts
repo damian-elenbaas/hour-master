@@ -1,7 +1,7 @@
-import { Controller, Get, Logger, Param } from '@nestjs/common';
+import { Controller, Get, Logger, Param, Query } from '@nestjs/common';
 import { RecommendationsService } from './recommendations.service';
 import { Id, UserRole } from '@hour-master/shared/api';
-import { Roles } from '@hour-master/backend/decorators';
+import { Public, Roles } from '@hour-master/backend/decorators';
 
 @Controller('recommendations')
 export class RecommendationsController {
@@ -33,5 +33,17 @@ export class RecommendationsController {
   @Roles([UserRole.ADMIN, UserRole.OFFICE])
   async getMostWorkedOn() {
     return await this.recommendationsService.getMostWorkedOnProject();
+  }
+
+  @Get('worker/:id/related-workers')
+  @Public()
+  async getRelatedWorkers(
+    @Param('id') id: Id,
+    @Query('depth') depth?: number
+  ) {
+    if(depth) {
+      return await this.recommendationsService.getNDepthRelatedWorkersFromWorker(id, depth);
+    }
+    return await this.recommendationsService.getRelatedWorkersFromWorker(id);
   }
 }
