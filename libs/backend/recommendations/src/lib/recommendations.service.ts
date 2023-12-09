@@ -1,6 +1,6 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { Neo4jService } from "nest-neo4j/dist";
-import { IHourScheme, IMachine, IProject, IUser, Id } from '@hour-master/shared/api';
+import { IHourScheme, IHourSchemeRow, IMachine, IProject, IUser, Id } from '@hour-master/shared/api';
 
 interface CreateHourSchemeCypherParams {
   id: string,
@@ -125,7 +125,11 @@ export class RecommendationsService {
 
     const result = await this.neo4jService.write(`
       MATCH (p:Project {_id: $id})
-      DETACH DELETE p
+      MATCH (p)<-[:ON_PROJECT]-(w:Work)-[:HAS_DONE]-(hs:HourScheme)
+      DETACH DELETE p, w
+      WITH hs
+      WHERE NOT (hs)-[:HAS_DONE]->()
+      DETACH DELETE hs
     `, {
       id
     });
@@ -238,8 +242,8 @@ export class RecommendationsService {
     this.logger.log(`Deleting hour scheme`);
 
     const result = await this.neo4jService.write(`
-      MATCH (hs:HourScheme {_id: $id})
-      DETACH DELETE hs
+      MATCH ((hs:HourScheme {_id: $id})-[:HAS_DONE]-(work:Work))
+      DETACH DELETE hs, work
     `, {
       id
     });
@@ -251,9 +255,9 @@ export class RecommendationsService {
     this.logger.log(`Deleting hour schemes`);
 
     const result = await this.neo4jService.write(`
-      MATCH (hs:HourScheme)
+      MATCH ((hs:HourScheme)-[:HAS_DONE]-(work:Work))
       WHERE hs._id IN $ids
-      DETACH DELETE hs
+      DETACH DELETE hs, work
     `, {
       ids
     });
@@ -265,7 +269,7 @@ export class RecommendationsService {
     this.logger.log(`Getting all workers from project`);
 
     const result = await this.neo4jService.read(`
-      MATCH ((p:Project {_id: $id})<-[:ON_PROJECT]-(hs:HourScheme)<-[:WORKED_ON]-(u:User))
+      MATCH ((p:Project {_id: $id})<-[:ON_PROJECT]-(work)-[:HAS_DONE]-(hs:HourScheme)<-[:WORKED_ON]-(u:User))
       RETURN DISTINCT u
     `, {
       id: projectId
@@ -283,8 +287,8 @@ export class RecommendationsService {
     this.logger.log(`Getting total hours on project`);
 
     const result = await this.neo4jService.read(`
-      MATCH ((p:Project {_id: $id})<-[r:ON_PROJECT]-(hs:HourScheme))
-      RETURN sum(r.hours) AS totalHours
+      MATCH ((p:Project {_id: $id})<-[:ON_PROJECT]-(work:Work))
+      RETURN sum(work.hours) AS totalHours
     `, {
       id: projectId
     });
@@ -296,7 +300,7 @@ export class RecommendationsService {
     this.logger.log(`Getting all used machines from project`);
 
     const result = await this.neo4jService.read(`
-      MATCH ((p:Project {_id: $id})<-[:ON_PROJECT]-(hs:HourScheme)-[:USED_MACHINE]->(m:Machine))
+      MATCH ((p:Project {_id: $id})<-[:ON_PROJECT]-(work:Work)-[:WITH_MACHINE]->(m:Machine))
       RETURN DISTINCT m
     `, {
       id: projectId
@@ -314,8 +318,8 @@ export class RecommendationsService {
     this.logger.log(`Getting most worked on project`);
 
     const result = await this.neo4jService.read(`
-      MATCH ((p:Project)<-[r:ON_PROJECT]-(hs:HourScheme))
-      RETURN p, sum(r.hours) AS totalHours
+      MATCH ((p:Project)<-[:ON_PROJECT]-(work:Work))
+      RETURN p, sum(work.hours) AS totalHours
       ORDER BY totalHours DESC
       LIMIT 1
     `);
@@ -327,21 +331,32 @@ export class RecommendationsService {
     this.logger.log(`Getting hour scheme rows related to project`);
 
     const result = await this.neo4jService.read(`
-      MATCH ((:Project {_id: $id})<-[work:ON_PROJECT]-(hs:HourScheme))
-      RETURN hs, work
+      MATCH ((:Project {_id: $id})<-[:ON_PROJECT]-(work:Work))
+      OPTIONAL MATCH ((work)-[:WITH_MACHINE]->(m:Machine))
+      RETURN work, m
     `, {
       id: projectId
     });
 
-    return result;
+    const rows: IHourSchemeRow[] = [];
+    result.records.forEach((record) => {
+      const row = record.get('work').properties as IHourSchemeRow;
+      const machine = record.get('m')
+      if(machine) {
+        row.machine = machine.properties as IMachine;
+      }
+      rows.push(row);
+    });
+
+    return rows;
   }
 
   async getTotalHoursOnMachine(machineId: Id) {
     this.logger.log(`Getting total hours on machine`);
 
     const result = await this.neo4jService.read(`
-      MATCH ((m:Machine {_id: $id})<-[r:USED_MACHINE]-(hs:HourScheme))
-      RETURN sum(r.hours) AS totalHours
+      MATCH ((m:Machine {_id: $id})<-[:WITH_MACHINE]-(work:Work))
+      RETURN sum(work.hours) AS totalHours
     `, {
       id: machineId
     });
@@ -349,14 +364,34 @@ export class RecommendationsService {
     return result.records[0].get('totalHours');
   }
 
+  async getHourSchemeRowsRelatedToMachine(machineId: Id) {
+    this.logger.log(`Getting hour scheme rows related to machine`);
+
+    const result = await this.neo4jService.read(`
+      MATCH ((:Machine {_id: $id})<-[:WITH_MACHINE]-(work:Work)-[:ON_PROJECT]->(p:Project))
+      RETURN work, p
+    `, {
+      id: machineId
+    });
+
+    const rows: IHourSchemeRow[] = [];
+    result.records.forEach((record) => {
+      const row = record.get('work').properties as IHourSchemeRow;
+      row.project = record.get('p').properties as IProject;
+      rows.push(row);
+    });
+
+    return rows;
+  }
+
   async getRelatedWorkersFromWorker(userId: Id) {
-    // Get related workers that worked on the same project
     this.logger.log(`Getting related workers from worker`);
 
     const result = await this.neo4jService.read(`
-      MATCH (u:User {_id: $id})-[:WORKED_ON]->(hs:HourScheme)
-      -[:ON_PROJECT]->(p:Project)
-      <-[:ON_PROJECT]-(hs2:HourScheme)<-[:WORKED_ON]-(u2:User)
+      MATCH (u:User {_id: $id})-[:WORKED_ON]->(hs:HourScheme)-[:HAS_DONE]-(work:Work)
+      -[:ON_PROJECT]->(p:Project)<-[:ON_PROJECT]-
+      (:Work)-[:HAS_DONE]-(:HourScheme)-[:WORKED_ON]-(u2:User)
+      WHERE u2._id <> u._id
       RETURN DISTINCT u2
     `, {
       id: userId
@@ -367,14 +402,16 @@ export class RecommendationsService {
     });
   }
 
+  // TODO: Make this work properly
   async getNDepthRelatedWorkersFromWorker(userId: Id, depth: number) {
     // Get related workers that worked on the same project
     this.logger.log(`Getting ${depth} depth related workers from worker`);
 
     const result = await this.neo4jService.read(`
-      MATCH (u:User {_id: $id})-[:WORKED_ON]->(hs:HourScheme)
-      -[:ON_PROJECT]->(p:Project)
-      <-[:ON_PROJECT]-(hs2:HourScheme)<-[:WORKED_ON]-(u2:User)
+      MATCH (u:User {_id: $id})-[:WORKED_ON]->(hs:HourScheme)-[:HAS_DONE]-(work:Work)
+      -[:ON_PROJECT]->(p:Project)<-[:ON_PROJECT]-
+      (:Work)-[:HAS_DONE]-(:HourScheme)-[:WORKED_ON]-(u2:User)
+      WHERE u2._id <> u._id
       RETURN DISTINCT u2
     `, {
       id: userId
