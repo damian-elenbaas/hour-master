@@ -3,7 +3,7 @@
 
 ## TODO's
 
-- Statistieken van machines
+- Statistieken van machines in frontend implementeren
 - Statistieken van gebruikers
 - Pagination
 - Kunnen filteren op Rol, Project etc.
