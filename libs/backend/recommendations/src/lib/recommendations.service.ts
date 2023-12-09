@@ -377,7 +377,18 @@ export class RecommendationsService {
     const rows: IHourSchemeRow[] = [];
     result.records.forEach((record) => {
       const row = record.get('work').properties as IHourSchemeRow;
-      row.project = record.get('p').properties as IProject;
+      const p = record.get('p').properties;
+      const project = {
+        location: {
+          address: p.address as string,
+          city: p.city as string,
+          postalCode: p.postalCode as string,
+        },
+        name: p.name as string,
+        _id: p._id as string,
+      } as IProject;
+
+      row.project = project;
       rows.push(row);
     });
 

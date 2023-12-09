@@ -1,7 +1,7 @@
 import { Controller, Get, Logger, Param, Query } from '@nestjs/common';
 import { RecommendationsService } from './recommendations.service';
 import { Id, UserRole } from '@hour-master/shared/api';
-import { Roles } from '@hour-master/backend/decorators';
+import { Public, Roles } from '@hour-master/backend/decorators';
 
 @Controller('recommendations')
 export class RecommendationsController {
@@ -9,7 +9,7 @@ export class RecommendationsController {
 
   constructor(
     private readonly recommendationsService: RecommendationsService
-  ) {}
+  ) { }
 
   @Get('project/:id/workers')
   @Roles([UserRole.ADMIN, UserRole.OFFICE])
@@ -41,12 +41,19 @@ export class RecommendationsController {
     return await this.recommendationsService.getMostWorkedOnProject();
   }
 
+  @Get('machine/:id/rows')
+  // @Roles([UserRole.ADMIN, UserRole.OFFICE])
+  @Public()
+  async getWorkRowsFromMachine(@Param('id') id: Id) {
+    return await this.recommendationsService.getHourSchemeRowsRelatedToMachine(id);
+  }
+
   @Get('worker/:id/related-workers')
   async getRelatedWorkers(
     @Param('id') id: Id,
     @Query('depth') depth?: number
   ) {
-    if(depth) {
+    if (depth) {
       return await this.recommendationsService.getNDepthRelatedWorkersFromWorker(id, depth);
     }
     return await this.recommendationsService.getRelatedWorkersFromWorker(id);
