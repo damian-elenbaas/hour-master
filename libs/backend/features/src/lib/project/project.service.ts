@@ -1,4 +1,4 @@
-import { Inject, Injectable, Logger, NotFoundException, forwardRef } from '@nestjs/common';
+import { Inject, Injectable, Logger, NotFoundException, UnauthorizedException, forwardRef } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Project } from './schemas/project.schema';
@@ -98,7 +98,7 @@ export class ProjectService {
       currentProject.admin.toString() !== userId.toString() &&
       user.role !== UserRole.ADMIN
     ) {
-      throw new Error('You are not the admin of this project');
+      throw new UnauthorizedException('You are not the admin of this project');
     }
 
     // check if worker exists
@@ -136,7 +136,7 @@ export class ProjectService {
       project.admin.toString() !== userId.toString() &&
       user.role !== UserRole.ADMIN
     ) {
-      throw new Error('You are not the admin of this project');
+      throw new UnauthorizedException('You are not the admin of this project');
     }
 
     const deletedProject = await this.projectModel.findByIdAndDelete(id).exec();

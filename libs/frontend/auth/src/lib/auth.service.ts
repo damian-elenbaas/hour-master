@@ -204,6 +204,18 @@ export class AuthService {
     );
   }
 
+  userMayEditProject(id: Id): Observable<boolean> {
+    return this.currentUser$.pipe(
+      map((user) => {
+        if (user) {
+          return user.role === UserRole.ADMIN || user._id === id;
+        }
+
+        return false;
+      })
+    );
+  }
+
   userIsLoggedIn(): Observable<boolean> {
     return this.currentUser$.pipe(
       map((user) => {

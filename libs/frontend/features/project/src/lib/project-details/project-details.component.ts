@@ -32,15 +32,14 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   totalHoursLoaded = false;
 
   token!: string;
-  user$!: Observable<IUser | null>;
   roles = UserRole;
   popUpModal!: Modal;
 
   constructor(
+    public readonly authService: AuthService,
     public readonly location: Location,
     private readonly route: ActivatedRoute,
     private readonly router: Router,
-    private readonly authService: AuthService,
     private readonly alertService: AlertService,
     private readonly projectService: ProjectService) { }
 
@@ -219,8 +218,6 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
         }
         this.totalHoursLoaded = true;
       });
-
-    this.user$ = this.authService.currentUser$;
   }
 
   ngOnDestroy(): void {
@@ -249,5 +246,9 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
           this.alertService.danger('Kan het project niet verwijderen!');
         },
       });
+  }
+
+  canEdit(): Observable<boolean> {
+    return this.authService.userMayEditProject(this.project.admin._id);
   }
 }
