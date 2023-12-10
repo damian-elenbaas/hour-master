@@ -1,14 +1,15 @@
 import * as bcrypt from 'bcrypt';
-import { ICreateUser, IUpdateUser, IUser, Id } from '@hour-master/shared/api';
+import { ICreateUser, IUpdateUser, IUser, Id, UserRole } from '@hour-master/shared/api';
 import { Inject, Injectable, Logger, NotFoundException, forwardRef } from '@nestjs/common';
 
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { User } from './schemas/user.schema';
 import { Model } from 'mongoose';
-import { ProjectService } from '@hour-master/backend/features';
+import { ProjectService } from '../project/project.service';
 import { RecommendationsService } from '@hour-master/backend/recommendations';
 import { transaction } from '@hour-master/backend/helpers';
 import { Connection } from 'mongoose';
+import { HourSchemeService } from '../hour-scheme/hour-scheme.service';
 
 @Injectable()
 export class UserService {
@@ -19,14 +20,16 @@ export class UserService {
     @InjectConnection() private connection: Connection,
     private readonly recommendationsService: RecommendationsService,
     @Inject(forwardRef(() => ProjectService))
-    private readonly projectService: ProjectService
+    private readonly projectService: ProjectService,
+    @Inject(forwardRef(() => HourSchemeService))
+    private readonly hourSchemeService: HourSchemeService,
   ) { }
 
   async getAll(): Promise<IUser[]> {
     this.logger.log(`getAll()`);
 
     return await this.userModel
-      .find({ role: { $ne: 'Admin' }})
+      .find({ role: { $ne: 'Admin' } })
       .sort({
         firstname: 1,
         lastname: 1,
@@ -110,6 +113,12 @@ export class UserService {
 
     if (!deletedUser) {
       throw new NotFoundException(`User with id ${id} not found`);
+    }
+
+    if (deletedUser.role === UserRole.OFFICE) {
+      await this.projectService.deleteAllByUserId(id);
+    } else if (deletedUser.role === UserRole.ROADWORKER) {
+      await this.hourSchemeService.deleteAllByUserId(id);
     }
 
     const n4jResult = await this.recommendationsService.deleteUser(id);

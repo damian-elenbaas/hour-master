@@ -140,6 +140,24 @@ export class RecommendationsService {
     return result;
   }
 
+  async deleteProjects(ids: Id[]) {
+    this.logger.log(`Deleting projects`);
+
+    const result = await this.neo4jService.write(`
+      MATCH (p:Project)
+      WHERE p._id IN $ids
+      MATCH (p)<-[:ON_PROJECT]-(w:Work)-[:HAS_DONE]-(hs:HourScheme)
+      DETACH DELETE p, w
+      WITH hs
+      WHERE NOT (hs)-[:HAS_DONE]->()
+      DETACH DELETE hs
+    `, {
+      ids
+    });
+
+    return result;
+  }
+
   async createOrUpdateMachine(machine: IMachine) {
     this.logger.log(`Creating machine`);
 
@@ -263,6 +281,19 @@ export class RecommendationsService {
       DETACH DELETE hs, work
     `, {
       ids
+    });
+
+    return result;
+  }
+
+  async deleteHourSchemesFromUser(userId: Id) {
+    this.logger.log(`Deleting hour schemes from user`);
+
+    const result = await this.neo4jService.write(`
+      MATCH ((u:User {_id: $userId})-[:WORKED_ON]-(hs:HourScheme)-[:HAS_DONE]-(work:Work))
+      DETACH DELETE hs, work
+    `, {
+      userId
     });
 
     return result;

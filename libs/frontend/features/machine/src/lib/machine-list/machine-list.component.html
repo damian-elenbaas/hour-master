@@ -13,7 +13,7 @@
           <th scope="col" class="px-6 py-3">Naam</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody *ngIf="!loading; else loadingRows">
         <a
           class="table-row border-b hover:bg-gray-200"
           *ngFor="let machine of machines"
@@ -26,12 +26,19 @@
             {{ machine.name }}
           </td>
         </a>
-        <tr *ngIf="loading">
+        <tr *ngIf="machines.length === 0">
+          <td colspan="4" class="px-6 py-4 text-center italic">
+            Geen machines gevonden.
+          </td>
+        </tr>
+      </tbody>
+      <ng-template #loadingRows>
+        <tr>
           <td colspan="4" class="px-6 py-4">
             <hour-master-loader></hour-master-loader>
           </td>
         </tr>
-      </tbody>
+      </ng-template>
     </table>
   </div>
 </div>

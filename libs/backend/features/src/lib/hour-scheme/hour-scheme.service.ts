@@ -201,23 +201,42 @@ export class HourSchemeService {
     return true;
   }
 
+  async deleteAllByUserId(userId: Id): Promise<boolean> {
+    this.logger.log(`deleteByUserId(${userId})`);
+
+    await this.hourSchemeModel.deleteMany({
+      worker: userId
+    }).exec();
+
+    await this.recommendationsService.deleteHourSchemesFromUser(userId);
+
+    return true;
+  }
+
   async deleteRowsByProjectId(projectId: Id): Promise<boolean> {
     this.logger.log(`deleteRowsByProjectId(${projectId})`);
 
-    const hourSchemes = await this.hourSchemeModel.find({
-      'rows.project': projectId
-    }).exec();
-
-    if (!hourSchemes) {
-      return true;
-    }
-
-    // delete rows from hour schemes
-    const hourSchemeIds = hourSchemes.map(hourScheme => hourScheme._id);
     await this.hourSchemeModel.updateMany({
-      _id: { $in: hourSchemeIds }
+      'rows.project': projectId
     }, {
       $pull: { rows: { project: projectId } }
+    }).exec();
+
+    // delete hour schemes without rows
+    await this.hourSchemeModel.deleteMany({
+      rows: { $size: 0 }
+    }).exec();
+
+    return true;
+  }
+
+  async deleteRowsByProjectIds(projectIds: Id[]): Promise<boolean> {
+    this.logger.log(`deleteRowsByProjectIds`);
+
+    await this.hourSchemeModel.updateMany({
+      'rows.project': { $in: projectIds }
+    }, {
+      $pull: { rows: { project: { $in: projectIds } } }
     }).exec();
 
     // delete hour schemes without rows
@@ -231,18 +250,8 @@ export class HourSchemeService {
   async updateRowsByMachineId(machineId: Id): Promise<boolean> {
     this.logger.log(`deleteRowsByProjectId(${machineId})`);
 
-    const hourSchemes = await this.hourSchemeModel.find({
-      'rows.machine': machineId
-    }).exec();
-
-    if (!hourSchemes) {
-      return true;
-    }
-
-    // set machine to null on rows from hour schemes where machine is deleted
-    const hourSchemeIds = hourSchemes.map(hourScheme => hourScheme._id);
     await this.hourSchemeModel.updateMany({
-      _id: { $in: hourSchemeIds }
+      'rows.machine': machineId
     }, {
       $set: { 'rows.$[elem].machine': null }
     }, {

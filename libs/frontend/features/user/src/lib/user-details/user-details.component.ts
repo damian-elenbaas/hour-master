@@ -240,7 +240,7 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
         .subscribe({
           next: () => {
             this.alertService.success(`Gebruiker ${this.user.username} is verwijderd!`);
-            this.location.back();
+            this.router.navigate(['/user']);
           },
           error: () => {
             this.alertService.danger('Je hebt geen rechten om deze gebruiker te verwijderen!');

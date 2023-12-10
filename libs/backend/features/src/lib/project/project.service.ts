@@ -25,7 +25,7 @@ export class ProjectService {
     private readonly userService: UserService,
     @Inject(forwardRef(() => HourSchemeService))
     private readonly hourSchemeService: HourSchemeService
-  ) {}
+  ) { }
 
   async getAll(): Promise<IProject[]> {
     this.logger.log(`getAll()`);
@@ -69,13 +69,13 @@ export class ProjectService {
 
     const createdProject = await this.projectModel.create(project);
 
-    if(!createdProject) {
+    if (!createdProject) {
       throw new Error('Could not create project');
     }
 
     const n4jResult = this.recommendationsService.createOrUpdateProject(createdProject);
 
-    if(!n4jResult) {
+    if (!n4jResult) {
       await this.projectModel.findByIdAndDelete(createdProject._id).exec();
       throw new Error('Could not create project');
     }
@@ -114,7 +114,7 @@ export class ProjectService {
 
     const n4jResult = this.recommendationsService.createOrUpdateProject(updatedProject);
 
-    if(!n4jResult) {
+    if (!n4jResult) {
       throw new Error('Could not update project');
     }
 
@@ -151,4 +151,18 @@ export class ProjectService {
 
     return true;
   }
+
+  async deleteAllByUserId(userId: Id): Promise<boolean> {
+    this.logger.log(`deleteAllByUserId(${userId})`);
+
+    const projects = await this.projectModel.find({ admin: userId }).exec();
+    const projectIds = projects.map(project => project._id);
+
+    await this.hourSchemeService.deleteRowsByProjectIds(projectIds);
+    await this.recommendationsService.deleteProjects(projectIds);
+    await this.projectModel.deleteMany({ admin: userId }).exec();
+
+    return true;
+  }
+
 }

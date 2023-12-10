@@ -14,7 +14,7 @@ export class MachineListComponent implements OnInit, OnDestroy {
   machines: IMachine[] = [];
   sub!: Subscription;
   token!: string;
-  loading = false;
+  loading = true;
 
   constructor(
     private readonly authService: AuthService,
@@ -44,6 +44,7 @@ export class MachineListComponent implements OnInit, OnDestroy {
           if(machines) {
             this.machines = machines;
           }
+          this.loading = false;
         },
         error: err => {
           console.error(err);
