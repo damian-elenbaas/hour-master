@@ -1,7 +1,7 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { IHourScheme } from '@hour-master/shared/api';
 import { HydratedDocument, SchemaTypes } from 'mongoose';
-import { User } from '@hour-master/backend/user';
+import { User } from '../../user/schemas/user.schema';
 import { IsMongoId } from 'class-validator';
 import { HourSchemeRow } from './hour-scheme-row.schema';
 

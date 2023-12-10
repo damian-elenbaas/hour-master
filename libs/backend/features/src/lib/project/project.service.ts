@@ -11,7 +11,7 @@ import {
 } from '@hour-master/shared/api';
 import { RecommendationsService } from '@hour-master/backend/recommendations';
 import { HourSchemeService } from '../hour-scheme/hour-scheme.service';
-import { UserService } from '@hour-master/backend/user';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class ProjectService {
@@ -21,6 +21,7 @@ export class ProjectService {
     @InjectModel(Project.name)
     private readonly projectModel: Model<Project>,
     private readonly recommendationsService: RecommendationsService,
+    @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
     @Inject(forwardRef(() => HourSchemeService))
     private readonly hourSchemeService: HourSchemeService

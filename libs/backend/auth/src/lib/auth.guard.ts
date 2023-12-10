@@ -9,7 +9,7 @@ import { Request } from 'express';
 import { Reflector } from '@nestjs/core';
 import { jwtConstants } from './jwt.const';
 import { IS_PUBLIC_KEY, Roles } from '@hour-master/backend/decorators';
-import { UserService } from '@hour-master/backend/user';
+import { UserService } from '@hour-master/backend/features';
 import { IJWTPayload } from '@hour-master/shared/api';
 
 @Injectable()

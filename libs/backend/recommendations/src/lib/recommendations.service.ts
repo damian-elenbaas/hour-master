@@ -66,7 +66,10 @@ export class RecommendationsService {
 
     const result = await this.neo4jService.write(`
       MATCH (u:User {_id: $id})
-      DETACH DELETE u
+      OPTIONAL MATCH (u)-[:WORKED_ON]->(hs:HourScheme)-[:HAS_DONE]-(w:Work)
+      OPTIONAL MATCH (u)-[:CONTROLS_PROJECT]->(p:Project)
+      OPTIONAL MATCH (p)<-[:ON_PROJECT]-(w2:Work)
+      DETACH DELETE u, hs, w, w2, p
     `, {
       id
     });

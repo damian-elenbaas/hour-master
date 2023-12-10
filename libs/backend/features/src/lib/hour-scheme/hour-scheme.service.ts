@@ -11,7 +11,7 @@ import { HourScheme } from './schemas/hour-scheme.schema';
 import { FilterQuery, Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { RecommendationsService } from '@hour-master/backend/recommendations';
-import { UserService } from '@hour-master/backend/user';
+import { UserService } from '../user/user.service';
 import { MachineService } from '../machine/machine.service';
 import { ProjectService } from '../project/project.service';
 
@@ -23,6 +23,7 @@ export class HourSchemeService {
     @InjectModel(HourScheme.name)
     private readonly hourSchemeModel: Model<HourScheme>,
     private readonly recommendationsService: RecommendationsService,
+    @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
     @Inject(forwardRef(() => MachineService))
     private readonly machineService: MachineService,

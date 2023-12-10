@@ -1,6 +1,6 @@
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UserService } from '@hour-master/backend/user';
+import { UserService } from '@hour-master/backend/features';
 import { IJWTPayload, ISignInResult } from '@hour-master/shared/api';
 
 @Injectable()

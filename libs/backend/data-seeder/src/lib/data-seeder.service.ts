@@ -3,7 +3,7 @@ import { Model, Types } from 'mongoose';
 
 import { HourScheme } from '@hour-master/backend/features';
 import { Project } from '@hour-master/backend/features';
-import { User } from '@hour-master/backend/user';
+import { User } from '@hour-master/backend/features';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { IHourScheme, IHourSchemeRow, IMachine, IProject, IUser, UserRole } from '@hour-master/shared/api';

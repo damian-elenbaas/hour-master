@@ -1,7 +1,6 @@
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Module } from '@nestjs/common';
 
-import { UserModule } from '@hour-master/backend/user';
 import { AuthModule } from '@hour-master/backend/auth';
 import { DataSeederModule } from '@hour-master/backend/data-seeder';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -20,7 +19,6 @@ import { FeaturesModule } from '@hour-master/backend/features';
       }),
     }),
     AuthModule,
-    UserModule,
     FeaturesModule,
     DataSeederModule,
   ],

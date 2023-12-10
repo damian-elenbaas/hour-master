@@ -1,10 +1,11 @@
 import * as bcrypt from 'bcrypt';
 import { ICreateUser, IUpdateUser, IUser, Id } from '@hour-master/shared/api';
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, Logger, NotFoundException, forwardRef } from '@nestjs/common';
 
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { User } from './schemas/user.schema';
 import { Model } from 'mongoose';
+import { ProjectService } from '@hour-master/backend/features';
 import { RecommendationsService } from '@hour-master/backend/recommendations';
 import { transaction } from '@hour-master/backend/helpers';
 import { Connection } from 'mongoose';
@@ -16,14 +17,16 @@ export class UserService {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<User>,
     @InjectConnection() private connection: Connection,
-    private readonly recommendationsService: RecommendationsService
+    private readonly recommendationsService: RecommendationsService,
+    @Inject(forwardRef(() => ProjectService))
+    private readonly projectService: ProjectService
   ) { }
 
   async getAll(): Promise<IUser[]> {
     this.logger.log(`getAll()`);
 
     return await this.userModel
-      .find()
+      .find({ role: { $ne: 'Admin' }})
       .sort({
         firstname: 1,
         lastname: 1,

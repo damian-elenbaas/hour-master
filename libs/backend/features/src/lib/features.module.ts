@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { UserModule, UserSchema } from '@hour-master/backend/user';
 import { RecommendationsModule } from '@hour-master/backend/recommendations';
 
 import { ProjectController } from './project/project.controller';
@@ -12,6 +11,9 @@ import { MachineSchema } from './machine/schemas/machine.schema';
 import { ProjectService } from './project/project.service';
 import { MachineService } from './machine/machine.service';
 import { HourSchemeService } from './hour-scheme/hour-scheme.service';
+import { UserSchema } from './user/schemas/user.schema';
+import { UserController } from './user/user.controller';
+import { UserService } from './user/user.service';
 
 @Module({
   imports: [
@@ -22,22 +24,24 @@ import { HourSchemeService } from './hour-scheme/hour-scheme.service';
       { name: 'User', schema: UserSchema },
     ]),
     RecommendationsModule,
-    UserModule
   ],
   controllers: [
     HourSchemeController,
     ProjectController,
-    MachineController
+    MachineController,
+    UserController
   ],
   providers: [
     HourSchemeService,
     ProjectService,
-    MachineService
+    MachineService,
+    UserService
   ],
   exports: [
     HourSchemeService,
     ProjectService,
-    MachineService
+    MachineService,
+    UserService
   ],
 })
 export class FeaturesModule {}

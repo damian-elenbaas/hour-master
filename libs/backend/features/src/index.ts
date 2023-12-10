@@ -7,3 +7,5 @@ export * from './lib/project/schemas/project.schema';
 export * from './lib/project/schemas/location.schema';
 export * from './lib/machine/machine.service';
 export * from './lib/machine/schemas/machine.schema';
+export * from './lib/user/user.service';
+export * from './lib/user/schemas/user.schema';

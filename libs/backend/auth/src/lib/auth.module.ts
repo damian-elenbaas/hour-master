@@ -6,7 +6,8 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth.guard';
-import { UserModule } from '@hour-master/backend/user';
+import { FeaturesModule } from '@hour-master/backend/features';
+
 
 @Module({
   imports: [
@@ -16,7 +17,7 @@ import { UserModule } from '@hour-master/backend/user';
       secret: jwtConstants.secret,
       signOptions: { expiresIn: '3600s' },
     }),
-    UserModule
+    FeaturesModule
   ],
   controllers: [AuthController],
   providers: [AuthService, { provide: APP_GUARD, useClass: AuthGuard }],
