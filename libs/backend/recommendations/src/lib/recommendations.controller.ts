@@ -65,7 +65,19 @@ export class RecommendationsController {
     return await this.recommendationsService.getRelatedProjectsFromMachine(id);
   }
 
-  @Get('worker/:id/related-workers')
+  @Get('worker/:id/projects')
+  @Roles([UserRole.ADMIN, UserRole.OFFICE])
+  async getProjectsFromWorker(@Param('id') id: Id) {
+    return await this.recommendationsService.getRelatedProjectsFromWorker(id);
+  }
+
+  @Get('worker/:id/machines')
+  @Roles([UserRole.ADMIN, UserRole.OFFICE])
+  async getMachinesFromWorker(@Param('id') id: Id) {
+    return await this.recommendationsService.getRelatedMachinesFromWorker(id);
+  }
+
+  @Get('worker/:id/workers')
   async getRelatedWorkers(
     @Param('id') id: Id,
     @Query('depth') depth?: number

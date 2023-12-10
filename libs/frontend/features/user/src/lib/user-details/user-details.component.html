@@ -6,7 +6,7 @@
     </button>
   </div>
   <div class="w-fit mx-auto">
-    <div *ngIf="loaded; else loading">
+    <div *ngIf="detailsLoaded; else loading">
       <h2 class="text-xl font-semibold pb-0.5">
         {{ (user$ | async)?.firstname | titlecase }}
         {{ (user$ | async)?.lastname | titlecase }}

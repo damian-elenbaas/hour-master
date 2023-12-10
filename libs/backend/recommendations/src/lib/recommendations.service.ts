@@ -479,4 +479,40 @@ export class RecommendationsService {
 
     return relatedWorkers;
   }
+
+  async getRelatedProjectsFromWorker(userId: Id) {
+    this.logger.log(`Getting related projects from worker`);
+
+    const result = await this.neo4jService.read(`
+      MATCH (u:User {_id: $id})-[:WORKED_ON]->(hs:HourScheme)-[:HAS_DONE]-(work:Work)-[:ON_PROJECT]->(p:Project)
+      RETURN DISTINCT p
+    `, {
+      id: userId
+    });
+
+    const projects: IProject[] = [];
+    result.records.forEach((record) => {
+      projects.push(record.get('p').properties as IProject);
+    });
+
+    return projects;
+  }
+
+  async getRelatedMachinesFromWorker(userId: Id) {
+    this.logger.log(`Getting related machines from worker`);
+
+    const result = await this.neo4jService.read(`
+      MATCH (u:User {_id: $id})-[:WORKED_ON]->(hs:HourScheme)-[:HAS_DONE]-(work:Work)-[:WITH_MACHINE]->(m:Machine)
+      RETURN DISTINCT m
+    `, {
+      id: userId
+    });
+
+    const machines: IMachine[] = [];
+    result.records.forEach((record) => {
+      machines.push(record.get('m').properties as IMachine);
+    });
+
+    return machines;
+  }
 }

@@ -5,6 +5,8 @@ import { Injectable } from '@angular/core';
 import {
   ApiResponse,
   ICreateUser,
+  IMachine,
+  IProject,
   IUpdateUser,
   IUser,
   Id,
@@ -23,7 +25,8 @@ export const httpOptions = {
   providedIn: 'root',
 })
 export class UserService {
-  endpoint = `${environment.dataApiUrl}/api/user`;
+  dataEndpoint = `${environment.dataApiUrl}/api/user`;
+  rcmndEndpoint = `${environment.rcmndApiUrl}/api/recommendations/worker`;
 
   constructor(private readonly http: HttpClient) {}
 
@@ -33,10 +36,10 @@ export class UserService {
    * @options options - optional URL queryparam options
    */
   public list(options?: any): Observable<IUser[] | null> {
-    console.log(`list ${this.endpoint}`);
+    console.log(`list ${this.dataEndpoint}`);
 
     return this.http
-      .get<ApiResponse<IUser[]>>(this.endpoint, {
+      .get<ApiResponse<IUser[]>>(this.dataEndpoint, {
         ...options,
         ...httpOptions,
       })
@@ -55,10 +58,10 @@ export class UserService {
    * @returns Observable<IUser | null>
    */
   public details(id: Id, options?: any): Observable<IUser | null> {
-    console.log(`details ${this.endpoint}/${id}`);
+    console.log(`details ${this.dataEndpoint}/${id}`);
 
     return this.http
-      .get<ApiResponse<IUser>>(`${this.endpoint}/${id}`, {
+      .get<ApiResponse<IUser>>(`${this.dataEndpoint}/${id}`, {
         ...options,
         ...httpOptions,
       })
@@ -83,7 +86,7 @@ export class UserService {
     options?: any
   ): Observable<boolean | null> {
     return this.http
-      .patch<ApiResponse<boolean>>(`${this.endpoint}/${id}`, user, {
+      .patch<ApiResponse<boolean>>(`${this.dataEndpoint}/${id}`, user, {
         ...options,
         ...httpOptions,
       })
@@ -103,7 +106,7 @@ export class UserService {
    */
   public create(user: ICreateUser, options?: any): Observable<IUser | null> {
     return this.http
-      .post<ApiResponse<IUser>>(`${this.endpoint}`, user, {
+      .post<ApiResponse<IUser>>(`${this.dataEndpoint}`, user, {
         ...options,
         ...httpOptions,
       })
@@ -116,12 +119,51 @@ export class UserService {
 
   public delete(id: Id, options?: any): Observable<boolean | null> {
     return this.http
-      .delete<ApiResponse<boolean>>(`${this.endpoint}/${id}`, {
+      .delete<ApiResponse<boolean>>(`${this.dataEndpoint}/${id}`, {
         ...options,
         ...httpOptions,
       })
       .pipe(
         map((response: any) => response.results as boolean),
+        tap(console.log),
+        catchError(this.handleError)
+      );
+  }
+
+  public getRelatedProjects(id: Id, options?: any): Observable<IProject[] | null> {
+    return this.http
+      .get<ApiResponse<any>>(`${this.rcmndEndpoint}/${id}/projects`, {
+        ...options,
+        ...httpOptions,
+      })
+      .pipe(
+        map((response: any) => response.results as IProject[]),
+        tap(console.log),
+        catchError(this.handleError)
+      );
+  }
+
+  public getRelatedMachines(id: Id, options?: any): Observable<IMachine[] | null> {
+    return this.http
+      .get<ApiResponse<any>>(`${this.rcmndEndpoint}/${id}/machines`, {
+        ...options,
+        ...httpOptions,
+      })
+      .pipe(
+        map((response: any) => response.results as IMachine[]),
+        tap(console.log),
+        catchError(this.handleError)
+      );
+  }
+
+  public getRelatedWorkers(id: Id, options?: any): Observable<IUser[] | null> {
+    return this.http
+      .get<ApiResponse<any>>(`${this.rcmndEndpoint}/${id}/workers`, {
+        ...options,
+        ...httpOptions,
+      })
+      .pipe(
+        map((response: any) => response.results as IUser[]),
         tap(console.log),
         catchError(this.handleError)
       );

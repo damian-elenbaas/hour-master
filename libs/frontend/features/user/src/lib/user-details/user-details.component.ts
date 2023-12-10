@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { IUser, Id, Token } from '@hour-master/shared/api';
+import { IMachine, IProject, IUser, Id, Token, UserRole } from '@hour-master/shared/api';
 import { Observable, Subscription, of, switchMap } from 'rxjs';
 import { UserService } from '../user.service';
 import { Location } from '@angular/common';
@@ -14,12 +14,23 @@ import { AlertService } from '@hour-master/frontend/common';
   styleUrls: ['./user-details.component.scss'],
 })
 export class UserDetailsComponent implements OnInit, OnDestroy {
-  subscriptionDetails!: Subscription;
-  subscriptionAuth!: Subscription;
-  token!: Token;
+  detailSub!: Subscription;
+  projectsSub!: Subscription;
+  machinesSub!: Subscription;
+  workersSub!: Subscription;
+
   user$!: Observable<IUser>;
+  projects: IProject[] = [];
+  machines: IMachine[] = [];
+  workers: IUser[] = [];
+
+  detailsLoaded = false;
+  projectsLoaded = false;
+  machinesLoaded = false;
+  workersLoaded = false;
+
+  token!: Token;
   popUpModal!: Modal;
-  loaded = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -34,8 +45,7 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
     const modalElement = document.getElementById('popup-modal') as HTMLElement;
     this.popUpModal = new Modal(modalElement);
 
-    this.subscriptionDetails = this.authService
-      .currentUserToken$
+    this.detailSub = this.authService.currentUserToken$
       .pipe(
         switchMap((token) => {
           if (!token) {
@@ -75,7 +85,10 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
             this.router.navigate(['/user']);
           } else {
             this.user$ = of(user);
-            this.loaded = true;
+            this.detailsLoaded = true;
+            if(user.role === UserRole.ROADWORKER) {
+              this.loadRelations();
+            }
           }
         },
         error: (error) => {
@@ -84,11 +97,133 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
           this.router.navigate(['/user']);
         },
       });
+
   }
 
   ngOnDestroy(): void {
-    if (this.subscriptionAuth) this.subscriptionAuth.unsubscribe();
-    if (this.subscriptionDetails) this.subscriptionDetails.unsubscribe();
+    this.detailSub?.unsubscribe();
+    this.projectsSub?.unsubscribe();
+    this.machinesSub?.unsubscribe();
+    this.workersSub?.unsubscribe();
+  }
+
+  loadRelations(): void {
+    this.projectsSub = this.authService.currentUserToken$
+      .pipe(
+        switchMap((token) => {
+          if (!token) {
+            this.router.navigate(['/auth/login']);
+            return of(null);
+          } else {
+            this.token = token;
+            return this.route.paramMap;
+          }
+        })
+      )
+      .pipe(
+        switchMap((params: ParamMap | null) => {
+          if (!params) return of(null);
+
+          if (!params.get('id')) {
+            return of([]);
+          } else {
+            return this.userService.getRelatedProjects(params.get('id') as Id, {
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${this.token}`,
+              },
+            });
+          }
+        })
+      )
+      .subscribe({
+        next: (projects: IProject[] | null) => {
+          if (projects) {
+            this.projects = projects;
+          }
+        },
+        error: (error) => {
+          console.error(error);
+        },
+      });
+
+    this.machinesSub = this.authService.currentUserToken$
+      .pipe(
+        switchMap((token) => {
+          if (!token) {
+            this.router.navigate(['/auth/login']);
+            return of(null);
+          } else {
+            this.token = token;
+            return this.route.paramMap;
+          }
+        })
+      )
+      .pipe(
+        switchMap((params: ParamMap | null) => {
+          if (!params) return of(null);
+
+          if (!params.get('id')) {
+            return of([]);
+          } else {
+            return this.userService.getRelatedMachines(params.get('id') as Id, {
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${this.token}`,
+              },
+            });
+          }
+        })
+      )
+      .subscribe({
+        next: (machines: IMachine[] | null) => {
+          if (machines) {
+            this.machines = machines;
+          }
+        },
+        error: (error) => {
+          console.error(error);
+        },
+      });
+
+    this.workersSub = this.authService.currentUserToken$
+      .pipe(
+        switchMap((token) => {
+          if (!token) {
+            this.router.navigate(['/auth/login']);
+            return of(null);
+          } else {
+            this.token = token;
+            return this.route.paramMap;
+          }
+        })
+      )
+      .pipe(
+        switchMap((params: ParamMap | null) => {
+          if (!params) return of(null);
+
+          if (!params.get('id')) {
+            return of([]);
+          } else {
+            return this.userService.getRelatedWorkers(params.get('id') as Id, {
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${this.token}`,
+              },
+            });
+          }
+        })
+      )
+      .subscribe({
+        next: (workers: IUser[] | null) => {
+          if (workers) {
+            this.workers = workers;
+          }
+        },
+        error: (error) => {
+          console.error(error);
+        },
+      });
   }
 
   delete(): void {
