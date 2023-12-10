@@ -91,7 +91,6 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           console.error(error);
-          this.alertService.danger('Gebruiker niet gevonden!');
           this.router.navigate(['/user']);
         },
       });
