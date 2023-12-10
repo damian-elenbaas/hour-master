@@ -34,9 +34,11 @@
           </div>
         </div>
       </section>
-      <section *ngIf="user.role === roles.ROADWORKER" class="mt-5">
+      <section *ngIf="isRoadWorker()" class="mt-5">
       </section>
-      <div class="w-full flex flex-col md:flex-row gap-2 justify-center mt-10">
+      <div
+        *ngIf="canEdit() | async"
+        class="w-full flex flex-col md:flex-row gap-2 justify-center mt-10">
         <button routerLink="edit" class="bg-accent px-4 py-2 rounded-md">
           Gebruiker wijzigen
         </button>

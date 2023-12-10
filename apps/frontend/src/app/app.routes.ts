@@ -86,6 +86,7 @@ export const appRoutes: Route[] = [
         path: 'new',
         pathMatch: 'full',
         component: UserEditComponent,
+        canMatch: [authGuard([UserRole.ADMIN])]
       },
       {
         path: ':id',
@@ -96,9 +97,10 @@ export const appRoutes: Route[] = [
         path: ':id/edit',
         pathMatch: 'full',
         component: UserEditComponent,
+        canMatch: [authGuard([UserRole.ADMIN])]
       },
     ],
-    canMatch: [authGuard([UserRole.ADMIN])]
+    canMatch: [authGuard([UserRole.ADMIN, UserRole.OFFICE])]
   },
   {
     path: 'project',

@@ -15,10 +15,11 @@ export class UserListComponent implements OnInit, OnDestroy {
   subscriptionList!: Subscription;
   subscriptionAuth!: Subscription;
   loading = true;
+  currentUser$ = this.authService.currentUser$;
 
   constructor(
+    public readonly authService: AuthService,
     private readonly router: Router,
-    private readonly authService: AuthService,
     private userService: UserService,
   ) { }
 

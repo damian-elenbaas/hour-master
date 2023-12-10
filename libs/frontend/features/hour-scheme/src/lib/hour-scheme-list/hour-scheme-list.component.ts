@@ -18,8 +18,8 @@ export class HourSchemeListComponent implements OnInit, OnDestroy {
   loading = true;
 
   constructor(
+    public readonly authService: AuthService,
     private readonly router: Router,
-    private readonly authService: AuthService,
     private hourSchemeService: HourSchemeService
   ) { }
 

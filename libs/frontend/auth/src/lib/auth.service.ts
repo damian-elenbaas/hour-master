@@ -124,7 +124,7 @@ export class AuthService {
     return this.currentUser$.pipe(
       map((user) => {
         if (user) {
-          return user.role === UserRole.ADMIN;
+          return user.role === UserRole.ADMIN || user.role === UserRole.OFFICE;
         }
 
         return false;
@@ -144,13 +144,64 @@ export class AuthService {
     );
   }
 
-  userMayEditHourSchemes(): boolean {
-    const user = this.currentUser$.getValue();
-    if (user) {
-      return user.role === UserRole.ADMIN || user.role === UserRole.ROADWORKER;
-    }
+  userMayCreateUsers(): Observable<boolean> {
+    return this.currentUser$.pipe(
+      map((user) => {
+        if (user) {
+          return user.role === UserRole.ADMIN;
+        }
 
-    return false;
+        return false;
+      })
+    );
+  }
+
+  userMayEditHourSchemes(): Observable<boolean> {
+    return this.currentUser$.pipe(
+      map((user) => {
+        if (user) {
+          return user.role === UserRole.ADMIN || user.role === UserRole.ROADWORKER;
+        }
+
+        return false;
+      })
+    );
+  }
+
+  userMayEditHourScheme(id: Id): Observable<boolean> {
+    return this.currentUser$.pipe(
+      map((user) => {
+        if (user) {
+          return user.role === UserRole.ADMIN || user._id === id;
+        }
+
+        return false;
+      })
+    );
+  }
+
+  userMaySeeMachineDetails(): Observable<boolean> {
+    return this.currentUser$.pipe(
+      map((user) => {
+        if (user) {
+          return user.role === UserRole.ADMIN || user.role === UserRole.OFFICE;
+        }
+
+        return false;
+      })
+    );
+  }
+
+  userMaySeeProjectDetails(): Observable<boolean> {
+    return this.currentUser$.pipe(
+      map((user) => {
+        if (user) {
+          return user.role === UserRole.ADMIN || user.role === UserRole.OFFICE;
+        }
+
+        return false;
+      })
+    );
   }
 
   /**

@@ -21,10 +21,10 @@
   </hour-master-dashboard-button>
   <hour-master-dashboard-button *ngIf="
       user$.value !== null &&
-      user$.value.role === roles.ADMIN
+      (user$.value.role === roles.ADMIN || user$.value.role === roles.OFFICE)
     " link="/user">
     <i class="fa-solid fa-users text-7xl"></i>
-    Gebruikers
+    Werknemers
   </hour-master-dashboard-button>
   <hour-master-dashboard-button link="/about">
     <i class="fa-solid fa-circle-info text-7xl"></i>

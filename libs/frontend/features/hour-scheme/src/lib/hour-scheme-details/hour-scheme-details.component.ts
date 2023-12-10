@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { IHourScheme, IUser, Id, UserRole } from '@hour-master/shared/api';
+import { IHourScheme, Id, UserRole } from '@hour-master/shared/api';
 import { HourSchemeService } from '../hour-scheme.service';
 import { Observable, Subscription, of, switchMap } from 'rxjs';
 import { Location } from '@angular/common';
@@ -19,13 +19,12 @@ export class HourSchemeDetailsComponent implements OnInit, OnDestroy {
   subscriptionDetails!: Subscription;
   popUpModal!: Modal;
   token!: string;
-  user$!: Observable<IUser | null>;
   roles = UserRole;
 
   constructor(
+    public readonly authService: AuthService,
     private readonly route: ActivatedRoute,
     private readonly hourSchemeService: HourSchemeService,
-    private readonly authService: AuthService,
     private readonly alertService: AlertService,
     private readonly router: Router,
     public location: Location
@@ -79,8 +78,6 @@ export class HourSchemeDetailsComponent implements OnInit, OnDestroy {
           this.router.navigate(['/hour-scheme']);
         }
       });
-
-    this.user$ = this.authService.currentUser$;
   }
 
   ngOnDestroy(): void {
@@ -100,5 +97,9 @@ export class HourSchemeDetailsComponent implements OnInit, OnDestroy {
         this.alertService.success('Urenschema verwijderd!');
         this.router.navigate(['/hour-scheme']);
       });
+  }
+
+  canEdit(): Observable<boolean> {
+    return this.authService.userMayEditHourScheme(this.hourScheme.worker._id)
   }
 }

@@ -25,18 +25,28 @@
         <tbody>
           <tr class="border-b" *ngFor="let row of hourScheme.rows">
             <td class="px-6 py-4">
-              <a routerLink="/project/{{ row.project._id }}" class="underline decoration-accent hover:text-accent">
+              <a *ngIf="authService.userMaySeeProjectDetails() | async; else noLinkProject" routerLink="/project/{{ row.project._id }}" class="underline decoration-accent hover:text-accent">
                 {{ row.project.name }}
               </a>
+              <ng-template #noLinkProject>
+                {{ row.project.name }}
+              </ng-template>
             </td>
             <td class="px-6 py-4">
               {{ row.hours }}
             </td>
             <td class="px-6 py-4">
-              <a *ngIf="row.machine;" class="underline decoration-accent hover:text-accent"
-                routerLink="/machine/{{ row.machine._id }}">
-                {{ row.machine.name }}
-              </a>
+              <div *ngIf="authService.userMaySeeMachineDetails() | async; else noLinkMachine">
+                <a *ngIf="row.machine;" class="underline decoration-accent hover:text-accent"
+                  routerLink="/machine/{{ row.machine._id }}">
+                  {{ row.machine.name }}
+                </a>
+              </div>
+              <ng-template #noLinkMachine>
+                <div *ngIf="row.machine">
+                  {{ row.machine.name }}
+                </div>
+              </ng-template>
               <span *ngIf="!row.machine">Geen machine gebruikt</span>
             </td>
             <td class="px-6 py-4">
@@ -54,13 +64,9 @@
     <div class="text-center italic mt-5">
       Totaal aantal uren: {{ hourScheme.totalHours || 0 }}
     </div>
-    <div
-      *ngIf="
-        (hourScheme &&
-        (user$ | async)?._id === hourScheme.worker._id) ||
-        (user$ | async)?.role === roles.ADMIN
-      "
-      class="flex flex-col md:flex-row gap-2 mt-5">
+    <div *ngIf="
+        canEdit() | async
+      " class="flex flex-col md:flex-row gap-2 mt-5">
       <button routerLink="edit" class="bg-accent px-4 py-2 rounded-md">
         Urenschema wijzigen
       </button>

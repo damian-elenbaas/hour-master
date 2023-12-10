@@ -18,20 +18,20 @@ export class UserController {
   constructor(private userService: UserService) {}
 
   @Get('')
-  @Roles([UserRole.ADMIN])
+  @Roles([UserRole.ADMIN, UserRole.OFFICE])
   async getAll(): Promise<IUser[]> {
     return await this.userService.getAll();
   }
 
   @Get(':id')
-  @Roles([UserRole.ADMIN])
+  @Roles([UserRole.ADMIN, UserRole.OFFICE])
   async getOne(@Param('id') id: Id): Promise<IUser> {
     return await this.userService.getOne(id);
   }
 
   @Post('')
   @Roles([UserRole.ADMIN])
-  async create(@Body() body: CreateUserDto): Promise<IUser> {
+  async create(@Body() body: CreateUserDto): Promise<IUser | null> {
     return await this.userService.create(body);
   }
 

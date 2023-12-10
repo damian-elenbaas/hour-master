@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { IMachine, IProject, IUser, Id, Token, UserRole } from '@hour-master/shared/api';
-import { Subscription, of, switchMap } from 'rxjs';
+import { Observable, Subscription, of, switchMap } from 'rxjs';
 import { UserService } from '../user.service';
 import { Location } from '@angular/common';
 import { Modal } from 'flowbite';
@@ -31,7 +31,6 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
 
   token!: Token;
   popUpModal!: Modal;
-  roles = UserRole;
 
   constructor(
     private route: ActivatedRoute,
@@ -247,5 +246,13 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
           },
         });
     }
+  }
+
+  canEdit(): Observable<boolean> {
+    return this.authService.userMayEditUser(this.user._id);
+  }
+
+  isRoadWorker(): boolean {
+    return this.user.role === UserRole.ROADWORKER;
   }
 }

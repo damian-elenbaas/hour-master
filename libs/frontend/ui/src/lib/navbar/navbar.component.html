@@ -74,10 +74,10 @@
           </hour-master-navbar-item>
         </li>
         <li
-          *ngIf="user$.value !== null && user$.value.role === roles.ADMIN"
+          *ngIf="user$.value !== null && (user$.value.role === roles.ADMIN || user$.value.role === roles.OFFICE)"
         >
           <hour-master-navbar-item [link]="'/user'">
-            Gebruikers
+            Werknemers
           </hour-master-navbar-item>
         </li>
         <li>
