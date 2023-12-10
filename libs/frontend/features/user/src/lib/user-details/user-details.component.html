@@ -6,14 +6,14 @@
     </button>
   </div>
   <div class="w-fit mx-auto">
-    <div *ngIf="detailsLoaded; else loading">
+    <div *ngIf="user; else loading">
       <h2 class="text-xl font-semibold pb-0.5">
-        {{ (user$ | async)?.firstname | titlecase }}
-        {{ (user$ | async)?.lastname | titlecase }}
+        {{ user.firstname | titlecase }}
+        {{ user.lastname | titlecase }}
       </h2>
       <div class="text-center border-b pb-4">
         <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
-          {{ (user$ | async)?.role | titlecase }}
+          {{ user.role | titlecase }}
         </span>
       </div>
       <section class="mt-8">
@@ -22,17 +22,19 @@
             <div class="flex flex-col mb-2">
               <span class="font-bold">Gebruikersnaam</span>
               <span class="font-medium">
-                {{ (user$ | async)?.username }}
+                {{ user.username }}
               </span>
             </div>
             <div class="flex flex-col md:ml-4">
               <span class="font-bold">Email</span>
               <span class="font-medium">
-                {{ (user$ | async)?.email }}
+                {{ user.email }}
               </span>
             </div>
           </div>
         </div>
+      </section>
+      <section *ngIf="user.role === roles.ROADWORKER" class="mt-5">
       </section>
       <div class="w-full flex flex-col md:flex-row gap-2 justify-center mt-10">
         <button routerLink="edit" class="bg-accent px-4 py-2 rounded-md">

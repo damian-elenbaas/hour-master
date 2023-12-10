@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { IMachine, IProject, IUser, Id, Token, UserRole } from '@hour-master/shared/api';
-import { Observable, Subscription, of, switchMap } from 'rxjs';
+import { Subscription, of, switchMap } from 'rxjs';
 import { UserService } from '../user.service';
 import { Location } from '@angular/common';
 import { Modal } from 'flowbite';
@@ -19,7 +19,7 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
   machinesSub!: Subscription;
   workersSub!: Subscription;
 
-  user$!: Observable<IUser>;
+  user!: IUser;
   projects: IProject[] = [];
   machines: IMachine[] = [];
   workers: IUser[] = [];
@@ -31,6 +31,7 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
 
   token!: Token;
   popUpModal!: Modal;
+  roles = UserRole;
 
   constructor(
     private route: ActivatedRoute,
@@ -84,9 +85,9 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
             this.alertService.danger('Gebruiker niet gevonden!');
             this.router.navigate(['/user']);
           } else {
-            this.user$ = of(user);
+            this.user = user;
             this.detailsLoaded = true;
-            if(user.role === UserRole.ROADWORKER) {
+            if (user.role === UserRole.ROADWORKER) {
               this.loadRelations();
             }
           }
@@ -228,25 +229,23 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
 
   delete(): void {
     this.popUpModal.hide();
-    this.user$.subscribe((user) => {
-      if (user) {
-        this.userService
-          .delete(user._id as Id, {
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${this.token}`,
-            },
-          })
-          .subscribe({
-            next: () => {
-              this.alertService.success(`Gebruiker ${user.username} is verwijderd!`);
-              this.location.back();
-            },
-            error: () => {
-              this.alertService.danger('Je hebt geen rechten om deze gebruiker te verwijderen!');
-            },
-          });
-      }
-    });
+    if (this.user) {
+      this.userService
+        .delete(this.user._id, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${this.token}`,
+          },
+        })
+        .subscribe({
+          next: () => {
+            this.alertService.success(`Gebruiker ${this.user.username} is verwijderd!`);
+            this.location.back();
+          },
+          error: () => {
+            this.alertService.danger('Je hebt geen rechten om deze gebruiker te verwijderen!');
+          },
+        });
+    }
   }
 }
