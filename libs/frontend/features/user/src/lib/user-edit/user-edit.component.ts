@@ -13,7 +13,7 @@ import {
   Token,
   UserRole,
 } from '@hour-master/shared/api';
-import { Subscription, of, switchMap } from 'rxjs';
+import { Observable, Subscription, of, switchMap } from 'rxjs';
 import { UserService } from '../user.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { AuthService } from '@hour-master/frontend/auth';
@@ -30,7 +30,6 @@ export class UserEditComponent implements OnInit, OnDestroy {
   user!: IUser;
   userForm!: FormGroup;
   subscriptionDetails!: Subscription;
-  roles = UserRole;
   loaded = false;
 
   currentUserToken!: Token;
@@ -188,5 +187,19 @@ export class UserEditComponent implements OnInit, OnDestroy {
 
   onCancel(): void {
     this.location.back();
+  }
+
+  allowedRolesToGive(): Observable<UserRole[]> {
+    const roles = Object.values(UserRole);
+
+    return this.authService.currentUser$.pipe(
+      switchMap((user) => {
+        if (user && user.role === UserRole.ADMIN) {
+          return of(roles)
+        } else {
+          return of(roles.filter((role) => role !== UserRole.ADMIN));
+        }
+      })
+    );
   }
 }

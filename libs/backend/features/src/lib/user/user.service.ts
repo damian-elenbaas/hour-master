@@ -1,6 +1,6 @@
 import * as bcrypt from 'bcrypt';
 import { ICreateUser, IUpdateUser, IUser, Id, UserRole } from '@hour-master/shared/api';
-import { Inject, Injectable, Logger, NotFoundException, forwardRef } from '@nestjs/common';
+import { Inject, Injectable, Logger, NotFoundException, UnauthorizedException, forwardRef } from '@nestjs/common';
 
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { User } from './schemas/user.schema';
@@ -65,8 +65,15 @@ export class UserService {
     return user;
   }
 
-  async create(user: ICreateUser): Promise<IUser | null> {
+  async create(user: ICreateUser, userId: Id): Promise<IUser | null> {
     this.logger.log(`creating user`);
+
+    const loggedInUser = await this.getOne(userId);
+
+    if (user.role === UserRole.ADMIN &&
+      loggedInUser.role !== UserRole.ADMIN) {
+      throw new UnauthorizedException('Only admins can create admins');
+    }
 
     const hashedPassword = await this.generateHashedPassword(
       user.password as string
@@ -86,8 +93,15 @@ export class UserService {
     return createdUser;
   }
 
-  async update(id: Id, user: IUpdateUser): Promise<boolean> {
+  async update(id: Id, user: IUpdateUser, userId: Id): Promise<boolean> {
     this.logger.log(`update(${id})`);
+
+    const loggedInUser = await this.getOne(userId);
+
+    if (user.role === UserRole.ADMIN &&
+      loggedInUser.role !== UserRole.ADMIN) {
+      throw new UnauthorizedException('Only admins can update admins');
+    }
 
     const updatedUser = await this.userModel
       .findByIdAndUpdate(id, user)

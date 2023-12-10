@@ -136,7 +136,8 @@ export class AuthService {
     return this.currentUser$.pipe(
       map((user) => {
         if (user) {
-          return user.role === UserRole.ADMIN && user._id !== itemUserId;
+          return (user.role === UserRole.ADMIN || user.role === UserRole.OFFICE)
+            && user._id !== itemUserId;
         }
 
         return false;
@@ -148,7 +149,7 @@ export class AuthService {
     return this.currentUser$.pipe(
       map((user) => {
         if (user) {
-          return user.role === UserRole.ADMIN;
+          return user.role === UserRole.ADMIN || user.role === UserRole.OFFICE;
         }
 
         return false;

@@ -6,9 +6,11 @@ import {
   Param,
   Patch,
   Post,
+  Request,
+  UnauthorizedException
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { IUser, Id, UserRole } from '@hour-master/shared/api';
+import { IJWTPayload, IUser, Id, UserRole } from '@hour-master/shared/api';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Roles } from '@hour-master/backend/decorators';
@@ -29,23 +31,36 @@ export class UserController {
   }
 
   @Post('')
-  @Roles([UserRole.ADMIN])
-  async create(@Body() body: CreateUserDto): Promise<IUser | null> {
-    return await this.userService.create(body);
+  @Roles([UserRole.ADMIN, UserRole.OFFICE])
+  async create(
+    @Body() body: CreateUserDto,
+    @Request() req: any
+  ): Promise<IUser | null> {
+    const user = req.user as IJWTPayload;
+    return await this.userService.create(body, user.sub);
   }
 
   @Patch(':id')
-  @Roles([UserRole.ADMIN])
+  @Roles([UserRole.ADMIN, UserRole.OFFICE])
   async update(
     @Param('id') id: Id,
-    @Body() body: UpdateUserDto
+    @Body() body: UpdateUserDto,
+    @Request() req: any
   ): Promise<boolean> {
-    return await this.userService.update(id, body);
+    const user = req.user as IJWTPayload;
+    return await this.userService.update(id, body, user.sub);
   }
 
   @Delete(':id')
-  @Roles([UserRole.ADMIN])
-  async delete(@Param('id') id: Id): Promise<boolean> {
+  @Roles([UserRole.ADMIN, UserRole.OFFICE])
+  async delete(
+    @Param('id') id: Id,
+    @Request() req: any
+  ): Promise<boolean> {
+    const user = req.user as IJWTPayload;
+    if (user.sub === id) {
+      throw new UnauthorizedException('You cannot delete yourself');
+    }
     return await this.userService.delete(id);
   }
 }
