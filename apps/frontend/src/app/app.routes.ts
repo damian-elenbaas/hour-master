@@ -81,6 +81,7 @@ export const appRoutes: Route[] = [
         path: '',
         pathMatch: 'full',
         component: UserListComponent,
+        canMatch: [authGuard([UserRole.ADMIN, UserRole.OFFICE])]
       },
       {
         path: 'new',
@@ -100,7 +101,6 @@ export const appRoutes: Route[] = [
         canMatch: [authGuard([UserRole.ADMIN])]
       },
     ],
-    canMatch: [authGuard([UserRole.ADMIN, UserRole.OFFICE])]
   },
   {
     path: 'project',

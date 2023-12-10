@@ -24,7 +24,6 @@ export class UserController {
   }
 
   @Get(':id')
-  @Roles([UserRole.ADMIN, UserRole.OFFICE])
   async getOne(@Param('id') id: Id): Promise<IUser> {
     return await this.userService.getOne(id);
   }

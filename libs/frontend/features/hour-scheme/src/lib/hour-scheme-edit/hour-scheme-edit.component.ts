@@ -18,16 +18,16 @@ import { AlertService } from '@hour-master/frontend/common';
 })
 export class HourSchemeEditComponent implements OnInit, OnDestroy {
   hourSchemeId!: Id;
+  hsForm: FormGroup = new FormGroup({
+    date: this.fb.control(this.getCurrentDate(), [Validators.required, Validators.pattern(/^\d{4}-\d{2}-\d{2}$/)]),
+    rows: this.fb.array([], [Validators.required, Validators.minLength(1)]),
+  });
   hsRowForm: FormGroup = this.fb.group({
     id: this.fb.control(''),
     project: this.fb.control('', Validators.required),
-    hours: this.fb.control(0, [Validators.required, Validators.min(0)]),
+    hours: this.fb.control(0, [Validators.required, Validators.min(1)]),
     machine: this.fb.control(''),
     description: this.fb.control('', Validators.required),
-  });
-  hsForm: FormGroup = new FormGroup({
-    date: this.fb.control(this.getCurrentDate(), Validators.required),
-    rows: this.fb.array([]),
   });
   worker!: IUser;
   addRowModal!: Modal;
@@ -345,8 +345,7 @@ export class HourSchemeEditComponent implements OnInit, OnDestroy {
     const formData = this.hsForm.value;
     const date = new Date(formData.date);
 
-    this.authService
-      .currentUser$
+    this.authService.currentUser$
       .pipe(
         switchMap((user) => {
           if (!user) {

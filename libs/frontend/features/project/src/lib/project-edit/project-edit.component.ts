@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { IProject, IUser, Id } from '@hour-master/shared/api';
 import { ProjectService } from '../project.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -16,11 +16,11 @@ import { AlertService } from '@hour-master/frontend/common';
 export class ProjectEditComponent implements OnInit, OnDestroy {
   projectId!: Id;
   projectForm = this.fb.group({
-    name: [''],
+    name: ['', Validators.required],
     location: this.fb.group({
-      address: [''],
-      city: [''],
-      postalCode: [''],
+      address: ['', Validators.required],
+      city: ['', Validators.required],
+      postalCode: ['', Validators.required],
     }),
   });
   loaded = false;

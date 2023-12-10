@@ -228,6 +228,30 @@ export class AuthService {
     );
   }
 
+  userIsRoadWorker(): Observable<boolean> {
+    return this.currentUser$.pipe(
+      map((user) => {
+        if (user) {
+          return user.role === UserRole.ROADWORKER;
+        }
+
+        return false;
+      })
+    );
+  }
+
+  userMaySeeStatistics(): Observable<boolean> {
+    return this.currentUser$.pipe(
+      map((user) => {
+        if (user) {
+          return user.role === UserRole.ADMIN || user.role === UserRole.OFFICE;
+        }
+
+        return false;
+      })
+    );
+  }
+
   /**
    * Handle errors.
    */

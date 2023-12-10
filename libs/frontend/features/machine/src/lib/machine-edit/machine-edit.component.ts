@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { IMachine, Id } from '@hour-master/shared/api';
 import { MachineService } from '../machine.service';
 import { AuthService } from '@hour-master/frontend/auth';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { Subscription, of, switchMap } from 'rxjs';
@@ -16,8 +16,8 @@ import { AlertService } from '@hour-master/frontend/common';
 export class MachineEditComponent implements OnInit, OnDestroy {
   machineId!: Id;
   machineForm = this.fb.group({
-    name: '',
-    typeNumber: '',
+    name: ['', Validators.required],
+    typeNumber: ['', Validators.required],
   })
   loaded = false;
   sub!: Subscription;

@@ -89,7 +89,8 @@
   }
 
   input.error,
-  select.error {
+  select.error,
+  textarea.error {
     @apply bg-red-50 border border-red-500 text-red-900 placeholder-red-700 focus:ring-red-500 focus:border-red-500;
   }
 

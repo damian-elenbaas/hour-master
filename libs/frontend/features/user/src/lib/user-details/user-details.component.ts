@@ -33,9 +33,9 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
   popUpModal!: Modal;
 
   constructor(
+    public authService: AuthService,
     private route: ActivatedRoute,
     private userService: UserService,
-    private authService: AuthService,
     private alertService: AlertService,
     private router: Router,
     public location: Location
@@ -86,9 +86,7 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
           } else {
             this.user = user;
             this.detailsLoaded = true;
-            if (user.role === UserRole.ROADWORKER) {
-              this.loadRelations();
-            }
+            this.loadRelations();
           }
         },
         error: (error) => {
@@ -108,7 +106,13 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
   }
 
   loadRelations(): void {
-    this.projectsSub = this.authService.currentUserToken$
+    this.projectsSub = this.canSeeStatistics()
+      .pipe(
+        switchMap((canSeeStatistics) => {
+          if(canSeeStatistics) return this.authService.currentUserToken$;
+          return of(null);
+        })
+      )
       .pipe(
         switchMap((token) => {
           if (!token) {
@@ -141,13 +145,20 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
           if (projects) {
             this.projects = projects;
           }
+          this.projectsLoaded = true;
         },
         error: (error) => {
           console.error(error);
         },
       });
 
-    this.machinesSub = this.authService.currentUserToken$
+    this.machinesSub = this.canSeeStatistics()
+      .pipe(
+        switchMap((canSeeStatistics) => {
+          if(canSeeStatistics) return this.authService.currentUserToken$;
+          return of(null);
+        })
+      )
       .pipe(
         switchMap((token) => {
           if (!token) {
@@ -180,13 +191,20 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
           if (machines) {
             this.machines = machines;
           }
+          this.machinesLoaded = true;
         },
         error: (error) => {
           console.error(error);
         },
       });
 
-    this.workersSub = this.authService.currentUserToken$
+    this.workersSub = this.canSeeStatistics()
+      .pipe(
+        switchMap((canSeeStatistics) => {
+          if(canSeeStatistics) return this.authService.currentUserToken$;
+          return of(null);
+        })
+      )
       .pipe(
         switchMap((token) => {
           if (!token) {
@@ -219,6 +237,7 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
           if (workers) {
             this.workers = workers;
           }
+          this.workersLoaded = true;
         },
         error: (error) => {
           console.error(error);
@@ -248,11 +267,15 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  canEdit(): Observable<boolean> {
-    return this.authService.userMayEditUser(this.user._id);
-  }
-
   isRoadWorker(): boolean {
     return this.user.role === UserRole.ROADWORKER;
+  }
+
+  canSeeStatistics(): Observable<boolean> {
+    return this.authService.userMaySeeStatistics();
+  }
+
+  canEdit(): Observable<boolean> {
+    return this.authService.userMayEditUser(this.user._id);
   }
 }

@@ -11,7 +11,16 @@
     >
       <div class="mb-6">
         <label for="date">Datum</label>
-        <input id="date" formControlName="date" type="date" />
+        <input
+          id="date"
+          formControlName="date"
+          type="date"
+          [ngClass]="{
+            error:
+              hsForm.controls['date'].invalid &&
+              hsForm.controls['date'].touched
+          }"
+        />
       </div>
       <div class="relative overflow-x-auto">
         <table class="w-full text-sm text-left">
@@ -139,7 +148,22 @@
               type="number"
               step="0.1"
               min="0"
+              [ngClass]="{
+                error:
+                  hsRowForm.controls['hours'].invalid &&
+                  hsRowForm.controls['hours'].touched
+              }"
             />
+            <p
+              *ngIf="
+                hsRowForm.controls['hours'].touched &&
+                hsRowForm.controls['hours'].errors &&
+                hsRowForm.controls['hours'].errors['min']
+              "
+              class="mt-2 text-sm text-red-600 dark:text-red-500"
+            >
+              De hoeveelheid uren moet groter zijn dan 0.
+            </p>
           </div>
           <div>
             <label for="machine">Machine</label>
@@ -156,7 +180,22 @@
               id="description"
               formControlName="description"
               rows="5"
+              [ngClass]="{
+                error:
+                  hsRowForm.controls['description'].invalid &&
+                  hsRowForm.controls['description'].touched
+              }"
             ></textarea>
+            <p
+              *ngIf="
+                hsRowForm.controls['description'].touched &&
+                hsRowForm.controls['description'].errors &&
+                hsRowForm.controls['description'].errors['required']
+              "
+              class="mt-2 text-sm text-red-600 dark:text-red-500"
+            >
+              Geef een omschrijving op.
+            </p>
           </div>
         </div>
         <button
@@ -169,7 +208,7 @@
         <button
           type="submit"
           class="bg-accent px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
-          data-modal-toggle="addRowModal"
+          [disabled]="hsRowForm.invalid"
         >
           <i class="fas fa-plus"></i> Rij toevoegen
         </button>
