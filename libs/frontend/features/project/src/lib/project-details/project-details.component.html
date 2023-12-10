@@ -14,7 +14,7 @@
       </a>
     </h4>
     <h4>Statistieken</h4>
-    <div class="flex flex-row gap-4">
+    <div class="flex flex-row gap-4 justify-center">
       <section class="w-fit">
         <h5 class="text-white bg-primary w-full p-2 rounded-md mx-auto mb-2">
           Werknemers
@@ -48,6 +48,44 @@
         </ng-template>
       </section>
     </div>
+    <div class="relative overflow-x-auto mt-5">
+      <h5 class="text-white bg-primary w-full p-2 rounded-t-lg mx-auto">
+        Uren
+      </h5>
+      <table class="w-full text-sm text-left rtl:text-right">
+        <thead class="text-xs uppercase bg-primary text-white">
+          <tr>
+            <th scope="col" class="px-6 py-3">Uren</th>
+            <th scope="col" class="px-6 py-3">Machine</th>
+            <th scope="col" class="px-6 py-3">Omschrijving</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="rowsLoaded; else loadingRows">
+          <tr class="border-b" *ngFor="let row of rows">
+            <td class="px-6 py-4">
+              {{ row.hours }}
+            </td>
+            <td class="px-6 py-4">
+              <a *ngIf="row.machine; " class="underline decoration-accent hover:text-accent"
+                routerLink="/machine/{{ row.machine._id }}">
+                {{ row.machine.name }}
+              </a>
+              <span *ngIf="!row.machine">Geen machine gebruikt</span>
+            </td>
+            <td class="px-6 py-4">
+              {{ row.description }}
+            </td>
+          </tr>
+        </tbody>
+        <ng-template #loadingRows>
+          <tr>
+            <td colspan="3">
+              <hour-master-loader></hour-master-loader>
+            </td>
+          </tr>
+        </ng-template>
+      </table>
+    </div>
     <div class="mt-5 flex justify-center">
       <span *ngIf="totalHoursLoaded; else loadingHours" class="text-center italic">
         Totaal aantal uren aan gewerkt: {{ totalHours }}
@@ -56,13 +94,11 @@
         <hour-master-loader></hour-master-loader>
       </ng-template>
     </div>
-    <div
-      *ngIf="
+    <div *ngIf="
         (project &&
         (user$ | async)?._id === project.admin._id) ||
         (user$ | async)?.role === roles.ADMIN
-      "
-      class="flex flex-col md:flex-row gap-2 mt-5">
+      " class="flex flex-col md:flex-row gap-2 mt-5">
       <button routerLink="edit" class="bg-accent px-4 py-2 rounded-md">
         Project wijzigen
       </button>

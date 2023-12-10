@@ -2,7 +2,7 @@ import { Observable, throwError } from 'rxjs';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { map, catchError, tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { ApiResponse, IMachine, IProject, IUser, Id } from '@hour-master/shared/api';
+import { ApiResponse, IHourSchemeRow, IMachine, IProject, IUser, Id } from '@hour-master/shared/api';
 import { environment } from '@hour-master/shared/environments';
 
 /**
@@ -146,6 +146,23 @@ export class ProjectService {
       )
       .pipe(
         map((response: any) => response.results as number),
+        tap(console.log),
+        catchError(this.handleError)
+      );
+  }
+
+  public getWorkRowsFromProject(id: Id, options?: any): Observable<IHourSchemeRow[] | null> {
+    console.log(`getWorkRowsFromProject ${this.rcmndEndpoint}/${id}/rows`);
+
+    return this.http
+      .get<ApiResponse<number>>(
+        `${this.rcmndEndpoint}/${id}/rows`, {
+        ...options,
+        ...httpOptions,
+      }
+      )
+      .pipe(
+        map((response: any) => response.results as IHourSchemeRow[]),
         tap(console.log),
         catchError(this.handleError)
       );

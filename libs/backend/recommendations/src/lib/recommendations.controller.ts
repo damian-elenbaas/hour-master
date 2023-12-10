@@ -1,7 +1,7 @@
 import { Controller, Get, Logger, Param, Query } from '@nestjs/common';
 import { RecommendationsService } from './recommendations.service';
 import { Id, UserRole } from '@hour-master/shared/api';
-import { Public, Roles } from '@hour-master/backend/decorators';
+import { Roles } from '@hour-master/backend/decorators';
 
 @Controller('recommendations')
 export class RecommendationsController {
@@ -42,8 +42,7 @@ export class RecommendationsController {
   }
 
   @Get('machine/:id/rows')
-  // @Roles([UserRole.ADMIN, UserRole.OFFICE])
-  @Public()
+  @Roles([UserRole.ADMIN, UserRole.OFFICE])
   async getWorkRowsFromMachine(@Param('id') id: Id) {
     return await this.recommendationsService.getHourSchemeRowsRelatedToMachine(id);
   }

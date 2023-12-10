@@ -1,6 +1,6 @@
 import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { IMachine, IProject, IUser, UserRole } from '@hour-master/shared/api';
+import { IHourSchemeRow, IMachine, IProject, IUser, UserRole } from '@hour-master/shared/api';
 import { ProjectService } from '../project.service';
 import { AuthService } from '@hour-master/frontend/auth';
 import { AlertService } from '@hour-master/frontend/common';
@@ -17,15 +17,18 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   detailSub!: Subscription;
   workersSub!: Subscription;
   machinesSub!: Subscription;
+  rowsSub!: Subscription;
   totalHoursSub!: Subscription;
 
   project!: IProject;
   workers: IUser[] = [];
   machines: IMachine[] = [];
+  rows: IHourSchemeRow[] = [];
   totalHours = 0;
 
   workersLoaded = false;
   machinesLoaded = false;
+  rowsLoaded = false;
   totalHoursLoaded = false;
 
   token!: string;
@@ -147,6 +150,40 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
           this.machines = machines;
         }
         this.machinesLoaded = true;
+      });
+
+    this.rowsSub = this.authService.currentUserToken$
+      .pipe(
+        switchMap((token) => {
+          if (token) {
+            this.token = token;
+            return this.route.paramMap;
+          } else {
+            this.router.navigate(['/auth/login']);
+            return of(null);
+          }
+        })
+      )
+      .pipe(
+        switchMap((params) => {
+          if (params) {
+            const id = params.get('id') as string;
+            return this.projectService.getWorkRowsFromProject(id, {
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + this.token,
+              },
+            });
+          } else {
+            return of(null);
+          }
+        })
+      )
+      .subscribe((rows) => {
+        if (rows) {
+          this.rows = rows;
+        }
+        this.rowsLoaded = true;
       });
 
     this.totalHoursSub = this.authService.currentUserToken$
