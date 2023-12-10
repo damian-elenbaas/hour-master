@@ -33,7 +33,7 @@
               {{ row.hours }}
             </td>
             <td class="px-6 py-4">
-              <a *ngIf="row.machine; " class="underline decoration-accent hover:text-accent"
+              <a *ngIf="row.machine;" class="underline decoration-accent hover:text-accent"
                 routerLink="/machine/{{ row.machine._id }}">
                 {{ row.machine.name }}
               </a>
@@ -41,6 +41,11 @@
             </td>
             <td class="px-6 py-4">
               {{ row.description }}
+            </td>
+          </tr>
+          <tr *ngIf="hourScheme.rows?.length === 0">
+            <td colspan="4" class="px-6 py-4 text-center italic">
+              Geen uren gevonden
             </td>
           </tr>
         </tbody>

@@ -364,6 +364,42 @@ export class RecommendationsService {
     return result.records[0].get('totalHours');
   }
 
+  async getRelatedWorkersFromMachine(machineId: Id) {
+    this.logger.log(`Getting related workers from machine`);
+
+    const result = await this.neo4jService.read(`
+      MATCH (u:User)-[:WORKED_ON]->(hs:HourScheme)-[:HAS_DONE]-(work:Work)-[:WITH_MACHINE]->(m:Machine {_id: $id})
+      RETURN DISTINCT u
+    `, {
+      id: machineId
+    });
+
+    const workers: IUser[] = [];
+    result.records.forEach((record) => {
+      workers.push(record.get('u').properties as IUser);
+    });
+
+    return workers;
+  }
+
+  async getRelatedProjectsFromMachine(machineId: Id) {
+    this.logger.log(`Getting related projects from machine`);
+
+    const result = await this.neo4jService.read(`
+      MATCH (p:Project)<-[:ON_PROJECT]-(work:Work)-[:WITH_MACHINE]->(m:Machine {_id: $id})
+      RETURN DISTINCT p
+    `, {
+      id: machineId
+    });
+
+    const projects: IProject[] = [];
+    result.records.forEach((record) => {
+      projects.push(record.get('p').properties as IProject);
+    });
+
+    return projects;
+  }
+
   async getHourSchemeRowsRelatedToMachine(machineId: Id) {
     this.logger.log(`Getting hour scheme rows related to machine`);
 

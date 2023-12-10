@@ -41,10 +41,28 @@ export class RecommendationsController {
     return await this.recommendationsService.getMostWorkedOnProject();
   }
 
+  @Get('machine/:id/total-hours')
+  @Roles([UserRole.ADMIN, UserRole.OFFICE])
+  async getTotalHoursOnMachine(@Param('id') id: Id) {
+    return await this.recommendationsService.getTotalHoursOnMachine(id);
+  }
+
   @Get('machine/:id/rows')
   @Roles([UserRole.ADMIN, UserRole.OFFICE])
   async getWorkRowsFromMachine(@Param('id') id: Id) {
     return await this.recommendationsService.getHourSchemeRowsRelatedToMachine(id);
+  }
+
+  @Get('machine/:id/workers')
+  @Roles([UserRole.ADMIN, UserRole.OFFICE])
+  async getWorkersFromMachine(@Param('id') id: Id) {
+    return await this.recommendationsService.getRelatedWorkersFromMachine(id);
+  }
+
+  @Get('machine/:id/projects')
+  @Roles([UserRole.ADMIN, UserRole.OFFICE])
+  async getProjectsFromMachine(@Param('id') id: Id) {
+    return await this.recommendationsService.getRelatedProjectsFromMachine(id);
   }
 
   @Get('worker/:id/related-workers')
