@@ -17,7 +17,7 @@
         </span>
       </div>
       <section class="mt-8">
-        <div class="flex flex-col md:flex-row md:justify-between">
+        <div class="flex flex-col md:flex-row md:justify-center p-4">
           <div class="flex flex-col md:flex-row md:justify-between">
             <div class="flex flex-col mb-2">
               <span class="font-bold">Gebruikersnaam</span>
@@ -36,18 +36,21 @@
       </section>
       <section *ngIf="isRoadWorker() && (canSeeStatistics() | async)" class="mt-5 border-t ">
         <h5>Statistieken</h5>
-        <div class="flex flex-col md:flex-row justify-center gap-3">
+        <div class="flex flex-col items-center gap-4 justify-center md:flex-row md:items-start">
           <section class="w-fit mx-auto">
             <h5 class="text-white bg-primary w-full p-2 rounded-md mx-auto mb-2">
               Gerelateerde werknemers
             </h5>
-            <ul *ngIf="workersLoaded; else loadingWorkers" class="ml-4 flex flex-col gap-2">
-              <li *ngFor="let worker of workers">
+            <ul *ngIf="workersLoaded; else loadingWorkers" class="flex flex-col gap-2">
+              <li *ngFor="let worker of workers" class="ml-4">
                 <a class="hover:text-accent" routerLink="/user/{{ worker._id }}">
                   {{ worker.firstname }}
                   {{ worker.lastname }}
                 </a>
               </li>
+              <div *ngIf="workers.length === 0" class="text-center">
+                <span class="text-sm italic">Geen gerelateerde werknemers</span>
+              </div>
             </ul>
             <ng-template #loadingWorkers>
               <hour-master-loader></hour-master-loader>
@@ -57,12 +60,15 @@
             <h5 class="text-white bg-primary w-full p-2 rounded-md mx-auto mb-2">
               Projecten
             </h5>
-            <ul *ngIf="projectsLoaded; else loadingProjects" class="ml-4 flex flex-col gap-2">
-              <li *ngFor="let project of projects">
+            <ul *ngIf="projectsLoaded; else loadingProjects" class="flex flex-col gap-2">
+              <li *ngFor="let project of projects" class="ml-4">
                 <a class="hover:text-accent" routerLink="/project/{{ project._id }}">
                   {{ project.name }}
                 </a>
               </li>
+              <div *ngIf="projects.length === 0" class="text-center">
+                <span class="text-sm italic">Geen projecten</span>
+              </div>
             </ul>
             <ng-template #loadingProjects>
               <hour-master-loader></hour-master-loader>
@@ -72,13 +78,16 @@
             <h5 class="text-white bg-primary w-full p-2 rounded-md mx-auto mb-2">
               Machines
             </h5>
-            <ul *ngIf="machinesLoaded; else loadingMachines" class="ml-4 flex flex-col gap-2">
-              <li *ngFor="let machine of machines">
+            <ul *ngIf="machinesLoaded; else loadingMachines" class="flex flex-col gap-2">
+              <li *ngFor="let machine of machines" class="ml-4 ">
                 <a class="hover:text-accent" routerLink="/machine/{{ machine._id }}">
                   {{ machine.name }}
                   ({{ machine.typeNumber }})
                 </a>
               </li>
+              <div *ngIf="machines.length === 0" class="text-center">
+                <span class="text-sm italic">Geen machines</span>
+              </div>
             </ul>
             <ng-template #loadingMachines>
               <hour-master-loader></hour-master-loader>

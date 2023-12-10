@@ -5,108 +5,129 @@
   </button>
   <div *ngIf="project; else loading">
     <h3>{{ project.name }}</h3>
-    <h4 class="pb-0">{{ project.location.address }}, {{ project.location.city }}</h4>
-    <h4 class="pt-0">
-      Project van
-      <a class="underline decoration-accent hover:text-accent" routerLink="/user/{{ project.admin._id }}">
-        {{ project.admin.firstname }}
-        {{ project.admin.lastname }}
-      </a>
-    </h4>
-    <h4>Statistieken</h4>
-    <div class="flex flex-row gap-4 justify-center">
-      <section class="w-fit">
-        <h5 class="text-white bg-primary w-full p-2 rounded-md mx-auto mb-2">
-          Werknemers
-        </h5>
-        <ul *ngIf="workersLoaded; else loadingWorkers" class="ml-4 flex flex-col gap-2">
-          <li *ngFor="let worker of workers">
-            <a class="hover:text-accent" routerLink="/user/{{ worker._id }}">
-              {{ worker.firstname }}
-              {{ worker.lastname }}
-            </a>
-          </li>
-        </ul>
-        <ng-template #loadingWorkers>
-          <hour-master-loader></hour-master-loader>
-        </ng-template>
-      </section>
-      <section class="w-fit">
-        <h5 class="text-white bg-primary w-full p-2 rounded-md mx-auto mb-2">
-          Machines
-        </h5>
-        <ul *ngIf="machinesLoaded; else loadingMachines" class="ml-4 flex flex-col gap-2">
-          <li *ngFor="let machine of machines">
-            <a class="hover:text-accent" routerLink="/machine/{{ machine._id }}">
-              {{ machine.name }}
-              ({{ machine.typeNumber }})
-            </a>
-          </li>
-        </ul>
-        <ng-template #loadingMachines>
-          <hour-master-loader></hour-master-loader>
-        </ng-template>
-      </section>
-    </div>
-    <div class="relative overflow-x-auto mt-5">
-      <h5 class="text-white bg-primary w-full p-2 rounded-t-lg mx-auto">
-        Uren
-      </h5>
-      <table class="w-full text-sm text-left rtl:text-right">
-        <thead class="text-xs uppercase bg-primary text-white">
-          <tr>
-            <th scope="col" class="px-6 py-3">Uren</th>
-            <th scope="col" class="px-6 py-3">Machine</th>
-            <th scope="col" class="px-6 py-3">Omschrijving</th>
-          </tr>
-        </thead>
-        <tbody *ngIf="rowsLoaded; else loadingRows">
-          <tr class="border-b" *ngFor="let row of rows">
-            <td class="px-6 py-4">
-              {{ row.hours }}
-            </td>
-            <td class="px-6 py-4">
-              <a *ngIf="row.machine; " class="underline decoration-accent hover:text-accent"
-                routerLink="/machine/{{ row.machine._id }}">
-                {{ row.machine.name }}
+    <section class="border-t">
+      <div class="flex flex-col md:flex-row md:justify-center p-4">
+        <div class="flex flex-col md:flex-row md:justify-between">
+          <div class="flex flex-col mb-2">
+            <span class="font-bold">Locatie</span>
+            <span class="font-medium">
+              {{ project.location.address }}, {{ project.location.city }} ({{ project.location.postalCode }})
+            </span>
+          </div>
+          <div class="flex flex-col md:ml-4">
+            <span class="font-bold">Project van</span>
+            <span class="font-medium">
+              <a class="underline decoration-accent hover:text-accent" routerLink="/user/{{ project.admin._id }}">
+                {{ project.admin.firstname }}
+                {{ project.admin.lastname }}
               </a>
-              <span *ngIf="!row.machine">Geen machine gebruikt</span>
-            </td>
-            <td class="px-6 py-4">
-              {{ row.description }}
-            </td>
-          </tr>
-          <tr *ngIf="rows.length === 0">
-            <td colspan="3" class="px-6 py-4 text-center italic">
-              Geen uren gevonden
-            </td>
-          </tr>
-        </tbody>
-        <ng-template #loadingRows>
-          <tr>
-            <td colspan="3">
-              <hour-master-loader></hour-master-loader>
-            </td>
-          </tr>
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="border-t">
+      <h4>Statistieken</h4>
+      <div class="flex flex-col items-center gap-4 justify-center md:flex-row md:items-start">
+        <section class="w-fit">
+          <h5 class="text-white bg-primary w-full p-2 rounded-md mx-auto mb-2">
+            Werknemers
+          </h5>
+          <ul *ngIf="workersLoaded; else loadingWorkers" class="flex flex-col gap-2">
+            <li *ngFor="let worker of workers" class="ml-4">
+              <a class="hover:text-accent" routerLink="/user/{{ worker._id }}">
+                {{ worker.firstname }}
+                {{ worker.lastname }}
+              </a>
+            </li>
+            <div *ngIf="workers.length === 0" class="text-center">
+              <span class="text-sm italic">Geen gerelateerde werknemers</span>
+            </div>
+          </ul>
+          <ng-template #loadingWorkers>
+            <hour-master-loader></hour-master-loader>
+          </ng-template>
+        </section>
+        <section class="w-fit">
+          <h5 class="text-white bg-primary w-full p-2 rounded-md mx-auto mb-2">
+            Machines
+          </h5>
+          <ul *ngIf="machinesLoaded; else loadingMachines" class="flex flex-col gap-2">
+            <li *ngFor="let machine of machines" class="ml-4">
+              <a class="hover:text-accent" routerLink="/machine/{{ machine._id }}">
+                {{ machine.name }}
+                ({{ machine.typeNumber }})
+              </a>
+            </li>
+            <div *ngIf="machines.length === 0" class="text-center">
+              <span class="text-sm italic">Geen machines gebruikt</span>
+            </div>
+          </ul>
+          <ng-template #loadingMachines>
+            <hour-master-loader></hour-master-loader>
+          </ng-template>
+        </section>
+      </div>
+      <div class="relative overflow-x-auto mt-5">
+        <h5 class="text-white bg-primary w-full p-2 rounded-t-lg mx-auto">
+          Uren
+        </h5>
+        <table class="w-full text-sm text-left rtl:text-right">
+          <thead class="text-xs uppercase bg-primary text-white">
+            <tr>
+              <th scope="col" class="px-6 py-3">Uren</th>
+              <th scope="col" class="px-6 py-3">Machine</th>
+              <th scope="col" class="px-6 py-3">Omschrijving</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="rowsLoaded; else loadingRows">
+            <tr class="border-b" *ngFor="let row of rows">
+              <td class="px-6 py-4">
+                {{ row.hours }}
+              </td>
+              <td class="px-6 py-4">
+                <a *ngIf="row.machine; " class="underline decoration-accent hover:text-accent"
+                  routerLink="/machine/{{ row.machine._id }}">
+                  {{ row.machine.name }}
+                </a>
+                <span *ngIf="!row.machine">Geen machine gebruikt</span>
+              </td>
+              <td class="px-6 py-4">
+                {{ row.description }}
+              </td>
+            </tr>
+            <tr *ngIf="rows.length === 0">
+              <td colspan="3" class="px-6 py-4 text-center italic">
+                Geen uren gevonden
+              </td>
+            </tr>
+          </tbody>
+          <ng-template #loadingRows>
+            <tr>
+              <td colspan="3">
+                <hour-master-loader></hour-master-loader>
+              </td>
+            </tr>
+          </ng-template>
+        </table>
+      </div>
+      <div class="mt-5 flex justify-center">
+        <span *ngIf="totalHoursLoaded; else loadingHours" class="text-center italic">
+          Totaal aantal uren aan gewerkt: {{ totalHours }}
+        </span>
+        <ng-template #loadingHours>
+          <hour-master-loader></hour-master-loader>
         </ng-template>
-      </table>
-    </div>
-    <div class="mt-5 flex justify-center">
-      <span *ngIf="totalHoursLoaded; else loadingHours" class="text-center italic">
-        Totaal aantal uren aan gewerkt: {{ totalHours }}
-      </span>
-      <ng-template #loadingHours>
-        <hour-master-loader></hour-master-loader>
-      </ng-template>
-    </div>
-    <div *ngIf="canEdit() | async;" class="flex flex-col md:flex-row gap-2 mt-5">
-      <button routerLink="edit" class="bg-accent px-4 py-2 rounded-md">
-        Project wijzigen
-      </button>
-      <button (click)="popUpModal.show()" class="bg-secondary text-white px-4 py-2 rounded-md">
-        Project verwijderen
-      </button>
-    </div>
+      </div>
+      <div *ngIf="canEdit() | async;" class="flex flex-col md:flex-row gap-2 mt-5">
+        <button routerLink="edit" class="bg-accent px-4 py-2 rounded-md">
+          Project wijzigen
+        </button>
+        <button (click)="popUpModal.show()" class="bg-secondary text-white px-4 py-2 rounded-md">
+          Project verwijderen
+        </button>
+      </div>
+    </section>
   </div>
   <ng-template #loading>
     <hour-master-loader></hour-master-loader>

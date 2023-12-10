@@ -26,134 +26,775 @@
         </thead>
         <tbody>
           <tr class="border-b">
-            <td class="px-6 py-4">1</td>
+            <td class="px-6 py-4 whitespace-nowrap">F-01</td>
             <td class="px-6 py-4">
-              Een kantoormedewerker moet CRUD operaties kunnen uitvoeren op
-              projecten.
+              Als kantoormedewerker wil ik een lijst van projecten kunnen zien,
+              zo danig dat ik weet welke projecten er zijn.
             </td>
             <td class="px-6 py-4">
-              Een kantoormedewerker moet een project kunnen aanmaken, lezen,
-              wijzigen en verwijderen dat op een locatie bevindt. De
-              stratenmakers moeten op dit project uiteindelijk hun uren kunnen
-              registreren.
+              <ul>
+                <li>
+                  Een kantoormedewerker moet een lijst van projecten kunnen zien.
+                </li>
+                <li>
+                  Een kantoormedewerker mag alle projecten zien.
+                </li>
+                <li>
+                  In de lijst moet de naam van het project en beheerder worden
+                  weergegeven.
+                </li>
+              </ul>
             </td>
             <td class="px-6 py-4 text-center">
-              <b>M</b>
+              <b>Must</b>
             </td>
           </tr>
           <tr class="border-b">
-            <td class="px-6 py-4">2</td>
+            <td class="px-6 py-4 whitespace-nowrap">F-02</td>
             <td class="px-6 py-4">
-              Een stratenmaker moet CRUD operaties kunnen uitvoeren op
-              urenschema's.
+              Als kantoormedewerker wil ik projecten kunnen aanmaken, zodanig
+              dat stratenmakers hun uren kunnen registreren.
             </td>
             <td class="px-6 py-4">
-              Een stratenmaker moet een urenschema kunnen invullen, lezen
-              wijzigen en verwijderen voor een project. Hierbij moet hij kunnen
-              aangeven welke werkzaamheden hij heeft uitgevoerd en of er
-              machines zijn gebruikt. Deze operaties kan een stratenmaker alleen
-              op zijn eigen urenschema uitvoeren.
+              <ul>
+                <li>
+                  Er moet een knop op de projectenlijstpagina zijn om een
+                  project aan te maken.
+                </li>
+                <li>
+                  De project moet een naam en locatie hebben.
+                </li>
+                <li>
+                  In de locatie moet een straatnaam, huisnummer, postcode en stad
+                  worden opgeslagen.
+                </li>
+                <li>
+                  De postcode moet voor de Nederlandse standaard gevalideerd worden.
+                </li>
+              </ul>
             </td>
             <td class="px-6 py-4 text-center">
-              <b>M</b>
+              <b>Must</b>
             </td>
           </tr>
           <tr class="border-b">
-            <td class="px-6 py-4">3</td>
+            <td class="px-6 py-4 whitespace-nowrap">F-03</td>
             <td class="px-6 py-4">
-              Een kantoormedewerker moet CRUD operaties kunnen uitvoeren op
-              machine's.
+              Als kantoormedewerker wil ik vanuit de projectenlijst naar
+              de details van een project kunnen navigeren, zondanig dat ik weet
+              wat de details van het project zijn.
             </td>
             <td class="px-6 py-4">
-              Een kantoormedewerker moet machines kunnen toevoegen, lezen,
-              wijzigen en verwijderen.
+              <ul>
+                <li>
+                  Er moet vanuit een project in de projectlijst genavigeerd kunnen
+                  worden naar de detailpagina van het project.
+                </li>
+                <li>
+                  In de detailpagina moet de naam van het project, beheerder en
+                  locatie worden weergegeven.
+                </li>
+                <li>
+                  Voor ieder project moet een aparte detailpagina zijn.
+                </li>
+              </ul>
             </td>
             <td class="px-6 py-4 text-center">
-              <b>M</b>
+              <b>Must</b>
             </td>
           </tr>
           <tr class="border-b">
-            <td class="px-6 py-4">4</td>
+            <td class="px-6 py-4 whitespace-nowrap">F-04</td>
             <td class="px-6 py-4">
-              Een kantoormedewerker moet een overzicht kunnen zien van alle
-              urenregistraties voor een bepaald project.
+              Als kantoormedewerker wil ik mijn projecten kunnen wijzigen,
+              zodanig dat ik fouten kan herstellen.
             </td>
             <td class="px-6 py-4">
-              Wanneer een kantoormedewerker de detailpagina van een project
-              opent, moet er een overzicht komen van alle urenregistraties die
-              op dat project zijn gemaakt. Daarnaast worden er statistieken
-              zoals totaal aantal uren en gebruikte machines weergegeven.
+              <ul>
+                <li>
+                  Er moet een knop in de detailpagina van een project zijn om het
+                  project te wijzigen. Deze knop moet alleen zichtbaar zijn voor
+                  de beheerder van het project.
+                </li>
+                <li>
+                  De kantoormedewerker moet zijn projecten de naam en locatie
+                  kunnen wijzigen.
+                </li>
+                <li>
+                  De postcode moet worden gevalideerd voor de Nederlandse
+                  standaard.
+                </li>
+                <li>
+                  De kantoormedewerker mag alleen zijn eigen projecten wijzigen.
+                </li>
+              </ul>
             </td>
             <td class="px-6 py-4 text-center">
-              <b>S</b>
+              <b>Must</b>
             </td>
           </tr>
           <tr class="border-b">
-            <td class="px-6 py-4">5</td>
+            <td class="px-6 py-4 whitespace-nowrap">F-05</td>
             <td class="px-6 py-4">
-              Een kantoormedewerker kan accounts aanmaken voor stratenmakers
+              Als kantoormedewerker wil ik mijn projecten kunnen verwijderen,
+              zodanig dat ik oude projecten kan verwijderen.
             </td>
             <td class="px-6 py-4">
-              Wanneer er een nieuwe stratenmaker indienst komt, moet hij een
-              acccount krijgen. De taak voor een kantoormedewerker is om deze
-              aan te maken.
+              <ul>
+                <li>
+                  De kantoormedewerker moet zijn projecten kunnen verwijderen.
+                </li>
+                <li>
+                  De kantoormedewerker mag alleen zijn eigen projecten verwijderen.
+                </li>
+                <li>
+                  Wanneer er uren zijn gekoppeld aan het project, moeten ook
+                  deze worden verwijderd.
+                </li>
+              </ul>
             </td>
             <td class="px-6 py-4 text-center">
-              <b>S</b>
+              <b>Must</b>
             </td>
           </tr>
           <tr class="border-b">
-            <td class="px-6 py-4">6</td>
+            <td class="px-6 py-4 whitespace-nowrap">F-06</td>
             <td class="px-6 py-4">
-              Er wordt aangegeven wanneer er een machine onderhoud nodig heeft
+              Als kantoormedewerker wil ik een lijst van machines kunnen zien,
+              zondag dat ik weet welke machines er zijn.
             </td>
             <td class="px-6 py-4">
-              Er wordt op het beginscherm van het dashboard aangegeven als een
-              melding dat er een machine onderhoud nodig heeft. Dit wordt
-              bepaald door de hoeveelheid uren dat een machine heeft gedraaid,
-              dat berekend is uit de ingevulde uren.
+              <ul>
+                <li>
+                  Een kantoormedewerker moet een lijst van machines kunnen zien.
+                </li>
+                <li>
+                  Een kantoormedewerker mag alle machines zien.
+                </li>
+                <li>
+                  In de lijst moet de naam van het machine en typenummer worden
+                  weergegeven.
+                </li>
+              </ul>
             </td>
             <td class="px-6 py-4 text-center">
-              <b>S</b>
+              <b>Must</b>
             </td>
           </tr>
           <tr class="border-b">
-            <td class="px-6 py-4">7</td>
+            <td class="px-6 py-4 whitespace-nowrap">F-07</td>
             <td class="px-6 py-4">
-              Er kan aangegeven worden dat er onderhoud uitgevoerd op een
-              machine
+              Als kantoormedewerker wil ik machines kunnen aanmaken, zodanig
+              dat stratenmakers bij hun urenregistratie kunnen aangeven welke
+              machines ze hebben gebruikt.
             </td>
             <td class="px-6 py-4">
-              Een kantoormedewerker kan bij een machine aangeven dat er
-              onderhoud is gepleegd. Dit wordt geregistreerd bij de machine.
+              <ul>
+                <li>
+                  Er moet een knop op de machineslijstpagina zijn om een
+                  machine aan te maken.
+                </li>
+                <li>
+                  De machine moet een naam en typenummer hebben.
+                </li>
+              </ul>
             </td>
             <td class="px-6 py-4 text-center">
-              <b>S</b>
+              <b>Must</b>
             </td>
           </tr>
           <tr class="border-b">
-            <td class="px-6 py-4">8</td>
-            <td class="px-6 py-4">Er is een administrator account</td>
+            <td class="px-6 py-4 whitespace-nowrap">F-08</td>
             <td class="px-6 py-4">
-              Er is een administrator account die alle CRUD operaties kan
-              uitvoeren op alle entiteiten. Deze moet ook kantoormedewerker en
-              stratenmaker accounts kunnen aanmaken.
+              Als kantoormedewerker wil ik vanuit de machineslijst naar
+              de details van een machine kunnen navigeren, zondanig dat ik weet
+              wat de details van de machine zijn.
+            </td>
+            <td class="px-6 py-4">
+              <ul>
+                <li>
+                  Er moet vanuit een machine in de machineslijst genavigeerd kunnen
+                  worden naar de detailpagina van de machine.
+                </li>
+                <li>
+                  In de detailpagina moet de naam van de machine en typenummer
+                  worden weergegeven.
+                </li>
+                <li>
+                  Voor iedere machine moet een aparte detailpagina zijn.
+                </li>
+              </ul>
             </td>
             <td class="px-6 py-4 text-center">
-              <b>S</b>
+              <b>Must</b>
             </td>
           </tr>
           <tr class="border-b">
-            <td class="px-6 py-4">9</td>
+            <td class="px-6 py-4 whitespace-nowrap">F-09</td>
             <td class="px-6 py-4">
-              Er is een overzicht scherm van alle projecten in een bepaalde stad
+              Als kantoormedewerker wil ik machines kunnen wijzigen, zodanig
+              dat ik fouten kan herstellen.
             </td>
             <td class="px-6 py-4">
-              Een kantoormedewerker kan een overzicht scherm zien waarin alle
-              projecten in een bepaalde stad worden weergegeven.
+              <ul>
+                <li>
+                  Er moet een knop in de detailpagina van een machine zijn om de
+                  machine te wijzigen.
+                </li>
+                <li>
+                  De kantoormedewerker moet zijn machines de naam en typenummer
+                  kunnen wijzigen.
+                </li>
+                <li>
+                  De kantoormedewerker mag alle machines wijzigen.
+                </li>
+              </ul>
             </td>
             <td class="px-6 py-4 text-center">
-              <b>C</b>
+              <b>Must</b>
+            </td>
+          </tr>
+          <tr class="border-b">
+            <td class="px-6 py-4 whitespace-nowrap">F-10</td>
+            <td class="px-6 py-4">
+              Als kantoormedewerker wil ik machines kunnen verwijderen, zodanig
+              dat ik oude machines kan verwijderen.
+            </td>
+            <td class="px-6 py-4">
+              <ul>
+                <li>
+                  De kantoormedewerker moet machines kunnen verwijderen.
+                </li>
+                <li>
+                  De kantoormedewerker mag alle machines verwijderen.
+                </li>
+                <li>
+                  Wanneer een machine voorkomt in een urenschema, moet in de
+                  urenschema de machine worden verwijderd.
+                </li>
+              </ul>
+            </td>
+            <td class="px-6 py-4 text-center">
+              <b>Must</b>
+            </td>
+          </tr>
+          <tr class="border-b">
+            <td class="px-6 py-4 whitespace-nowrap">F-11</td>
+            <td class="px-6 py-4">
+              Als stratenmaker wil ik mijn geregisreerde urenschema's kunnen zien
+              in een lijst, zodanig dat ik weet welke urenschema's ik heb
+              geregistreerd.
+            </td>
+            <td class="px-6 py-4">
+              <ul>
+                <li>
+                  De stratenmaker moet een lijst van zijn urenschema's kunnen
+                  zien.
+                </li>
+                <li>
+                  De stratenmaker mag alleen zijn eigen urenschema's zien.
+                </li>
+                <li>
+                  In de lijst moet de datum van het urenschema worden weergegeven.
+                </li>
+                <li>
+                  De lijst is op aflopende datum gesorteerd.
+                </li>
+              </ul>
+            </td>
+            <td class="px-6 py-4 text-center">
+              <b>Must</b>
+            </td>
+          </tr>
+          <tr class="border-b">
+            <td class="px-6 py-4 whitespace-nowrap">F-12</td>
+            <td class="px-6 py-4">
+              Als kantoormedewerker wil ik een lijst van alle urenschema's kunnen zien,
+              zondanig dat ik weet welke urenschema's er zijn.
+            </td>
+            <td class="px-6 py-4">
+              <ul>
+                <li>
+                  De kantoormedewerker moet een lijst van alle urenschema's kunnen
+                  zien.
+                </li>
+                <li>
+                  De kantoormedewerker mag alle urenschema's zien.
+                </li>
+                <li>
+                  In de lijst moet de datum van het urenschema worden weergegeven.
+                </li>
+                <li>
+                  De lijst is op aflopende datum gesorteerd.
+                </li>
+              </ul>
+            </td>
+            <td class="px-6 py-4 text-center">
+              <b>Must</b>
+            </td>
+          </tr>
+          <tr class="border-b">
+            <td class="px-6 py-4 whitespace-nowrap">F-13</td>
+            <td class="px-6 py-4">
+              Als stratenmaker wil ik urenschema's kunnen invullen, zodanig
+              dat de kantoormedewerker weet hoeveel uren ik heb gewerkt.
+            </td>
+            <td class="px-6 py-4">
+              <ul>
+                <li>
+                  De stratenmaker moet een urenschema kunnen invullen.
+                </li>
+                <li>
+                  De stratenmaker mag alleen voor zichzelf urenschema's invullen.
+                </li>
+                <li>
+                  De stratenmaker moet een datum kunnen kiezen.
+                </li>
+                <li>
+                  De stratenmaker moet meerdere rijen kunnen toevoegen aan het
+                  urenschema.
+                </li>
+                <li>
+                  De stratenmaker moet per rij een project kunnen kiezen.
+                </li>
+                <li>
+                  De stratenmaker moet per rij een aantal uren kunnen invullen.
+                </li>
+                <li>
+                  De stratenmaker moet per rij een machine kunnen
+                  selecteren.
+                </li>
+                <li>
+                  De ingevulde uren zijn minimaal 1 of hoger.
+                </li>
+                <li>
+                  Het urenschema moet minimaal 1 rij bevatten.
+                </li>
+              </ul>
+            </td>
+            <td class="px-6 py-4 text-center">
+              <b>Must</b>
+            </td>
+          </tr>
+          <tr class="border-b">
+            <td class="px-6 py-4 whitespace-nowrap">F-14</td>
+            <td class="px-6 py-4">
+              Als kantoormedewerker of stratenmaker wil ik vanuit de urenschema
+              lijst naar de details van een urenschema kunnen navigeren, zondanig
+              dat ik weet wat de details van het urenschema zijn.
+            </td>
+            <td class="px-6 py-4">
+              <ul>
+                <li>
+                  Er moet vanuit een urenschema in de urenschema lijst genavigeerd
+                  kunnen worden naar de detailpagina van het urenschema.
+                </li>
+                <li>
+                  In de detailpagina moet de datum van het urenschema worden
+                  weergegeven.
+                </li>
+                <li>
+                  Voor ieder urenschema moet een aparte detailpagina zijn.
+                </li>
+                <li>
+                  De kantoormedewerker mag alle urenschema's zien.
+                </li>
+                <li>
+                  De stratenmaker mag alleen zijn eigen urenschema's zien.
+                </li>
+                <li>
+                  In de detailpagina moet een lijst van de rijen van het urenschema
+                  worden weergegeven.
+                </li>
+                <li>
+                  In de lijst moet het project, aantal uren en machine van de rij
+                  worden weergegeven.
+                </li>
+                <li>
+                  Er wordt een totaal aantal uren van alle rijen berekend en weergegeven.
+                </li>
+              </ul>
+            </td>
+            <td class="px-6 py-4 text-center">
+              <b>Must</b>
+            </td>
+          </tr>
+          <tr class="border-b">
+            <td class="px-6 py-4 whitespace-nowrap">F-15</td>
+            <td class="px-6 py-4">
+              Als stratenmaker wil ik mijn urenschema's kunnen wijzigen,
+              zodanig dat ik fouten in mijn urenschema's kan corrigeren.
+            </td>
+            <td class="px-6 py-4">
+              <ul>
+                <li>
+                  Er moet een knop in de detailpagina van het urenschema zijn om
+                  het urenschema kunnen wijzigen.
+                </li>
+                <li>
+                  De stratenmaker moet zijn urenschema's kunnen wijzigen.
+                </li>
+                <li>
+                  De stratenmaker mag alleen zijn eigen urenschema's wijzigen.
+                </li>
+                <li>
+                  De stratenmaker moet een datum kunnen wijzigen.
+                </li>
+                <li>
+                  De stratenmaker moet meerdere rijen kunnen toevoegen, wijzigen
+                  en verwijderen aan het urenschema.
+                </li>
+                <li>
+                  De stratenmaker moet per rij een project kunnen kiezen.
+                </li>
+                <li>
+                  De stratenmaker moet per rij een aantal uren kunnen invullen.
+                </li>
+                <li>
+                  De stratenmaker moet per rij een machine kunnen
+                  selecteren.
+                </li>
+                <li>
+                  De ingevulde uren zijn minimaal 1 of hoger.
+                </li>
+                <li>
+                  Het urenschema moet minimaal 1 rij bevatten.
+                </li>
+              </ul>
+            </td>
+            <td class="px-6 py-4 text-center">
+              <b>Must</b>
+            </td>
+          </tr>
+          <tr class="border-b">
+            <td class="px-6 py-4 whitespace-nowrap">F-16</td>
+            <td class="px-6 py-4">
+              Als stratenmaker wil ik mijn urenschema kunnen verwijderen.
+            </td>
+            <td class="px-6 py-4">
+              <ul>
+                <li>
+                  Er moet een knop in de detailpagina van het urenschema zijn om
+                  het urenschema te verwijderen.
+                </li>
+                <li>
+                  De stratenmaker moet zijn urenschema's kunnen verwijderen.
+                </li>
+                <li>
+                  De stratenmaker mag alleen zijn eigen urenschema's verwijderen.
+                </li>
+              </ul>
+            </td>
+            <td class="px-6 py-4 text-center">
+              <b>Must</b>
+            </td>
+          </tr>
+          <tr class="border-b">
+            <td class="px-6 py-4 whitespace-nowrap">F-17</td>
+            <td class="px-6 py-4">
+              Als kantoormedewerker wil ik een lijst van alle werknemers kunnen
+              zien, zodanig dat ik weet wie er allemaal bij het bedrijf werken.
+            </td>
+            <td class="px-6 py-4">
+              <ul>
+                <li>
+                  Er moet een lijst van alle werknemers zijn.
+                </li>
+                <li>
+                  De kantoormedewerker moet alle werknemers kunnen zien.
+                </li>
+                <li>
+                  De voor- en achternaam van de werknemer moet worden weergegeven.
+                </li>
+                <li>
+                  Het emailadres van de werknemer moet worden weergegeven.
+                </li>
+                <li>
+                  De functie van de werknemer moet worden weergegeven.
+                </li>
+                <li>
+                  De lijst is op voor- en achternaam aflopend gesorteerd.
+                </li>
+              </ul>
+            </td>
+            <td class="px-6 py-4 text-center">
+              <b>Must</b>
+            </td>
+          </tr>
+          <tr class="border-b">
+            <td class="px-6 py-4 whitespace-nowrap">F-18</td>
+            <td class="px-6 py-4">
+              Als kantoormedewerker wil ik een nieuwe werknemer kunnen toevoegen,
+              zodanig dat de nieuwe werknemer zijn functie kan uitvoeren.
+            </td>
+            <td class="px-6 py-4">
+              <ul>
+                <li>
+                  Er moet een knop op de werknemerlijst pagina zijn om een nieuwe werknemer toe te voegen.
+                </li>
+                <li>
+                  De werknemer moet een voornaam, achternaam, gebruikersnaam, emailadres, functie en wachtwoord hebben.
+                </li>
+                <li>
+                  De kantoormedewerker moet een nieuwe werknemer kunnen toevoegen.
+                </li>
+                <li>
+                  De kantoormedewerker moet een voor- en achternaam kunnen invullen.
+                </li>
+                <li>
+                  De kantoormedewerker moet een emailadres kunnen invullen.
+                </li>
+                <li>
+                  De kantoormedewerker moet een functie kunnen selecteren.
+                </li>
+                <li>
+                  De kantoormedewerker moet een wachtwoord kunnen invullen.
+                </li>
+                <li>
+                  De kantoormedewerker moet een wachtwoord herhaling kunnen invullen.
+                </li>
+                <li>
+                  De wachtwoorden moeten overeenkomen.
+                </li>
+              </ul>
+            </td>
+            <td class="px-6 py-4 text-center">
+              <b>Must</b>
+            </td>
+          </tr>
+          <tr class="border-b">
+            <td class="px-6 py-4 whitespace-nowrap">F-19</td>
+            <td class="px-6 py-4">
+              Als kantoormedewerker wil ik vanuit de werknemerlijst de details
+              van een werknemer kunnen zien, zodanig dat ik alle gegevens van de
+              werknemer kan bekijken.
+            </td>
+            <td class="px-6 py-4">
+              <ul>
+                <li>
+                  Er moet vanuit een werknemer in de werknemerslijst naar de
+                  detailpagina van de werknemer genavigeerd kunnen worden.
+                </li>
+                <li>
+                  De kantoormedewerker moet de details van de werknemer kunnen zien.
+                </li>
+                <li>
+                  De voor- en achternaam van de werknemer moet worden weergegeven.
+                </li>
+                <li>
+                  De gebruikersnaam van de werknemer moet worden weergegeven.
+                </li>
+                <li>
+                  Het emailadres van de werknemer moet worden weergegeven.
+                </li>
+                <li>
+                  De functie van de werknemer moet worden weergegeven.
+                </li>
+              </ul>
+            </td>
+            <td class="px-6 py-4 text-center">
+              <b>Must</b>
+            </td>
+          </tr>
+          <tr class="border-b">
+            <td class="px-6 py-4 whitespace-nowrap">F-20</td>
+            <td class="px-6 py-4">
+              Als kantoormedewerker wil ik de gegevens van een werknemer kunnen
+              wijzigen, zodanig dat de administratie up-to-date is.
+            </td>
+            <td class="px-6 py-4">
+              <ul>
+                <li>
+                  Er moet een knop in de detailpagina van de werknemer zijn om
+                  de werknemer te wijzigen.
+                </li>
+                <li>
+                  De kantoormedewerker moet de werknemer kunnen wijzigen.
+                </li>
+                <li>
+                  De kantoormedewerker moet een voor- en achternaam kunnen invullen.
+                </li>
+                <li>
+                  De kantoormedewerker moet een gebruikersnaam kunnen invullen.
+                </li>
+                <li>
+                  De kantoormedewerker moet een emailadres kunnen invullen.
+                </li>
+                <li>
+                  De kantoormedewerker moet een functie kunnen selecteren.
+                </li>
+              </ul>
+            </td>
+            <td class="px-6 py-4 text-center">
+              <b>Must</b>
+            </td>
+          </tr>
+          <tr class="border-b">
+            <td class="px-6 py-4 whitespace-nowrap">F-21</td>
+            <td class="px-6 py-4">
+              Als kantoormedewerker wil een ontslagen werknemer kunnen verwijderen,
+              zodanig dat de administratie up-to-date is.
+            </td>
+            <td class="px-6 py-4">
+              <ul>
+                <li>
+                  Er moet een knop in de detailpagina van de werknemer zijn om
+                  de werknemer te verwijderen.
+                </li>
+                <li>
+                  De kantoormedewerker moet de werknemer kunnen verwijderen.
+                </li>
+                <li>
+                  De kantoormedewerker moet een bevestiging krijgen voordat de
+                  werknemer verwijderd wordt.
+                </li>
+                <li>
+                  Alle gerelateerde projecten of urenregistraties moeten ook
+                  verwijderd worden.
+                </li>
+                <li>
+                  De kantoormedewerker mag zichzelf niet verwijderen.
+                </li>
+              </ul>
+            </td>
+            <td class="px-6 py-4 text-center">
+              <b>Must</b>
+            </td>
+          </tr>
+          <tr class="border-b">
+            <td class="px-6 py-4 whitespace-nowrap">F-22</td>
+            <td class="px-6 py-4">
+              Als kantoormedewerker wil ik statistieken over een project
+              in het detailpagina van het project kunnen zien.
+            </td>
+            <td class="px-6 py-4">
+              <ul>
+                <li>
+                  Er moet een overzicht van alle urenregistraties van het project
+                  zijn.
+                </li>
+                <li>
+                  Er moet een overzicht van alle werknemers die aan het project
+                  werken zijn.
+                </li>
+                <li>
+                  Er moet een overzicht van alle gebruikte machines zijn.
+                </li>
+              </ul>
+            </td>
+            <td class="px-6 py-4 text-center">
+              <b>Should</b>
+            </td>
+          </tr>
+          <tr class="border-b">
+            <td class="px-6 py-4 whitespace-nowrap">F-23</td>
+            <td class="px-6 py-4">
+              Als kantoormedewerker wil ik statistieken over een machine
+              in het detailpagina van de machine kunnen zien.
+            </td>
+            <td class="px-6 py-4">
+              <ul>
+                <li>
+                  Er moet een overzicht van alle urenregistraties van het project
+                  zijn.
+                </li>
+                <li>
+                  Er moet een overzicht van alle werknemers die aan het project
+                  werken zijn.
+                </li>
+                <li>
+                  Er moet een overzicht van alle gebruikte machines zijn.
+                </li>
+              </ul>
+            </td>
+            <td class="px-6 py-4 text-center">
+              <b>Should</b>
+            </td>
+          </tr>
+          <tr class="border-b">
+            <td class="px-6 py-4 whitespace-nowrap">F-24</td>
+            <td class="px-6 py-4">
+              Als kantoormedewerker wil ik statistieken over een stratenmaker
+              in het detailpagina van de werknemer kunnen zien.
+            </td>
+            <td class="px-6 py-4">
+              <ul>
+                <li>
+                  Er moet een overzicht van alle gerelateerde werknemers zijn.
+                </li>
+                <li>
+                  Er moet een overzicht van alle machines waar de werknemer
+                  mee gewerkt heeft zijn.
+                </li>
+                <li>
+                  Er moet een overzicht van alle projecten waar de werknemer
+                  aan gewerkt heeft zijn.
+                </li>
+              </ul>
+            </td>
+            <td class="px-6 py-4 text-center">
+              <b>Should</b>
+            </td>
+          </tr>
+          <tr class="border-b">
+            <td class="px-6 py-4 whitespace-nowrap">F-25</td>
+            <td class="px-6 py-4">
+              Als bedrijfzijnde wil ik een administrator account kunnen hebben,
+              zodanig dat ik de applicatie kan beheren.
+            </td>
+            <td class="px-6 py-4">
+              <ul>
+                <li>
+                  Er moet een administrator account zijn.
+                </li>
+                <li>
+                  De administrator moet alle functionaliteiten van de kantoormedewerker
+                  hebben.
+                </li>
+                <li>
+                  De administrator moet alle functionaliteiten van de stratenmaker
+                  hebben.
+                </li>
+                <li>
+                  De admistratoraccount mag niet verwijderd kunnen worden door
+                  een kantoormedewerker.
+                </li>
+              </ul>
+            </td>
+            <td class="px-6 py-4 text-center">
+              <b>Could</b>
+            </td>
+          </tr>
+          <tr class="border-b">
+            <td class="px-6 py-4 whitespace-nowrap">F-25</td>
+            <td class="px-6 py-4">
+              Als werknemer wil ik mijn eigen wachtwoord kunnen wijzigen,
+              zodanig dat wanneer ik mijn wachtwoord vergeten ben, ik een
+              nieuw wachtwoord kan aanmaken.
+            </td>
+            <td class="px-6 py-4">
+              <ul>
+                <li>
+                  Er moet een 'Wachtwoord vergeten' knop op het inlogpagina zijn.
+                </li>
+                <li>
+                  De werknemer moet een emailadres kunnen invullen.
+                </li>
+                <li>
+                  De werknemer moet een email krijgen met een link om het
+                  wachtwoord te wijzigen.
+                </li>
+                <li>
+                  De werknemer moet een nieuw wachtwoord kunnen invullen.
+                </li>
+                <li>
+                  De werknemer moet een bevestiging krijgen dat het wachtwoord
+                  gewijzigd is.
+                </li>
+              </ul>
+            </td>
+            <td class="px-6 py-4 text-center">
+              <b>Won't</b>
             </td>
           </tr>
         </tbody>
@@ -174,32 +815,43 @@
         </thead>
         <tbody>
           <tr class="border-b">
-            <td class="px-6 py-4">1</td>
+            <td class="px-6 py-4 whitespace-nowrap">NF-01</td>
             <td class="px-6 py-4">
-              De applicatie is op alle devices te gebruiken
+              Als werknemer wil ik dat ik de applicatie op al mijn devices kan gebruiken,
+              zodanig dat ik overal kan werken.
             </td>
             <td class="px-6 py-4">
-              De applicatie moet op alle scherm formaten die in deze tijd
-              gebruikt worden te gebruiken zijn. Met name desktop, tablet en
-              mobiel is belangrijk.
+              <ul>
+                <li>
+                  De applicatie moet op alle devices met internet en een browser te gebruiken zijn.
+                </li>
+                <li>
+                  De applicatie moet op alle schermgroottes te gebruiken zijn.
+                </li>
+              </ul>
             </td>
             <td class="px-6 py-4 text-center">
-              <b>M</b>
+              <b>Must</b>
             </td>
           </tr>
           <tr class="border-b">
-            <td class="px-6 py-4">2</td>
+            <td class="px-6 py-4 whitespace-nowrap">NF-02</td>
             <td class="px-6 py-4">
-              Er wordt gebruik gemaakt van een primaraire, secundaire en accent
-              kleur
+              Als bedrijf wil ik dat de applicatie stijl consistent is,
+              zodanig dat de applicatie professioneel overkomt.
             </td>
             <td class="px-6 py-4">
-              De applicatie moet een primaraire, secundaire en accent kleur
-              hebben. Deze kleuren moeten overal in de applicatie terugkomen en
-              op de juiste manier gebruikt worden.
+              <ul>
+                <li>
+                  De applicatie moet een primaraire, secundaire en accent kleur hebben.
+                </li>
+                <li>
+                  De applicatie moet een duidelijke navigatie hebben.
+                </li>
+              </ul>
             </td>
             <td class="px-6 py-4 text-center">
-              <b>M</b>
+              <b>Must</b>
             </td>
           </tr>
         </tbody>
@@ -255,10 +907,7 @@
       <p>
         Een machine spreekt voorzich. Deze wordt gebruikt bij werkzaamheden en
         kan aan een urenschema rij gekoppeld worden. Voor een machine wordt de
-        naam en typenummer bijgehouden. Daarnaast ook het aantal uren dat
-        gedraait moet worden, voordat er onderhoud nodig is. Daarnaast wordt er
-        bijgehouden hoeveel keer er onderhoud is gedaan aan de machine, zodat er
-        berekend kan worden wanneer het volgende moment is.
+        naam en typenummer bijgehouden.
       </p>
     </article>
   </section>
