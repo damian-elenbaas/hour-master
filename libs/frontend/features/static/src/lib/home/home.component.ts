@@ -8,11 +8,10 @@ import { UserRole } from '@hour-master/shared/api';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent {
-  user$ = this.authService.currentUser$;
   roles = UserRole;
 
   constructor(
-    private readonly authService: AuthService,
+    public readonly authService: AuthService,
   ) { }
 
 }

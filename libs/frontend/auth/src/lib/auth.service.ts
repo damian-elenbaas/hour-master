@@ -204,6 +204,18 @@ export class AuthService {
     );
   }
 
+  userIsLoggedIn(): Observable<boolean> {
+    return this.currentUser$.pipe(
+      map((user) => {
+        if (user) {
+          return true;
+        }
+
+        return false;
+      })
+    );
+  }
+
   /**
    * Handle errors.
    */

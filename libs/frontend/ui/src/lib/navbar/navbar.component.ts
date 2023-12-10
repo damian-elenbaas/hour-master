@@ -9,7 +9,6 @@ import { UserRole } from '@hour-master/shared/api';
   styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent {
-  user$ = this.authService.currentUser$;
   roles = UserRole;
 
   constructor(

@@ -4,24 +4,19 @@
     Urenschema's
   </hour-master-dashboard-button>
   <hour-master-dashboard-button *ngIf="
-      user$.value !== null &&
-      (user$.value.role === roles.ADMIN ||
-      user$.value.role === roles.OFFICE)
+      authService.userMaySeeProjectDetails() | async
     " link="/project">
     <i class="fa-solid fa-map text-7xl"></i>
     Projecten
   </hour-master-dashboard-button>
   <hour-master-dashboard-button *ngIf="
-      user$.value !== null &&
-      (user$.value.role === roles.ADMIN ||
-      user$.value.role === roles.OFFICE)
+      authService.userMaySeeMachineDetails() | async
     " link="/machine">
     <i class="fa-solid fa-screwdriver-wrench text-7xl"></i>
     Machines
   </hour-master-dashboard-button>
   <hour-master-dashboard-button *ngIf="
-      user$.value !== null &&
-      (user$.value.role === roles.ADMIN || user$.value.role === roles.OFFICE)
+      authService.userMayAccessUsers() | async
     " link="/user">
     <i class="fa-solid fa-users text-7xl"></i>
     Werknemers
