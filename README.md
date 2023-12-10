@@ -3,7 +3,6 @@
 
 ## TODO's
 
-- Statistieken van gebruikers
 - Pagination
 - Kunnen filteren op Rol, Project etc.
 - Generic Entity interface en services maken
