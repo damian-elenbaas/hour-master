@@ -1,4 +1,4 @@
-import { Inject, Injectable, Logger, NotFoundException, UnauthorizedException, forwardRef } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, Logger, NotFoundException, UnauthorizedException, forwardRef } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Project } from './schemas/project.schema';
@@ -8,6 +8,7 @@ import {
   IUpsertProject,
   Id,
   UserRole,
+  postalCodeRegex,
 } from '@hour-master/shared/api';
 import { RecommendationsService } from '@hour-master/backend/recommendations';
 import { HourSchemeService } from '../hour-scheme/hour-scheme.service';
@@ -67,6 +68,10 @@ export class ProjectService {
   async create(project: ICreateProject): Promise<IProject> {
     this.logger.log(`create`);
 
+    if(!postalCodeRegex.test(project.location.postalCode)) {
+      throw new BadRequestException('Postalcode does not apply to regex');
+    }
+
     const createdProject = await this.projectModel.create(project);
 
     if (!createdProject) {
@@ -99,6 +104,10 @@ export class ProjectService {
       user.role !== UserRole.ADMIN
     ) {
       throw new UnauthorizedException('You are not the admin of this project');
+    }
+
+    if(!postalCodeRegex.test(project.location.postalCode)) {
+      throw new BadRequestException('Postalcode does not apply to regex');
     }
 
     // check if worker exists

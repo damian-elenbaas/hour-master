@@ -46,6 +46,9 @@
       "@hour-master/frontend/features/user": [
         "libs/frontend/features/user/src/index.ts"
       ],
+      "@hour-master/frontend/validators": [
+        "libs/frontend/validators/src/index.ts"
+      ],
       "@hour-master/shared/api": ["libs/shared/api/src/index.ts"],
       "@hour-master/shared/environments": [
         "libs/shared/environments/src/index.ts"

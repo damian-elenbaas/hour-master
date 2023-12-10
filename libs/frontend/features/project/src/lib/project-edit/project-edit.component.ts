@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { IProject, IUser, Id } from '@hour-master/shared/api';
+import { IProject, IUser, Id, postalCodeRegex } from '@hour-master/shared/api';
 import { ProjectService } from '../project.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, of, switchMap } from 'rxjs';
@@ -20,7 +20,7 @@ export class ProjectEditComponent implements OnInit, OnDestroy {
     location: this.fb.group({
       address: ['', Validators.required],
       city: ['', Validators.required],
-      postalCode: ['', Validators.required],
+      postalCode: ['', [Validators.required, Validators.pattern(postalCodeRegex)]]
     }),
   });
   loaded = false;

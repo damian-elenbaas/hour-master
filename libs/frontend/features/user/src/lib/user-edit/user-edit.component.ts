@@ -1,11 +1,8 @@
 import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
-  AbstractControl,
   FormBuilder,
   FormGroup,
-  ValidationErrors,
-  ValidatorFn,
   Validators,
 } from '@angular/forms';
 import {
@@ -21,6 +18,7 @@ import { UserService } from '../user.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { AuthService } from '@hour-master/frontend/auth';
 import { AlertService } from '@hour-master/frontend/common';
+import { passwordMatchValidator } from '@hour-master/frontend/validators';
 
 @Component({
   selector: 'hour-master-user-edit',
@@ -192,14 +190,3 @@ export class UserEditComponent implements OnInit, OnDestroy {
     this.location.back();
   }
 }
-
-const passwordMatchValidator: ValidatorFn = (
-  control: AbstractControl
-): ValidationErrors | null => {
-  const password = control.get('password');
-  const passwordConfirm = control.get('passwordConfirm');
-
-  return password && passwordConfirm && password.value !== passwordConfirm.value
-    ? { passwordMismatch: true }
-    : null;
-};

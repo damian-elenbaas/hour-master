@@ -70,8 +70,8 @@
         <div class="mt-2">
           <label for="postal" [ngClass]="{
             error:
-            projectForm.controls.location.controls.postalCode.invalid &&
-            projectForm.controls.location.controls.postalCode.touched
+              projectForm.controls.location.controls.postalCode.invalid &&
+              projectForm.controls.location.controls.postalCode.touched
             }">
             Postcode
           </label>
@@ -81,10 +81,18 @@
             projectForm.controls.location.controls.postalCode.touched
             }" formControlName="postalCode" required />
           <p *ngIf="
-            projectForm.controls.location.controls.postalCode.invalid &&
-            projectForm.controls.location.controls.postalCode.touched
+            projectForm.controls.location.controls.postalCode.touched &&
+            projectForm.controls.location.controls.postalCode.errors &&
+            projectForm.controls.location.controls.postalCode.errors['required']
             " class="mt-2 text-sm text-red-600 dark:text-red-500">
             Postcode is verplicht!
+          </p>
+          <p *ngIf="
+            projectForm.controls.location.controls.postalCode.touched &&
+            projectForm.controls.location.controls.postalCode.errors &&
+            projectForm.controls.location.controls.postalCode.errors['pattern']
+            " class="mt-2 text-sm text-red-600 dark:text-red-500">
+            Postcode is niet valide!
           </p>
         </div>
       </div>
